@@ -10,17 +10,54 @@ from nltk.stem import WordNetLemmatizer, PorterStemmer
 from nltk.stem.snowball import FrenchStemmer
 from nltk import ngrams, FreqDist
 from . import commons
+from googletrans import Translator, LANGUAGES
+#from translate import Translator
+import swifter 
 
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
 
+languages = {
+        "en": "english",
+        'fr':"french",
+        "de":"german",
+        'it': "italian"
+        }
+
 # Selection des 500 mots les plus communs
 NUM_COMMON_WORDS = 500
+lang_abbr = LANGUAGES.keys()
+
+#Traduction d'un text
+def translate_text(text, src="en", dest="fr"):
+    if src == "fr":
+        return text
+    else:
+        try:
+            # from_lang = languages.get(src)
+            # translator= Translator(from_lang=from_lang, to_lang="french")
+            # return = translator.translate(text)
+           
+            translator= Translator()
+            translation = translator.translate(text, src=src, dest=dest)
+            return translation.text
+        except Exception as exce:
+            print(exce)
+            return text
+
+#Traduction d'une serie
+@commons.timeit
+def translate_serie(df):
+    
+    
+    return df.swifter.apply(lambda x: translate_text(x.text_clean, src=x.lang, dest="fr"), axis=1)
 
 # Feature-engineering du texte
 @commons.timeit
-def apply_feature_engineering(df:pd.DataFrame):
+def apply_feature_engineering(df:pd.DataFrame, 
+    translate=False,
+    stemm=True):
     logging.debug("start feature-engineering")
 
     #Remplacement de Nan par ""
@@ -47,6 +84,12 @@ def apply_feature_engineering(df:pd.DataFrame):
     df["lang"] = find_language(df.text_clean)
     logging.debug(f"got the langages")
 
+    #Langue utilisée
+    if translate:
+        not_fr = df.lang != "fr"
+        df.loc[not_fr, "text_clean"] = translate_serie(df.loc[not_fr,:])
+        logging.debug(f"translate the langages")
+
     #Suppression de la ponctuation
     df["text_clean"] = remove_punctuation(df.text_clean)
     logging.debug(f"punctuation removed")
@@ -72,8 +115,12 @@ def apply_feature_engineering(df:pd.DataFrame):
     # logging.debug(f"useless words removed")
 
     #Passage à la racine des mots
-    df["text_stem"] = stemmatize_serie(df)
-    logging.debug(f"text stemmed")
+    if stemm:
+        df["text_stem"] = stemmatize_serie(df)
+        logging.debug(f"text stemmed")
+    else:
+        df["text_stem"] = df.text_clean
+    
 
     #Selection des mots les plus courant et chaque mot courant a une colonne 
     df_dummy, df_commons = select_common_words(df.text_stem)
@@ -135,20 +182,15 @@ def stemmatize_words(words:list, lang:str):
 
 @commons.timeit
 def stemmatize_serie(df):
-    return df.apply(lambda x: stemmatize_words(x.text_clean, x.lang), axis=1)
+    return df.swifter.apply(lambda x: stemmatize_words(x.text_clean, x.lang), axis=1)
 
 #Suppression des stopwords et text -> word
 def remove_stops(text:str, lang):
 
-    langage = {
-        "en": "english",
-        'fr':"french",
-        "de":"german",
-        'it': "italian"
-        }
 
-    if lang in langage.keys():
-        stopWords = set(stopwords.words(langage.get(lang)))
+
+    if lang in languages.keys():
+        stopWords = set(stopwords.words(languages.get(lang)))
         
         words = word_tokenize(text)
         wordsFiltered = []

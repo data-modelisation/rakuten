@@ -87,7 +87,10 @@ if __name__ == "__main__":
             df_text, df_image, df_y = commons.select_samples(df_text, df_image, df_y, samples=args.samples)
 
         #On applique le feature-engineering sur les images et les textes
-        df_text, df_commons = text_tools.apply_feature_engineering(df=df_text)
+        df_text, df_commons = text_tools.apply_feature_engineering(
+            df=df_text,
+            stemm=True,
+            translate=True)
         df_image = image_tools.apply_feature_engineering(df=df_image)
 
         #On sauvegarde
