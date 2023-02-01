@@ -86,6 +86,7 @@ ipython_config.py
 data/**/*.csv
 data/**/*.jpg
 data/**/*.pkl
+src/**/*.pkl
 
 # Rapports
 reports/archives/*
