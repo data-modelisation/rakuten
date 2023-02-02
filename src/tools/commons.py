@@ -15,10 +15,11 @@ def timeit(fct):
     return timed_fct
 
 # Fusion de colonnes de texte
-def merge_columns(*args):
+def merge_columns(columns=[]):
+
     merged_column = ""
-    for column in args:
-        merged_column += column + " "
+    for column in columns:
+        merged_column += column.fillna("") + " "
 
     return merged_column
 
