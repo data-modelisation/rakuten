@@ -31,11 +31,11 @@ def read_image_files(pid:pd.Series, iid=pd.Series, folder="", ):
 
 # Feature-engineering du texte
 @commons.timeit
-def apply_feature_engineering(df:pd.DataFrame):
+def apply_feature_engineering(df:pd.DataFrame, folder=""):
 
     #Parallisation de l'extraction d'infos
     pool = mp.Pool(mp.cpu_count())
-    infos = [pool.apply(get_image_infos, link) for link in df.links.values]
+    infos = [pool.apply(get_image_infos, folder+link) for link in df.links.values]
     results = np.array(infos)
     pool.close() 
     
@@ -44,7 +44,7 @@ def apply_feature_engineering(df:pd.DataFrame):
 
     # Les trois moyennes des canaux sont les colonnes suivantes
     df[["r_means", "b_means", "g_means"]] = np.array(results[:, 1:])
-
+    df[""]
     return df
 
 #Pour une photo, on récupère ses infos
