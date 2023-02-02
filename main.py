@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 import argparse
 import time
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
 import pandas as pd
+import pickle
 
 import src.tools.text as text_tools
 import src.tools.image as image_tools
@@ -22,13 +24,13 @@ parser = argparse.ArgumentParser(
                     description = 'Classification of products',
                     epilog = 'Enjoy!')
 
+parser.add_argument('--trans', action='store_true', help='transform')
 parser.add_argument('--train', action='store_true', help='train the model')
 parser.add_argument('--predict', action='store_true', help='make a prediction')
 parser.add_argument('--show', action='store_true', help='show the predication in heatmap')
 
-
-parser.add_argument('--load-data',action='store_true', help='load the downloaded data')
-parser.add_argument('--load-data-fe',action='store_true', help='load the feature engineering data')
+parser.add_argument('--text', action='store_true', help='work with text data')
+parser.add_argument('--image', action='store_true', help='work with image data')
 
 parser.add_argument('--samples', '--samples',
                     default=0,
@@ -40,92 +42,74 @@ parser.add_argument('--test-size', '--test-size',
                     help='how to split?',
                     type=float
                     )
-
 args = parser.parse_args()
 
 if __name__ == "__main__":
     
     start_time = time.time()
+    df_text = text_tools.read_csv(name="X_train_update.csv", folder=PATH_RAW)
+    df_y = text_tools.read_csv(name="Y_train_CVw08PX.csv", folder=PATH_RAW)
+    print("dataset loaded")
+    
+    #Features and Target selection
+    X_train, X_test, y_train, y_test = train_test_split(
+        df_text,
+        df_y.prdtypecode,
+        test_size=args.test_size,
+        stratify=df_y.prdtypecode,
+        )
+    print("dataset splitted")
+    commons.save_pkl(y_train, name="y_train.pkl", folder=PATH_FEAT)
+    commons.save_pkl(y_test, name="y_test.pkl", folder=PATH_FEAT)
 
-    # Si on ne charge pas les données feature-engineering
-    if not args.load_data_fe:
+    # Transformation des données
+    if args.trans:
+        preprocess = text_tools.build_preprocessor()
+        X_train = preprocess.fit_transform(X_train)
+        X_test = preprocess.transform(X_test)
 
-        # Si charge les données téléchargées
-        if not args.load_data:
+        commons.save_pkl(X_train, name="X_train_transformed.pkl", folder=PATH_FEAT)
+        commons.save_pkl(X_test, name="X_test_transformed.pkl", folder=PATH_FEAT)
+        
+        print("preprocessing finished")
+    else:
+        X_train = commons.read_pkl(name="X_train_transformed.pkl", folder=PATH_FEAT)
+        X_test = commons.read_pkl(name="X_test_transformed.pkl", folder=PATH_FEAT)
+        print("preprocessed datasets loaded")
 
-            #Lecture
-            df_text = text_tools.read_csv(
-                name="X_train_update.csv",
-                folder=PATH_RAW)
+    #Equilibrage du dataset
+    rs = RandomOverSampler()
+    X_train, y_train = rs.fit_resample(X_train, y_train)
 
-            df_y = text_tools.read_csv(
-                name="Y_train_CVw08PX.csv",
-                folder=PATH_RAW)
-            
-            df_image = image_tools.read_image_files(
-                df_text.productid,
-                df_text.imageid,
-                folder=PATH_RAW + "/images/image_train")
+    #Entrainement d'un modele
+    if args.train:
+        model = text_tools.build_pipeline()
+        model.fit(X_train, y_train)
+        pickle.dump(model, open("src/models/simple/knn/model_text_knn.pkl", 'wb'))
+    
+    else:    
+        model = pickle.load(open("src/models/simple/knn/model_text_knn.pkl", 'rb'))
 
-            #Conversion des numéros de catégorie en description
-            df_y["prdtypename"] = commons.convert_to_readable_categories(df_y.prdtypecode)
-            df_text["prdtypecode"] = df_y.prdtypecode
-            df_text["prdtypename"] = df_y.prdtypename
-            df_image["prdtypecode"] = df_y.prdtypecode
-            df_image["prdtypename"] = df_y.prdtypename
+    #Prediction grâce au modele
+    if args.predict:
+        y_preds_test = model.predict(X_test)
+        df_y_preds_test = pd.DataFrame(
+            y_preds_test.reshape(-1,1),
+            columns=["prdtypecode",],
+            index=X_test.index)        
 
-            #Sauvegarde
-            commons.save_pkl(df_text, name="df_text.pkl", folder=PATH_BASE)
-            commons.save_pkl(df_y, name="df_y.pkl", folder=PATH_BASE)
-        else:
-            #Sinon on charge directement les données
-            df_text = commons.read_pkl(name="df_text.pkl", folder=PATH_BASE)
-            df_y = commons.read_pkl(name="df_y.pkl", folder=PATH_BASE)
-
-        #Si on ne travaille que sur une selection
-        if args.samples > 0:
-            df_text, df_image, df_y = commons.select_samples(df_text, df_image, df_y, samples=args.samples)
-
-        #On applique le feature-engineering sur les images et les textes
-        df_text, df_commons = text_tools.apply_feature_engineering(
-            df=df_text,
-            stemm=True,
-            translate=True)
-        df_image = image_tools.apply_feature_engineering(df=df_image)
-
-        #On sauvegarde
-        for df, name in zip(
-            (df_text, df_commons, df_y, df_image), 
-            ("df_text", "df_commons", "df_y", "df_image")):
-            commons.save_pkl(df, name=name+".pkl", folder=PATH_FEAT)
-            print(f"sauvegarde de {name} terminée")
+        print("prediction finished")
+        commons.save_pkl(df_y_preds_test, name="y_preds_test.pkl", folder="src/models/simple/knn/")
 
     else:
-        #Sinon on charge les données déjà feature-engineering
-        df_text = commons.read_pkl(name="df_text.pkl", folder=PATH_FEAT)    
-        df_y = commons.read_pkl(name="df_y.pkl", folder=PATH_FEAT)
+        df_y_preds_test = commons.read_pkl(name="y_preds_test.pkl", folder="src/models/simple/knn/")
+        print("predictions loaded")
 
-    #Features and Target selection
-    features = df_text.drop(["lang", "designation", "description", "productid", "imageid", "prdtypecode", "prdtypename", "text", "text_clean", "text_stem"], axis=1)
-    target = df_y.prdtypecode
+    print(f"Finished in {time.time() - start_time}s")
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        features,
-        target,
-        test_size=args.test_size
-    )
-    
-    if args.train:
-        model = KNeighborsClassifier()
-        model.fit(X_train, y_train)
-
-    if args.predict:
-        y_preds = model.predict(X_test)
-        crosstab = pd.crosstab(y_test, y_preds, rownames=["Real"], colnames=["Predicted"])
-        print(crosstab)
-
-    if args.predict & args.show:
+    if args.show:
+        y_preds_test = df_y_preds_test.prdtypecode
+        crosstab = pd.crosstab(y_test, y_preds_test, rownames=["Real"], colnames=["Predicted"])
+        print(classification_report(y_test, y_preds_test))
         heat = graphs.heatmap(crosstab)
         plt.show()
-        
-    print(f"Finished in {time.time() - start_time}s")
