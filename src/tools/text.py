@@ -48,6 +48,7 @@ french_stopwords = stopwords.words("french") + [
 MAX_FEATURES_WORDS = 1000 #Nombre de mots fréquents à conserver
 MAX_TEXT_LENGTH = 300 #Ajustement des textes à cette longueur
 
+#Transformeur pour supprimer des colonnes
 class ColumnDropper(BaseEstimator,TransformerMixin):
 
     def __init__(self, columns=[]):
@@ -59,6 +60,7 @@ class ColumnDropper(BaseEstimator,TransformerMixin):
     def transform(self, X):
         return X.copy().drop(self.columns, axis=1)
 
+#Transformeur pour créer des liens à partir de productid et imageid
 class LinksMaker(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
@@ -70,7 +72,8 @@ class LinksMaker(BaseEstimator, TransformerMixin):
         X_copy = X.copy()
         X_copy["links"] = "data/raw/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
         return X_copy
-        
+    
+#Transformeur pour fusionner des colonnes de texte
 class TextColumnMerger(BaseEstimator, TransformerMixin):
     def __init__(self, columns=[], name="merged_col"):
         self.columns = columns
@@ -86,6 +89,7 @@ class TextColumnMerger(BaseEstimator, TransformerMixin):
         X_copy[self.name] = commons.merge_columns(columns=columns)
         return X_copy
 
+#Transformeur pour compter le nombre de mot dans des colonnes de texte
 class WordsCounter(BaseEstimator, TransformerMixin):
     def __init__(self, columns=[]):
         self.columns = columns
@@ -99,6 +103,7 @@ class WordsCounter(BaseEstimator, TransformerMixin):
             X_copy[f"words_in_"+column] = X_copy[column].apply(lambda text: get_num_words(text))
         return X_copy
 
+#Transformeur pour detecter la langue d'un texte et le traduire (opt)
 class LanguageTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, column, text_length=300, translate=False):
         self.column = column  
@@ -119,6 +124,7 @@ class LanguageTransformer(BaseEstimator, TransformerMixin):
             
         return X_copy
 
+#Transformeur pour vectoriser le texte
 class Vectorizer(BaseEstimator, TransformerMixin):
     def __init__(self, column, type_="tfidf"):
         self.column = column
@@ -153,6 +159,7 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 
         return X_copy.join(df_vec)#, rsuffix= "_" + self.type_)
 
+# Construction du pipeline pour le modèle texte
 def build_pipeline():
 
     pipeline = Pipeline(steps=[
@@ -163,6 +170,7 @@ def build_pipeline():
 
     return pipeline
 
+# Construction du pipeline pour le preprocessing
 def build_preprocessor():
 
     preprocessor = Pipeline(steps=[
@@ -177,10 +185,11 @@ def build_preprocessor():
 
     return preprocessor
 
-
+#Stemmatisation d'un texte en francais
 def stemmatize_text(text):
     return [FrenchStemmer().stem(w) for w in word_tokenize(text)]
 
+#Nettoyage des textes
 def clean_text(text):
 
     if isinstance(text, np.ndarray):
