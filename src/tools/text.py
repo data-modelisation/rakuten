@@ -18,13 +18,15 @@ from nltk.stem import WordNetLemmatizer, PorterStemmer
 from nltk.stem.snowball import FrenchStemmer
 from nltk import ngrams, FreqDist
 
-from  sklearn.feature_extraction.text import CountVectorizer
-from  sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.impute import SimpleImputer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
 
 from . import commons
 
@@ -104,7 +106,7 @@ class TextCounter(BaseEstimator, TransformerMixin):
         X_copy = X.copy()
         for column in self.columns:
             X_copy[f"words_"+column] = X_copy[column].apply(lambda text: get_num_words(text))
-            X_copy[f"length_"+column] = X_copy[column].apply(lambda text: len(text))
+            X_copy[f"length_"+column] = X_copy[column].apply(lambda text: get_text_length(text))
         return X_copy
 
 #Transformeur pour detecter la langue d'un texte et le traduire (opt)
@@ -130,10 +132,10 @@ class LanguageTransformer(BaseEstimator, TransformerMixin):
 
 #Transformeur pour vectoriser le texte
 class Vectorizer(BaseEstimator, TransformerMixin):
-    def __init__(self, column, type_="tfidf"):
+    def __init__(self, column, vectorize_type="tfidf"):
         self.column = column
-        self.type_ = type_
-        vectorizer_obj = TfidfVectorizer if self.type_=="tf" else CountVectorizer
+        self.vectorize_type = vectorize_type
+        vectorizer_obj = TfidfVectorizer if self.vectorize_type=="tf" else CountVectorizer
         
         self.vectorizer =  vectorizer_obj(
                 max_features=MAX_FEATURES_WORDS, 
@@ -161,30 +163,45 @@ class Vectorizer(BaseEstimator, TransformerMixin):
             columns=self.vectorizer.get_feature_names_out()
         )
 
-        return X_copy.join(df_vec, rsuffix= "_" + self.type_) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+        return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+
+
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline():
+def build_pipeline_model():
 
-    pipeline = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=["links", "productid", "imageid", "lang"])),
+    model = Pipeline(steps=[
+        ("dropper", ColumnDropper(columns=["links", "lang"])),
         ("scaler", StandardScaler()),
         ("classifier", KNeighborsClassifier() )
     ])
 
-    return pipeline
+    return model
+
+# Construction du pipeline pour le chargement des données
+def build_pipeline_load():
+    loader = Pipeline(steps=[
+        ('linker', LinksMaker()),
+        ('counter', TextCounter(columns=["designation", "description"])),
+        ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
+        ("dropper", ColumnDropper(columns=["designation", "description", "imageid", "productid"])),
+    ])
+    return loader
+
+# Construction du pipeline pour la traduction des langues
+def build_pipeline_lang(translate=False):
+
+    translater = Pipeline(steps=[
+        ('trans', LanguageTransformer(column="text", text_length=500, translate=translate)),
+    ])
+    return translater
 
 # Construction du pipeline pour le preprocessing
-def build_preprocessor():
+def build_pipeline_preprocessor(vectorize_type="tfidf"):
 
-    preprocessor = Pipeline(steps=[
-        ('links', LinksMaker()),
-        ('counters', TextCounter(columns=["designation", "description"])),
-        ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
-        ('language', LanguageTransformer(column="text", text_length=500, translate=False)),
-        #('vectorize_cn', Vectorizer(column="text", type_="cn")),
-        ('vectorize_tf', Vectorizer(column="text", type_="tf")),
-        ("dropper", ColumnDropper(columns=["designation", "description", "text"])),
+    preprocessor = Pipeline(steps=[        
+        ('vectorizer', Vectorizer(column="text", vectorize_type=vectorize_type)),
+        ("dropper", ColumnDropper(columns=["text",])),
         ])
 
     return preprocessor
@@ -251,6 +268,13 @@ def get_lang(text:str, text_length=300):
 def get_num_words(text:str):
     try:
         return len(text.split())
+    except Exception as exce:
+        return 0
+
+# Longueur d'un texte
+def get_text_length(text:str):
+    try:
+        return len(text)
     except Exception as exce:
         return 0
 
