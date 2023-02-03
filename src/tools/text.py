@@ -7,6 +7,9 @@ import logging
 from unidecode import unidecode
 from googletrans import Translator, LANGUAGES
 import swifter 
+import fasttext
+
+fasttext.FastText.eprint = lambda x: None
 
 import nltk
 from nltk.corpus import stopwords
@@ -147,7 +150,7 @@ class Vectorizer(BaseEstimator, TransformerMixin):
         return self    
         
     def transform(self, X):
-        print(X.columns)
+
         X_copy = X.copy()
         X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
 
@@ -157,13 +160,13 @@ class Vectorizer(BaseEstimator, TransformerMixin):
             columns=self.vectorizer.get_feature_names_out()
         )
 
-        return X_copy.join(df_vec)#, rsuffix= "_" + self.type_)
+        return X_copy.join(df_vec, rsuffix= "_" + self.type_) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
 
 # Construction du pipeline pour le modèle texte
 def build_pipeline():
 
     pipeline = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=["links", "productid", "imageid", "lang",])),
+        ("dropper", ColumnDropper(columns=["links", "productid", "imageid", "lang", "words_in_designation", "words_in_description"])),
         ("scaler", StandardScaler()),
         ("classifier", KNeighborsClassifier() )
     ])
@@ -191,10 +194,7 @@ def stemmatize_text(text):
 
 #Nettoyage des textes
 def clean_text(text):
-
-    if isinstance(text, np.ndarray):
-        text = text[0]
-    
+   
     #Suppression des balises
     text = re.sub('<[^<]+?>', ' ', text)
 
@@ -208,9 +208,9 @@ def clean_text(text):
     text = unidecode(text)
 
     #Ajustement de la taille des textes
-    # if MAX_TEXT_LENGTH > 0:
-    #     text = text[:MAX_TEXT_LENGTH]
-    
+    if MAX_TEXT_LENGTH > 0:
+        text = text[:MAX_TEXT_LENGTH]
+
     return text
 
 #Traduction d'un texte
@@ -232,9 +232,7 @@ def translate_text(text, src="en", dest="fr"):
 #Traduction d'une serie
 @commons.timeit
 def translate_serie(df):
-    
     return df.swifter.apply(lambda x: translate_text(x.text_clean, src=x.lang, dest="fr"), axis=1)
-
 
 #Langue d'un texte
 def get_lang(text:str, text_length=300):
