@@ -2,7 +2,7 @@ import seaborn as sns
 
 
 def heatmap(df):
-    graph = sns.heatmap(df,cmap='BrBG',fmt='.2f',
+    graph = sns.heatmap(df,fmt='.2f',
          linewidths=2,annot=False)
     return graph
 
