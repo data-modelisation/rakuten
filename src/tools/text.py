@@ -48,8 +48,8 @@ french_stopwords = stopwords.words("french") + [
         'soi', 'somm', 'soyon', 'votr'
     ]
 
-MAX_FEATURES_WORDS = 1000 #Nombre de mots fréquents à conserver
-MAX_TEXT_LENGTH = 300 #Ajustement des textes à cette longueur
+MAX_FEATURES_WORDS = 5000 #Nombre de mots fréquents à conserver
+MAX_TEXT_LENGTH = 500 #Ajustement des textes à cette longueur
 
 #Transformeur pour supprimer des colonnes
 class ColumnDropper(BaseEstimator,TransformerMixin):
@@ -93,7 +93,7 @@ class TextColumnMerger(BaseEstimator, TransformerMixin):
         return X_copy
 
 #Transformeur pour compter le nombre de mot dans des colonnes de texte
-class WordsCounter(BaseEstimator, TransformerMixin):
+class TextCounter(BaseEstimator, TransformerMixin):
     def __init__(self, columns=[]):
         self.columns = columns
     
@@ -103,7 +103,8 @@ class WordsCounter(BaseEstimator, TransformerMixin):
     def transform(self, X):
         X_copy = X.copy()
         for column in self.columns:
-            X_copy[f"words_in_"+column] = X_copy[column].apply(lambda text: get_num_words(text))
+            X_copy[f"words_"+column] = X_copy[column].apply(lambda text: get_num_words(text))
+            X_copy[f"length_"+column] = X_copy[column].apply(lambda text: len(text))
         return X_copy
 
 #Transformeur pour detecter la langue d'un texte et le traduire (opt)
@@ -166,7 +167,7 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 def build_pipeline():
 
     pipeline = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=["links", "productid", "imageid", "lang", "words_in_designation", "words_in_description"])),
+        ("dropper", ColumnDropper(columns=["links", "productid", "imageid", "lang"])),
         ("scaler", StandardScaler()),
         ("classifier", KNeighborsClassifier() )
     ])
@@ -178,7 +179,7 @@ def build_preprocessor():
 
     preprocessor = Pipeline(steps=[
         ('links', LinksMaker()),
-        ('counters', WordsCounter(columns=["designation", "description"])),
+        ('counters', TextCounter(columns=["designation", "description"])),
         ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
         ('language', LanguageTransformer(column="text", text_length=500, translate=False)),
         #('vectorize_cn', Vectorizer(column="text", type_="cn")),
