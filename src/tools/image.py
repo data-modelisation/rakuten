@@ -24,15 +24,15 @@ from sklearn.preprocessing import StandardScaler
 
 from . import commons
 
+#Lecture et reduction de la taille d'une image
 def read_and_resize(link, width=100, height=100):
     im = imread(link)
     im = resize(im, (width, height, 3))
     return im.reshape(-1,3)
 
+#Lecture de toutes les images
 def read_images(links):
-
     images = np.array([read_and_resize(link) for link in links])
-    
     return images
 
 #Transformeur pour passer de RGB à Gray
@@ -95,14 +95,3 @@ def get_white_ratio(im:np.array):
 # Extraction de texte depuis une image
 def get_text_from_image(im:Image):
     return pytesseract.image_to_string(im)
-
-
-
-
-
-
-
-
-
-
-
