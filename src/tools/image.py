@@ -31,8 +31,8 @@ def read_and_resize(link, width=100, height=100):
     return im.reshape(-1,3)
 
 #Lecture de toutes les images
-def read_images(links):
-    images = np.array([read_and_resize(link) for link in links])
+def read_images(links, **kwargs):
+    images = np.array([read_and_resize(link, **kwargs) for link in links])
     return images
 
 #Transformeur pour passer de RGB à Gray
