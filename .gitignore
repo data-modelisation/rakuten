@@ -87,6 +87,8 @@ data/**/*.csv
 data/**/*.jpg
 data/**/*.pkl
 src/**/*.pkl
+src/**/*.joblib
+src/**/*.jpg
 
 # Rapports
 reports/archives/*
