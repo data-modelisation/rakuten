@@ -145,8 +145,8 @@ if __name__ == "__main__":
         start_time_image = time.time()
 
         #Selection des images en accord avec la selection
-        Image_train = image_tools.read_images(df_text.loc[X_train.index, "links"])
-        Image_test = image_tools.read_images(df_text.loc[X_test.index, "links"])
+        Image_train = image_tools.read_images(df_text.loc[X_train.index, "links"], width=128, height=128)
+        Image_test = image_tools.read_images(df_text.loc[X_test.index, "links"], width=128, height=128)
         stop_time_image_read = time.time()
         print(f"images loaded in {stop_time_image_read-start_time_image:03.2f}s")
 
