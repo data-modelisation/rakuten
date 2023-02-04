@@ -22,11 +22,13 @@ from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
 
 from . import commons
 
@@ -173,7 +175,7 @@ def build_pipeline_model():
     model = Pipeline(steps=[
         ("dropper", ColumnDropper(columns=["links", "lang"])),
         ("scaler", StandardScaler()),
-        ("classifier", KNeighborsClassifier() )
+        ("classifier", LogisticRegression() )
     ])
 
     return model
