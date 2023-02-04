@@ -9,6 +9,7 @@ from imblearn.under_sampling import RandomUnderSampler
 import pandas as pd
 import pickle
 from joblib import dump, load
+import vaex
 
 import src.tools.text as text_tools
 import src.tools.image as image_tools
@@ -73,10 +74,13 @@ if __name__ == "__main__":
         commons.save_pkl(df_text, name="df_text.pkl", folder=PATH_TRANS)
         #commons.save_pkl(df_y, name="df_y.pkl", folder=PATH_TRANS) TODO
 
+    print("datasets loaded")
+
     #Si on choisit de travailler sur quelques samples avec l'option --samples
     if args.samples > 0:
         df_text = df_text.sample(n=args.samples)
         df_y = df_y.loc[df_text.index]
+        print("datasets sampled")
     
     #Séparation des données en entrainement et test
     X_train, X_test, y_train, y_test = train_test_split(
@@ -85,28 +89,34 @@ if __name__ == "__main__":
         test_size=args.test_size,
         #stratify=df_y.prdtypecode,
         )
+    print("datasets splitted")
 
-    #Selection des images en accord avec la selection
-    Image_train = image_tools.read_images(df_text.loc[X_train.index, "links"])
-    Image_test = image_tools.read_images(df_text.loc[X_test.index, "links"])
-    
+
+
     #Si on travaille sur le texte
     if args.text:
 
         #Entrainement d'un modele pour le texte avec l'option --train
         if args.train:
-            
+            start_time_text = time.time()
+
             #Transformations : vectorisation du texte en mots courant
             pipeline_preprocess = text_tools.build_pipeline_preprocessor(vectorize_type="tfidf")    
             X_train = pipeline_preprocess.fit_transform(X_train)
-            
+            stop_time_text_trans = time.time()
+            print(f"model_text transformed in {stop_time_text_trans-start_time_text:03.2f}s")
+
             #Entrainement
             model_text = text_tools.build_pipeline_model()
             model_text.fit(X_train, y_train) 
+            stop_time_text_train = time.time()
+            print(f"model_text trained in {stop_time_text_train-stop_time_text_trans:03.2f}s")
 
             #Sauvegarde
             dump(model_text, 'src/models/model_text.joblib')
             dump(pipeline_preprocess, 'src/models/preprocess_text.joblib')
+            stop_time_text_save = time.time()
+            print(f"model_text saved in {stop_time_text_save-stop_time_text_train:03.2f}s")
 
         #Sinon chargement d'un modele pour le texte
         else:
@@ -116,31 +126,51 @@ if __name__ == "__main__":
         #Prediction
         X_test = pipeline_preprocess.transform(X_test)
         y_text_preds = model_text.predict(X_test)
+        #vaex_df.export_hdf5('src/models/X_train.hdf5')
 
         crosstab = pd.crosstab(y_test, y_text_preds, rownames=["Real"], colnames=["Predicted"])
-        print(classification_report(y_test, y_text_preds))
+        print(classification_report(y_test, y_text_preds, zero_division=0))
 
-        print(f"Text prediction finished in {time.time() - start_time}s")
+        print(f"Text prediction finished in {time.time() - start_time:03.2f}s")
         heat = graphs.heatmap(crosstab)
         plt.savefig('src/models/crosstab_text.jpg')
+        
+
+    # Nettoyage de la figure
+    plt.clf() 
 
     #Si on travaille sur les images
     if args.image:
-        
+
+        start_time_image = time.time()
+
+        #Selection des images en accord avec la selection
+        Image_train = image_tools.read_images(df_text.loc[X_train.index, "links"])
+        Image_test = image_tools.read_images(df_text.loc[X_test.index, "links"])
+        stop_time_image_read = time.time()
+        print(f"images loaded in {stop_time_image_read-start_time_image:03.2f}s")
+
         #Entrainement d'un modele pour les images avec l'option --train
-        if args.train:
+        if args.train:         
+
             #Transformations : gray + pca
             pipeline_preprocess = image_tools.build_pipeline_preprocessor()    
             Image_train = pipeline_preprocess.fit_transform(Image_train)
+            stop_time_image_trans = time.time()
+            print(f"model_image transformed in {stop_time_image_trans-stop_time_image_read:03.2f}s")
 
             #Entrainement
             model_image = image_tools.build_pipeline_model()
             model_image.fit(Image_train, y_train) 
+            stop_time_image_train = time.time()
+            print(f"model_image trained in {stop_time_image_train-stop_time_image_trans:03.2f}s")
 
             #Sauvegarde
             dump(model_image, 'src/models/model_image.joblib')
             dump(pipeline_preprocess, 'src/models/preprocess_image.joblib')
-            
+            stop_time_image_save = time.time()
+            print(f"model_image saved in {stop_time_image_save-stop_time_image_train:03.2f}s")
+
         #Sinon chargement d'un modele pour le texte
         else:
             model_image = load('src/models/model_image.joblib')
@@ -151,8 +181,9 @@ if __name__ == "__main__":
         y_image_preds = model_image.predict(Image_test)
 
         crosstab = pd.crosstab(y_test, y_image_preds, rownames=["Real"], colnames=["Predicted"])
-        print(classification_report(y_test, y_image_preds))
+        print(classification_report(y_test, y_image_preds, zero_division=0))
 
-        print(f"Image prediction finished in {time.time() - start_time}s")
+        print(f"Image prediction finished in {time.time() - start_time:03.2f}s")
+
         heat = graphs.heatmap(crosstab)
         plt.savefig('src/models/crosstab_image.jpg')
