@@ -29,6 +29,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import AdaBoostClassifier
 
 from . import commons
 
@@ -60,12 +61,21 @@ class ColumnDropper(BaseEstimator,TransformerMixin):
 
     def __init__(self, columns=[]):
         self.columns = columns
-
+        
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
-        return X.copy().drop(self.columns, axis=1)
+
+        if isinstance(X, pd.DataFrame):
+            return X.copy().drop(self.columns, axis=1)
+        elif isinstance(X, np.ndarray):
+            mask = np.ones(X.shape[1], dtype=bool)
+            mask[self.columns] = False
+            return X.copy()[:, mask]
+        else:
+            print('unknown X type')
+            import pdb; pdb.set_trace()
 
 #Transformeur pour créer des liens à partir de productid et imageid
 class LinksMaker(BaseEstimator, TransformerMixin):
@@ -173,7 +183,7 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 def build_pipeline_model():
 
     model = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=["links", "lang"])),
+        ("dropper", ColumnDropper(columns=[0,5])),
         ("scaler", StandardScaler()),
         ("classifier", LogisticRegression() )
     ])
