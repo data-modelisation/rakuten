@@ -91,6 +91,10 @@ if __name__ == "__main__":
         )
     print("datasets splitted")
 
+    #Equilibrage du dataset
+    ro = RandomUnderSampler()
+    X_train, y_train = ro.fit_resample(X_train, y_train)
+
     #Passage en Numpy
     X_train, y_train = X_train.values, y_train.values
     X_test, y_test = X_test.values, y_test.values
