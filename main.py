@@ -91,7 +91,9 @@ if __name__ == "__main__":
         )
     print("datasets splitted")
 
-
+    #Passage en Numpy
+    X_train, y_train = X_train.values, y_train.values
+    X_test, y_test = X_test.values, y_test.values
 
     #Si on travaille sur le texte
     if args.text:
@@ -105,6 +107,7 @@ if __name__ == "__main__":
             X_train = pipeline_preprocess.fit_transform(X_train)
             stop_time_text_trans = time.time()
             print(f"model_text transformed in {stop_time_text_trans-start_time_text:03.2f}s")
+            print(X_train.shape)
 
             #Entrainement
             model_text = text_tools.build_pipeline_model()
@@ -117,7 +120,7 @@ if __name__ == "__main__":
             dump(pipeline_preprocess, 'src/models/preprocess_text.joblib')
             stop_time_text_save = time.time()
             print(f"model_text saved in {stop_time_text_save-stop_time_text_train:03.2f}s")
-
+            
         #Sinon chargement d'un modele pour le texte
         else:
             model_text = load('src/models/model_text.joblib')

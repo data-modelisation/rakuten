@@ -150,7 +150,8 @@ class Vectorizer(BaseEstimator, TransformerMixin):
         vectorizer_obj = TfidfVectorizer if self.vectorize_type=="tf" else CountVectorizer
         
         self.vectorizer =  vectorizer_obj(
-                max_features=MAX_FEATURES_WORDS, 
+                max_features=MAX_FEATURES_WORDS,
+                #min_df=10, 
                 ngram_range=(1, 2),                 
                 analyzer="word",
                 preprocessor=clean_text,
@@ -159,31 +160,41 @@ class Vectorizer(BaseEstimator, TransformerMixin):
             )
         
     def fit(self, X, y=None):
-
-        self.vectorizer.fit(X[self.column])
-
+        if isinstance(X, pd.DataFrame):
+            self.vectorizer.fit(X[self.column])
+        elif isinstance(X, np.ndarray):
+            self.vectorizer.fit(X[:, self.column])
+        else:
+            print("unknox")
         return self    
         
     def transform(self, X):
 
         X_copy = X.copy()
-        X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
 
-        df_vec = pd.DataFrame(
-            X_vec,
-            index=X_copy.index,
-            columns=self.vectorizer.get_feature_names_out()
-        )
+        if isinstance(X, pd.DataFrame):
+            X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
 
-        return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+            df_vec = pd.DataFrame(
+                X_vec,
+                index=X_copy.index,
+                columns=self.vectorizer.get_feature_names_out()
+            )
 
+            return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+        elif isinstance(X, np.ndarray):
+            X_vec = self.vectorizer.transform(X_copy[:, self.column]).toarray()
+
+            return np.concatenate([X_copy, X_vec], axis=1)
+        else :
+            print("Unknow datatype")
 
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline_model():
+def build_pipeline_model(name="lr"):
 
     model = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=[0,5])),
+        ("dropper", ColumnDropper(columns=[0, 5, 6])),
         ("scaler", StandardScaler()),
         ("classifier", LogisticRegression() )
     ])
@@ -212,8 +223,8 @@ def build_pipeline_lang(translate=False):
 def build_pipeline_preprocessor(vectorize_type="tfidf"):
 
     preprocessor = Pipeline(steps=[        
-        ('vectorizer', Vectorizer(column="text", vectorize_type=vectorize_type)),
-        ("dropper", ColumnDropper(columns=["text",])),
+        ('vectorizer', Vectorizer(column=5, vectorize_type=vectorize_type)),
+        
         ])
 
     return preprocessor
