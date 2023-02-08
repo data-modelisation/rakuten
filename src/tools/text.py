@@ -194,12 +194,27 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline_model(name="lr"):
+def build_pipeline_model(name="kn"):
+
+    if name == "lr":
+        classifier = LogisticRegression()
+    elif name == "rf":
+        classifier = RandomForestClassifier()
+    elif name == "kn":
+        classifier = KNeighborsClassifier()
+    elif name == "dt":
+        classifier = DecisionTreeClassifier()
+    elif name == "svc":
+        classifier == SVC()
+    elif name == "gb":
+        classifier = GradientBoostingClassifier(n_estimators=50)
+    elif name == "ab":
+        classifier = AdaBoostClassifier()
 
     model = Pipeline(steps=[
         ("dropper", ColumnDropper(columns=[0, 5, 6])),
         ("scaler", StandardScaler()),
-        ("classifier", GradientBoostingClassifier() )
+        ("classifier", classifier)
     ])
 
     return model
