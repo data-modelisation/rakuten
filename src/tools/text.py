@@ -27,9 +27,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.svm import SVC
 
 from . import commons
 
@@ -53,7 +56,7 @@ french_stopwords = stopwords.words("french") + [
         'soi', 'somm', 'soyon', 'votr'
     ]
 
-MAX_FEATURES_WORDS = 5000 #Nombre de mots fréquents à conserver
+MAX_FEATURES_WORDS = 10000 #Nombre de mots fréquents à conserver
 MAX_TEXT_LENGTH = 500 #Ajustement des textes à cette longueur
 
 #Transformeur pour supprimer des colonnes
@@ -196,7 +199,7 @@ def build_pipeline_model(name="lr"):
     model = Pipeline(steps=[
         ("dropper", ColumnDropper(columns=[0, 5, 6])),
         ("scaler", StandardScaler()),
-        ("classifier", LogisticRegression() )
+        ("classifier", GradientBoostingClassifier() )
     ])
 
     return model
