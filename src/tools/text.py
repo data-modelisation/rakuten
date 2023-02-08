@@ -204,8 +204,8 @@ def build_pipeline_model(name="kn"):
         classifier = KNeighborsClassifier()
     elif name == "dt":
         classifier = DecisionTreeClassifier()
-    elif name == "svc":
-        classifier == SVC()
+    elif name == "sv":
+        classifier = SVC()
     elif name == "gb":
         classifier = GradientBoostingClassifier(n_estimators=50)
     elif name == "ab":
