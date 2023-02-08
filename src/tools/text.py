@@ -34,6 +34,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
 
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+
 from . import commons
 
 # nltk.download('stopwords')
@@ -194,7 +199,7 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline_model(name="kn"):
+def build_pipeline_model(name="kn", input_dim=10007):
 
     if name == "lr":
         classifier = LogisticRegression()
@@ -210,6 +215,15 @@ def build_pipeline_model(name="kn"):
         classifier = GradientBoostingClassifier(n_estimators=50)
     elif name == "ab":
         classifier = AdaBoostClassifier()
+    elif name == "nn_1":
+        classifier = Sequential()
+        classifier.add(Dense(108, input_dim=input_dim-3, activation='relu')) #On a supprimé 3 colonnes
+        classifier.add(Dense(54, activation='relu'))
+        classifier.add(Dense(27, activation='softmax'))
+        classifier.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    else :
+        print("unknown name")
 
     model = Pipeline(steps=[
         ("dropper", ColumnDropper(columns=[0, 5, 6])),

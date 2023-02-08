@@ -4,12 +4,13 @@ import argparse
 import time
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.model_selection import GridSearchCV
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
 import pandas as pd
 import pickle
 from joblib import dump, load
-import vaex
+import numpy as np
 
 import src.tools.text as text_tools
 import src.tools.image as image_tools
@@ -87,7 +88,7 @@ if __name__ == "__main__":
         df_text,
         df_y.prdtypecode,
         test_size=args.test_size,
-        #stratify=df_y.prdtypecode,
+        stratify=df_y.prdtypecode,
         )
     print("datasets splitted")
 
@@ -99,9 +100,14 @@ if __name__ == "__main__":
     X_train, y_train = X_train.values, y_train.values
     X_test, y_test = X_test.values, y_test.values
 
+    from sklearn.preprocessing import LabelEncoder
+    le = LabelEncoder()
+    y_train = le.fit_transform(y_train)
+    y_test = le.transform(y_test)
+
     #Si on travaille sur le texte
     if args.text:
-
+        model_text_name = "kn"
         #Entrainement d'un modele pour le texte avec l'option --train
         if args.train:
             start_time_text = time.time()
@@ -111,13 +117,42 @@ if __name__ == "__main__":
             X_train = pipeline_preprocess.fit_transform(X_train)
             stop_time_text_trans = time.time()
             print(f"model_text transformed in {stop_time_text_trans-start_time_text:03.2f}s")
-            print(X_train.shape)
+
+            #Chargement du modele
+            model_text = text_tools.build_pipeline_model(
+                name=model_text_name,
+                input_dim=X_train.shape[1])
+
+            #Grilles pour GridSearchCV
+            param_grid = {
+                "lr" : {
+                    'classifier__max_iter' : [10,],
+                    'classifier__solver': ['liblinear', 'lbfgs'], 
+                    'classifier__C': np.logspace(-4, 4, 9),
+                },
+                "kn" : {
+                    "classifier__n_neighbors" : [10, 50, 100],
+                    "classifier__leaf_size" : [5, 10, 50],
+                },
+                "dt" : {
+                    "classifier__max_depth" : [10, 50, 100],
+                    "classifier__leaf_size" : [5, 10, 50],
+                },
+                "rf" : {
+                    "classifier__n_estimators": [10, 50, 100, 250, 500, 1000],
+                    'classifier__min_samples_leaf': [1, 3, 5],
+                    'classifier__max_features': ['sqrt', 'log2']
+                }
+            }
+            print(f"Paramètres : {param_grid[model_text_name]}")
+            gridcv = GridSearchCV(model_text, param_grid=param_grid[model_text_name], scoring='accuracy', cv=3) 
 
             #Entrainement
-            model_text = text_tools.build_pipeline_model()
-            model_text.fit(X_train, y_train) 
+            gridcv.fit(X_train, y_train) 
             stop_time_text_train = time.time()
             print(f"model_text trained in {stop_time_text_train-stop_time_text_trans:03.2f}s")
+            print(gridcv.best_params_)
+            print(gridcv.best_score_)
 
             #Sauvegarde
             dump(model_text, 'src/models/model_text.joblib')
@@ -132,8 +167,12 @@ if __name__ == "__main__":
         
         #Prediction
         X_test = pipeline_preprocess.transform(X_test)
-        y_text_preds = model_text.predict(X_test)
+        y_text_preds = gridcv.predict(X_test)
+        
         #vaex_df.export_hdf5('src/models/X_train.hdf5')
+        
+        if model_text_name.startswith("nn_"):
+            y_text_preds = np.argmax(y_text_preds, axis=1)
 
         crosstab = pd.crosstab(y_test, y_text_preds, rownames=["Real"], colnames=["Predicted"])
         print(classification_report(y_test, y_text_preds, zero_division=0))
