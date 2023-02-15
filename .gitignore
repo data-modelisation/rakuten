@@ -90,6 +90,10 @@ src/**/*.pkl
 src/**/*.joblib
 src/**/*.jpg
 
+# Corpora
+tokenizers/
+corpora/
+
 # Rapports
 reports/archives/*
 
