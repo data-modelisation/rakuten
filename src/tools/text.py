@@ -8,8 +8,7 @@ from unidecode import unidecode
 from googletrans import Translator, LANGUAGES
 import swifter 
 import fasttext
-
-fasttext.FastText.eprint = lambda x: None
+import pathlib
 
 import nltk
 from nltk.corpus import stopwords
@@ -26,24 +25,17 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
 
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.svm import SVC
-
-import keras
-from keras.models import Sequential
-from keras.layers import Dense
-
-
 from . import commons
+from src.models.models_text import ada_boost, gradient_boost, decision_tree, kneighbors, \
+    random_forest, logistic_regression, nn_simple
 
-# nltk.download('stopwords')
-# nltk.download('punkt')
-# nltk.download('wordnet')
+fasttext.FastText.eprint = lambda x: None
+
+current_path = pathlib.Path().absolute()
+nltk.data.path.append(current_path)
+nltk.download('stopwords', download_dir=current_path)
+nltk.download('punkt', download_dir=current_path)
+nltk.download('wordnet', download_dir=current_path)
 
 languages = {
         "en": "english",
@@ -202,36 +194,29 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 def build_pipeline_model(name="kn", input_dim=10007):
 
     if name == "lr":
-        classifier = LogisticRegression()
+        clf, params = logistic_regression()
     elif name == "rf":
-        classifier = RandomForestClassifier()
+        clf, params = random_forest()
     elif name == "kn":
-        classifier = KNeighborsClassifier()
+        clf, params = kneighbors()
     elif name == "dt":
-        classifier = DecisionTreeClassifier()
-    elif name == "sv":
-        classifier = SVC()
+        clf, params = logistic_regression()
     elif name == "gb":
-        classifier = GradientBoostingClassifier(n_estimators=50)
+        clf, params = gradient_boost()
     elif name == "ab":
-        classifier = AdaBoostClassifier()
-    elif name == "nn_1":
-        classifier = Sequential()
-        classifier.add(Dense(108, input_dim=input_dim-3, activation='relu')) #On a supprimé 3 colonnes
-        classifier.add(Dense(54, activation='relu'))
-        classifier.add(Dense(27, activation='softmax'))
-        classifier.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
+        clf, params = ada_boost()
+    elif name == "nn_simple":
+        clf, params = nn_simple(input_dim)
     else :
-        print("unknown name")
+        print("unknown model name")
 
     model = Pipeline(steps=[
         ("dropper", ColumnDropper(columns=[0, 5, 6])),
         ("scaler", StandardScaler()),
-        ("classifier", classifier)
+        ("classifier", clf)
     ])
 
-    return model
+    return model, params
 
 # Construction du pipeline pour le chargement des données
 def build_pipeline_load():
