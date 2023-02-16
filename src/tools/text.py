@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from ftlangdetect import detect
+#from ftlangdetect import detect
 import re
 import logging
 from unidecode import unidecode
 from googletrans import Translator, LANGUAGES
-import swifter 
+#import swifter 
 import fasttext
-
-fasttext.FastText.eprint = lambda x: None
+import pathlib
 
 import nltk
 from nltk.corpus import stopwords
@@ -22,17 +21,21 @@ from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
 
 from . import commons
+from src.models.models_text import ada_boost, gradient_boost, decision_tree, kneighbors, \
+    random_forest, logistic_regression, nn_simple
 
-# nltk.download('stopwords')
-# nltk.download('punkt')
-# nltk.download('wordnet')
+fasttext.FastText.eprint = lambda x: None
+
+current_path = pathlib.Path().absolute()
+nltk.data.path.append(current_path)
+nltk.download('stopwords', download_dir=current_path)
+nltk.download('punkt', download_dir=current_path)
+nltk.download('wordnet', download_dir=current_path)
 
 languages = {
         "en": "english",
@@ -50,7 +53,7 @@ french_stopwords = stopwords.words("french") + [
         'soi', 'somm', 'soyon', 'votr'
     ]
 
-MAX_FEATURES_WORDS = 5000 #Nombre de mots fréquents à conserver
+MAX_FEATURES_WORDS = 10000 #Nombre de mots fréquents à conserver
 MAX_TEXT_LENGTH = 500 #Ajustement des textes à cette longueur
 
 #Transformeur pour supprimer des colonnes
@@ -58,24 +61,33 @@ class ColumnDropper(BaseEstimator,TransformerMixin):
 
     def __init__(self, columns=[]):
         self.columns = columns
-
+        
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
-        return X.copy().drop(self.columns, axis=1)
+
+        if isinstance(X, pd.DataFrame):
+            return X.copy().drop(self.columns, axis=1)
+        elif isinstance(X, np.ndarray):
+            mask = np.ones(X.shape[1], dtype=bool)
+            mask[self.columns] = False
+            return X.copy()[:, mask]
+        else:
+            print('unknown X type')
+            import pdb; pdb.set_trace()
 
 #Transformeur pour créer des liens à partir de productid et imageid
 class LinksMaker(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        pass
+    def __init__(self, path):
+        self.path = path
 
     def fit(self, X, y=None):
         return self
     
     def transform(self, X):
         X_copy = X.copy()
-        X_copy["links"] = "data/raw/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
+        X_copy["links"] = self.path + "/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
         return X_copy
     
 #Transformeur pour fusionner des colonnes de texte
@@ -138,7 +150,8 @@ class Vectorizer(BaseEstimator, TransformerMixin):
         vectorizer_obj = TfidfVectorizer if self.vectorize_type=="tf" else CountVectorizer
         
         self.vectorizer =  vectorizer_obj(
-                max_features=MAX_FEATURES_WORDS, 
+                max_features=MAX_FEATURES_WORDS,
+                #min_df=10, 
                 ngram_range=(1, 2),                 
                 analyzer="word",
                 preprocessor=clean_text,
@@ -147,41 +160,69 @@ class Vectorizer(BaseEstimator, TransformerMixin):
             )
         
     def fit(self, X, y=None):
-
-        self.vectorizer.fit(X[self.column])
-
+        if isinstance(X, pd.DataFrame):
+            self.vectorizer.fit(X[self.column])
+        elif isinstance(X, np.ndarray):
+            self.vectorizer.fit(X[:, self.column])
+        else:
+            print("unknox")
         return self    
         
     def transform(self, X):
 
         X_copy = X.copy()
-        X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
 
-        df_vec = pd.DataFrame(
-            X_vec,
-            index=X_copy.index,
-            columns=self.vectorizer.get_feature_names_out()
-        )
+        if isinstance(X, pd.DataFrame):
+            X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
 
-        return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+            df_vec = pd.DataFrame(
+                X_vec,
+                index=X_copy.index,
+                columns=self.vectorizer.get_feature_names_out()
+            )
 
+            return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
+        elif isinstance(X, np.ndarray):
+            X_vec = self.vectorizer.transform(X_copy[:, self.column]).toarray()
+
+            return np.concatenate([X_copy, X_vec], axis=1)
+        else :
+            print("Unknow datatype")
 
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline_model():
+def build_pipeline_model(name="kn", input_dim=10007, **kwargs):
 
-    model = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=["links", "lang"])),
-        ("scaler", StandardScaler()),
-        ("classifier", KNeighborsClassifier() )
-    ])
+    if name == "lr":
+        clf, params = logistic_regression()
+        kwargs={}
+    elif name == "rf":
+        clf, params = random_forest()
+        kwargs={}
+    elif name == "kn":
+        clf, params = kneighbors()
+        kwargs={}
+    elif name == "dt":
+        clf, params = logistic_regression()
+        kwargs={}
+    elif name == "gb":
+        clf, params = gradient_boost()
+        kwargs={}
+    elif name == "ab":
+        clf, params = ada_boost()
+        kwargs={}
+    elif name == "nn_simple":
+        clf, params = nn_simple(input_dim)
+    else :
+        print("unknown model name")
 
-    return model
+
+    return clf, params, kwargs
 
 # Construction du pipeline pour le chargement des données
-def build_pipeline_load():
+def build_pipeline_load(path):
     loader = Pipeline(steps=[
-        ('linker', LinksMaker()),
+        ('linker', LinksMaker(path)),
         ('counter', TextCounter(columns=["designation", "description"])),
         ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
         ("dropper", ColumnDropper(columns=["designation", "description", "imageid", "productid"])),
@@ -200,8 +241,9 @@ def build_pipeline_lang(translate=False):
 def build_pipeline_preprocessor(vectorize_type="tfidf"):
 
     preprocessor = Pipeline(steps=[        
-        ('vectorizer', Vectorizer(column="text", vectorize_type=vectorize_type)),
-        ("dropper", ColumnDropper(columns=["text",])),
+        ('vectorizer', Vectorizer(column=5, vectorize_type=vectorize_type)),
+        ("dropper", ColumnDropper(columns=[0, 5, 6])),
+        ("scaler", StandardScaler()),
         ])
 
     return preprocessor

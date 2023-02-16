@@ -87,6 +87,15 @@ data/**/*.csv
 data/**/*.jpg
 data/**/*.pkl
 src/**/*.pkl
+src/**/*.joblib
+src/**/*.pb
+src/**/variables*
+src/**/*.jpg
+logs/**/events.*
+
+# Corpora
+tokenizers/
+corpora/
 
 # Rapports
 reports/archives/*

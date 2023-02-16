@@ -1,9 +1,7 @@
 import matplotlib.pyplot as plt
 from PIL import Image
-import imagehash
 import numpy as np
 import logging
-from pytesseract import pytesseract
 import pandas as pd
 import string
 import seaborn as sns
@@ -13,26 +11,96 @@ import skimage
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
-from sklearn.decomposition import PCA
-from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline, FeatureUnion
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from . import commons
+from src.models.models_image import cnn_simple
 
+def build_pipeline_model(name="cnn_simple", input_dim=()):
+
+    if name == "cnn_simple":
+        model = cnn_simple(input_dim)
+
+    return model
+
+def flow_generators(df_train_image, df_test_image, target_shape,batch_size):
+    #Chargement des generateurs
+    Image_train, Image_test = get_image_generators()
+
+    #Flow des generateurs
+    train_generator = Image_train.flow_from_dataframe(
+        dataframe=df_train_image,
+        x_col="links",
+        y_col="label",
+        shear_range=.1,
+        rotation_range=10,
+        zoom_range=.1,
+        width_shift_range = 0.1,
+        height_shift_range = 0.1,
+        horizontal_flip=True,
+        target_size=target_shape[:2],
+        batch_size=batch_size,
+        class_mode="sparse",
+        shuffle=False)
+
+    test_generator = Image_test.flow_from_dataframe(
+        dataframe=df_test_image,
+        x_col="links",
+        y_col="label",
+        target_size=target_shape[:2],
+        batch_size=batch_size,
+        class_mode="sparse",
+        shuffle=False)
+
+    return train_generator, test_generator
+
+def get_image_generators():
+    Image_train = ImageDataGenerator(
+        rescale=1/255
+    )#, preprocessing_function=image_tools.togray)
+    Image_test = ImageDataGenerator(
+        rescale=1/255
+    )#, preprocessing_function=image_tools.togray)
+    
+    return Image_train, Image_test
+
+#Crop image (x, y, 3)
+def crop_image(im, crop_x_ratio = .2, crop_y_ratio = .2):
+
+    img_width, img_height = im.shape[0], im.shape[1]
+    crop_x_side = int(crop_x_ratio * img_width // 2)
+    crop_y_side = int(crop_y_ratio * img_height // 2)
+
+    cropped_image=im[
+        crop_x_side:img_width-crop_x_side, 
+        crop_x_side:img_width-crop_x_side, 
+        :]
+    
+    return cropped_image
+
+def togray(im):
+    return skimage.color.rgb2gray(im).reshape(-1,1)
 #Lecture et reduction de la taille d'une image
-def read_and_resize(link, width=100, height=100):
+def read_and_resize(link, width=100, height=100, resize_=True, gray=True, rescale=True, flatten=False):
     im = imread(link)
-    im = resize(im, (width, height, 3))
-    return im.reshape(-1,3)
+
+    if resize_:
+        im = resize(im, (width, height, 3))
+
+    if rescale:
+        im /= 255
+
+    if flatten:
+        im = im.reshape(-1, 3)
+    
+    return skimage.color.rgb2gray(im) if gray else im
+
 
 #Lecture de toutes les images
-def read_images(links):
-    images = np.array([read_and_resize(link) for link in links])
+def read_images(links, **kwargs):
+    images = np.array([read_and_resize(link, **kwargs) for link in links])
     return images
 
 #Transformeur pour passer de RGB à Gray
@@ -73,15 +141,6 @@ def build_pipeline_preprocessor():
 
     return preprocessor
 
-# Construction du pipeline pour le modèle image
-def build_pipeline_model():
-
-    model = Pipeline(steps=[
-        ('scaler', StandardScaler()),
-        ("classifier", SVC(kernel='rbf') )
-    ])
-
-    return model
 
 #Moyenne des canaux
 def get_channel_means(im:np.array):
@@ -89,9 +148,5 @@ def get_channel_means(im:np.array):
 
 # Ratio de blanc dans l'image
 def get_white_ratio(im:np.array):
-    mask_white = im[:,:,:] == [255, 255, 255]
+    mask_white = im[:,:,:] == [1, 1, 1]
     return mask_white.sum(axis=(1,2)) / (im.shape[1] * im.shape[2])
-
-# Extraction de texte depuis une image
-def get_text_from_image(im:Image):
-    return pytesseract.image_to_string(im)
