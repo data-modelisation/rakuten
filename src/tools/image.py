@@ -19,7 +19,7 @@ from . import commons
 from src.models.models_image import cnn_simple
 
 def build_pipeline_model(name="cnn_simple", input_dim=()):
-    print(input_dim)
+
     if name == "cnn_simple":
         model = cnn_simple(input_dim)
 
@@ -150,4 +150,3 @@ def get_channel_means(im:np.array):
 def get_white_ratio(im:np.array):
     mask_white = im[:,:,:] == [1, 1, 1]
     return mask_white.sum(axis=(1,2)) / (im.shape[1] * im.shape[2])
-

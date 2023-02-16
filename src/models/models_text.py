@@ -1,3 +1,5 @@
+import numpy as np
+
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -7,7 +9,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
 
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Input
 
 def ada_boost():
     clf = AdaBoostClassifier()
@@ -58,14 +60,15 @@ def logistic_regression():
     return clf, hyperparameters
 
 def nn_simple(input_dim):
-    clf = Sequential()
-    clf.add(Dense(108, input_dim=input_dim-3, activation='relu')) #On a supprimé 3 colonnes
-    clf.add(Dense(54, activation='relu'))
-    clf.add(Dense(27, activation='softmax'))
+    model = Sequential()
+    #model.add(Input(shape = input_dim-3, name = "Input"))
+    model.add(Dense(108, input_dim=input_dim, activation='relu')) #On a supprimé 3 colonnes
+    model.add(Dense(54, activation='relu'))
+    model.add(Dense(27, activation='softmax'))
     
-    clf.compile(
+    model.compile(
         loss='sparse_categorical_crossentropy', 
         optimizer='adam', 
         metrics=['accuracy'])
 
-    return clf, {}
+    return model, {}

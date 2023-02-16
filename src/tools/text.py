@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from ftlangdetect import detect
+#from ftlangdetect import detect
 import re
 import logging
 from unidecode import unidecode
 from googletrans import Translator, LANGUAGES
-import swifter 
+#import swifter 
 import fasttext
 import pathlib
 
@@ -79,15 +79,15 @@ class ColumnDropper(BaseEstimator,TransformerMixin):
 
 #Transformeur pour créer des liens à partir de productid et imageid
 class LinksMaker(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        pass
+    def __init__(self, path):
+        self.path = path
 
     def fit(self, X, y=None):
         return self
     
     def transform(self, X):
         X_copy = X.copy()
-        X_copy["links"] = "data/raw/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
+        X_copy["links"] = self.path + "/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
         return X_copy
     
 #Transformeur pour fusionner des colonnes de texte
@@ -191,37 +191,38 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 
 
 # Construction du pipeline pour le modèle texte
-def build_pipeline_model(name="kn", input_dim=10007):
+def build_pipeline_model(name="kn", input_dim=10007, **kwargs):
 
     if name == "lr":
         clf, params = logistic_regression()
+        kwargs={}
     elif name == "rf":
         clf, params = random_forest()
+        kwargs={}
     elif name == "kn":
         clf, params = kneighbors()
+        kwargs={}
     elif name == "dt":
         clf, params = logistic_regression()
+        kwargs={}
     elif name == "gb":
         clf, params = gradient_boost()
+        kwargs={}
     elif name == "ab":
         clf, params = ada_boost()
+        kwargs={}
     elif name == "nn_simple":
         clf, params = nn_simple(input_dim)
     else :
         print("unknown model name")
 
-    model = Pipeline(steps=[
-        ("dropper", ColumnDropper(columns=[0, 5, 6])),
-        ("scaler", StandardScaler()),
-        ("classifier", clf)
-    ])
 
-    return model, params
+    return clf, params, kwargs
 
 # Construction du pipeline pour le chargement des données
-def build_pipeline_load():
+def build_pipeline_load(path):
     loader = Pipeline(steps=[
-        ('linker', LinksMaker()),
+        ('linker', LinksMaker(path)),
         ('counter', TextCounter(columns=["designation", "description"])),
         ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
         ("dropper", ColumnDropper(columns=["designation", "description", "imageid", "productid"])),
@@ -241,7 +242,8 @@ def build_pipeline_preprocessor(vectorize_type="tfidf"):
 
     preprocessor = Pipeline(steps=[        
         ('vectorizer', Vectorizer(column=5, vectorize_type=vectorize_type)),
-        
+        ("dropper", ColumnDropper(columns=[0, 5, 6])),
+        ("scaler", StandardScaler()),
         ])
 
     return preprocessor
