@@ -16,12 +16,14 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from . import commons
-from src.models.models_image import cnn_simple
+from src.models.models_image import cnn_simple, mo_cnn_basic
 
 def build_pipeline_model(name="cnn_simple", input_dim=()):
 
     if name == "cnn_simple":
         model = cnn_simple(input_dim)
+    elif name == "mo_cnn_basic":
+        model = mo_cnn_basic(input_dim)
 
     return model
 
