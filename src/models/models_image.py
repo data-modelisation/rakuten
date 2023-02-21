@@ -18,6 +18,56 @@ def flow_image_generators(Image_train, Image_test):
             class_mode="sparse",
             shuffle=False)
 
+def mo_cnn_basic(input_shape):
+        
+        model = Sequential()
+
+        crop_pixels = 10
+
+        croped_shaped = (input_shape[0]-2*crop_pixels, input_shape[1]-2*crop_pixels, input_shape[2])
+
+        model.add(Cropping2D(cropping=((crop_pixels, crop_pixels), (crop_pixels, crop_pixels))))
+        
+        model.add(Conv2D(
+            filters = 16, 
+            kernel_size = (3, 3), 
+            activation = 'relu', 
+            input_shape = croped_shaped,  
+            padding = 'valid',
+            ))
+
+        model.add(MaxPooling2D(
+            pool_size = (2, 2),
+            padding = 'valid'))
+
+        model.add(Dropout(.2))
+
+        model.add(Conv2D(
+            filters = 8, 
+            kernel_size = (3, 3), 
+            activation = 'relu', 
+            input_shape =  input_shape,  
+            padding = 'valid',
+            ))
+
+        model.add(MaxPooling2D(
+            pool_size = (2, 2),
+            padding = 'valid'))
+
+        model.add(Dropout(.2))
+
+        model.add(Flatten())
+        model.add(Dense(units=27, activation="softmax"))
+
+        model.compile(
+                loss="sparse_categorical_crossentropy",
+                optimizer="adam",
+                metrics=["accuracy"]
+        )
+
+        return model
+    
+
 def cnn_simple(input_shape):
         model = Sequential()
 
