@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="136.09325mm"
-   height="46.488094mm"
-   viewBox="0 0 136.09325 46.488094"
+   width="136.05421mm"
+   height="37.737152mm"
+   viewBox="0 0 136.05421 37.737152"
    version="1.1"
    id="svg5"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
@@ -24,13 +24,13 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.096401"
-     inkscape:cx="236.59596"
-     inkscape:cy="71.789701"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
+     inkscape:zoom="1.0482005"
+     inkscape:cx="162.18271"
+     inkscape:cy="132.13121"
+     inkscape:window-width="1600"
+     inkscape:window-height="833"
      inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-y="31"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -39,7 +39,7 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-16.489891,-17.279927)">
+     transform="translate(-16.509413,-17.279927)">
     <rect
        style="fill:#f2f2f2;stroke:#000000;stroke-width:0.071;stroke-dasharray:none"
        id="rect236-3"
@@ -68,67 +68,31 @@
        ry="1.6782367"
        rx="0" />
     <rect
-       style="fill:#f2f2f2;stroke:#000000;stroke-width:0.0714071"
-       id="rect236-3-5"
-       width="92.426338"
-       height="4.6463642"
-       x="20.084595"
-       y="52.70966"
-       ry="1.6782367"
-       rx="0" />
-    <rect
-       style="fill:#f2f2f2;stroke:#000000;stroke-width:0.0714071"
-       id="rect236-3-3"
-       width="92.426338"
-       height="4.6463642"
-       x="20.084595"
-       y="58.107746"
-       ry="1.6782367"
-       rx="0" />
-    <rect
-       style="fill:#cccccc;stroke:none;stroke-width:0.0314474"
+       style="fill:#cccccc;stroke:none;stroke-width:0.0404306"
        id="rect236-3-56"
-       width="18.607943"
+       width="30.757313"
        height="4.4760661"
        x="20.143169"
        y="36.599514"
        ry="1.6167262"
        rx="0" />
     <rect
-       style="fill:#cccccc;stroke:none;stroke-width:0.0320781"
-       id="rect236-3-56-2"
-       width="18.653839"
-       height="4.6459379"
-       x="37.494934"
-       y="41.958103"
-       ry="1.6780827"
+       style="fill:#cccccc;stroke:none;stroke-width:0.0404306"
+       id="rect236-3-56-3"
+       width="30.757313"
+       height="4.4760661"
+       x="51.261742"
+       y="41.963749"
+       ry="1.6167262"
        rx="0" />
     <rect
-       style="fill:#cccccc;stroke:none;stroke-width:0.0320781"
-       id="rect236-3-56-9"
-       width="18.653839"
-       height="4.6459379"
-       x="56.626335"
-       y="47.306629"
-       ry="1.6780827"
-       rx="0" />
-    <rect
-       style="fill:#cccccc;stroke:none;stroke-width:0.0320781"
-       id="rect236-3-56-1"
-       width="18.653839"
-       height="4.6459379"
-       x="75.100609"
-       y="52.759079"
-       ry="1.6780827"
-       rx="0" />
-    <rect
-       style="fill:#cccccc;stroke:none;stroke-width:0.0320133"
-       id="rect236-3-56-27"
-       width="18.781746"
-       height="4.5956817"
-       x="93.693001"
-       y="58.139927"
-       ry="1.6599305"
+       style="fill:#cccccc;stroke:none;stroke-width:0.0404306"
+       id="rect236-3-56-6"
+       width="30.757313"
+       height="4.4760661"
+       x="81.652367"
+       y="47.41264"
+       ry="1.6167262"
        rx="0" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:0.0733917;stroke-dasharray:none"
@@ -142,58 +106,36 @@
     <text
        xml:space="preserve"
        style="font-size:2.82222px;fill:#cccccc;stroke:none;stroke-width:0.162"
-       x="21.834915"
-       y="39.765808"
-       id="text649"><tspan
-         sodipodi:role="line"
-         id="tspan647"
-         style="font-size:2.82222px;fill:#000000;fill-opacity:1;stroke-width:0.162"
-         x="21.834915"
-         y="39.765808">Valdidation</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:2.82222px;fill:#cccccc;stroke:none;stroke-width:0.162"
-       x="39.443161"
-       y="45.339405"
-       id="text649-0"><tspan
-         sodipodi:role="line"
-         id="tspan647-9"
-         style="font-size:2.82222px;fill:#000000;fill-opacity:1;stroke-width:0.162"
-         x="39.443161"
-         y="45.339405">Valdidation</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:2.82222px;fill:#cccccc;stroke:none;stroke-width:0.162"
-       x="58.574562"
-       y="50.687931"
+       x="90.520164"
+       y="50.709003"
        id="text649-3"><tspan
          sodipodi:role="line"
          id="tspan647-6"
          style="font-size:2.82222px;fill:#000000;fill-opacity:1;stroke-width:0.162"
-         x="58.574562"
-         y="50.687931">Valdidation</tspan></text>
+         x="90.520164"
+         y="50.709003">Validation</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:2.82222px;fill:#cccccc;stroke:none;stroke-width:0.162"
-       x="77.048836"
-       y="56.140381"
-       id="text649-06"><tspan
+       x="60.129536"
+       y="45.260113"
+       id="text649-3-7"><tspan
          sodipodi:role="line"
-         id="tspan647-2"
+         id="tspan647-6-5"
          style="font-size:2.82222px;fill:#000000;fill-opacity:1;stroke-width:0.162"
-         x="77.048836"
-         y="56.140381">Valdidation</tspan></text>
+         x="60.129536"
+         y="45.260113">Validation</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:2.82222px;fill:#cccccc;stroke:none;stroke-width:0.162"
-       x="95.728691"
-       y="61.503262"
-       id="text649-6"><tspan
+       x="29.010965"
+       y="39.895878"
+       id="text649-3-3"><tspan
          sodipodi:role="line"
-         id="tspan647-1"
+         id="tspan647-6-56"
          style="font-size:2.82222px;fill:#000000;fill-opacity:1;stroke-width:0.162"
-         x="95.728691"
-         y="61.503262">Valdidation</tspan></text>
+         x="29.010965"
+         y="39.895878">Validation</tspan></text>
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.0395896"
        id="rect236-3-56-27-9"
@@ -224,16 +166,16 @@
        ry="1.68072"
        rx="0" />
     <path
-       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.391826;stroke-dasharray:0.783652, 0.391826;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 16.685804,17.279927 v 46.21494"
+       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.352783;stroke-dasharray:0.705565, 0.352783;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 16.685804,17.279927 V 54.743582"
        id="path1653" />
     <path
-       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.391826;stroke-dasharray:0.783652, 0.391826;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 117.67594,17.55308 V 63.768021"
+       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.352783;stroke-dasharray:0.705565, 0.352783;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 117.67594,17.501356 V 54.965011"
        id="path1653-2" />
     <path
-       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.391826;stroke-dasharray:0.783652, 0.391826;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 152.38723,17.55308 V 63.768021"
+       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.352784;stroke-dasharray:0.705568, 0.352784;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 152.38723,17.55308 v 37.464"
        id="path1653-2-3" />
     <text
        xml:space="preserve"
