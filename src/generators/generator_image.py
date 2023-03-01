@@ -49,7 +49,7 @@ class ImageGenerator(CommonGenerator):
 
         return images, targets
 
-    def show_mask_variance(self,):
+    def show_mask_variance(self,threshold=.075):
 
         images = next(iter(copy.deepcopy(self)))
 
