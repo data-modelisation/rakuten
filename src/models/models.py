@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import gc
+import os
 import tensorflow as tf
 import keras
 from sklearn.model_selection import KFold
@@ -188,7 +189,8 @@ class Model():
                     validation_data=valid_gen,
                     fold=idx_fold
                 )
-
+                self.save_model_summary(model)
+                
                 #Make prediction on the validation dataset
                 y_pred = self.predict(valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
                 y_true = valid_gen.decode(valid_gen.targets)
@@ -217,7 +219,7 @@ class Model():
                     train_data,
                     **self.fit_kwargs(validation_data)
                 )
-
+                #model.summary(print_fn=self.save_model_summary)
                 print(f"end of fit in fold {fold}")
             
                 self.save_model(model, in_fold=True)
@@ -286,6 +288,16 @@ class Model():
         #Load the model with the best score
         return self.load_model(fold=best_fold)
 
+    def save_model_summary(self, model):
+
+        path = Path(self.model_path, "model_summary.txt")
+        if path.exists():
+            os.remove(path)
+
+        with open(path, 'w') as f:
+
+            model.summary(print_fn=lambda x: f.write(x + '\n'))
+                
 
     def save_summary(self, report, metrics=["precision", "recall", "f1-score"]):
 
