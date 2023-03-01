@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from skimage import io, transform
-
+from sklearn.feature_selection import VarianceThreshold
 
 from src.generators.generator import CommonGenerator
 import copy
@@ -52,9 +52,10 @@ class ImageGenerator(CommonGenerator):
     def show_mask_variance(self,threshold=.075):
 
         images = next(iter(copy.deepcopy(self)))
-
+        mean_images = images[0].mean(axis=3).reshape(32, -1)
         vt = VarianceThreshold(threshold=.075)
-        vt.fit_transform(images)
+        vt.fit_transform(mean_images)
         mask= vt.get_support()
-        plt.imshow(mask.reshape((500, 500)))
-        plt.show()
+        plt.imshow(mask.reshape((224, 224)), cmap="gray")
+        plt.savefig("notebooks/images/mask.png")
+        
