@@ -18,24 +18,24 @@ from nltk.stem.snowball import FrenchStemmer
 from nltk import ngrams, FreqDist
 
 from sklearn.impute import SimpleImputer
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
 
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 from . import commons
-from src.models.models_text import ada_boost, gradient_boost, decision_tree, kneighbors, \
-    random_forest, logistic_regression, nn_simple
 
 fasttext.FastText.eprint = lambda x: None
 
 current_path = pathlib.Path().absolute()
 nltk.data.path.append(current_path)
-nltk.download('stopwords', download_dir=current_path)
-nltk.download('punkt', download_dir=current_path)
-nltk.download('wordnet', download_dir=current_path)
+# nltk.download('stopwords', download_dir=current_path)
+# nltk.download('punkt', download_dir=current_path)
+# nltk.download('wordnet', download_dir=current_path)
 
 languages = {
         "en": "english",
@@ -53,8 +53,7 @@ french_stopwords = stopwords.words("french") + [
         'soi', 'somm', 'soyon', 'votr'
     ]
 
-MAX_FEATURES_WORDS = 10000 #Nombre de mots fréquents à conserver
-MAX_TEXT_LENGTH = 500 #Ajustement des textes à cette longueur
+
 
 #Transformeur pour supprimer des colonnes
 class ColumnDropper(BaseEstimator,TransformerMixin):
@@ -142,90 +141,82 @@ class LanguageTransformer(BaseEstimator, TransformerMixin):
             
         return X_copy
 
+#Transformeur pour nettoyer le texte
+class TextCleaner(BaseEstimator, TransformerMixin):
+
+    def __init__(self, column, max_len=10):
+        self.column = column
+        self.max_len=max_len
+    
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        X_copy = X.copy()
+
+        clean_fct_vectorized = np.vectorize(clean_text)
+        stemm_fct_vectorized = np.vectorize(stemmatize_text)
+
+        X_copy[:, self.column] = clean_fct_vectorized(X_copy[:, self.column], self.max_len)
+        #X_copy[:, self.column] = stemm_fct_vectorized(X_copy[:, self.column])
+
+        return X_copy
+
 #Transformeur pour vectoriser le texte
 class Vectorizer(BaseEstimator, TransformerMixin):
-    def __init__(self, column, vectorize_type="tfidf"):
+    def __init__(self, 
+        column, 
+        vectorizer="tfidf",
+        embedding=False,
+        max_len=250,
+        max_words_tokenized=100000,
+        max_words_featured=43903
+        ):
+
         self.column = column
-        self.vectorize_type = vectorize_type
-        vectorizer_obj = TfidfVectorizer if self.vectorize_type=="tf" else CountVectorizer
-        
-        self.vectorizer =  vectorizer_obj(
-                max_features=MAX_FEATURES_WORDS,
-                #min_df=10, 
-                ngram_range=(1, 2),                 
-                analyzer="word",
-                preprocessor=clean_text,
-                tokenizer=stemmatize_text,
-                stop_words=french_stopwords
-            )
+        self.vectorizer = vectorizer
+        self.max_len = max_len
+        self.embedding = embedding
+
+        max_words = max_words_tokenized if self.embedding else max_words_featured
+
+        self.tokenizer =  Tokenizer(
+            num_words=max_words,
+            filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
+            lower=True,
+            split=' ',
+            char_level=False,
+            oov_token=None,
+            analyzer=None,
+        )
         
     def fit(self, X, y=None):
-        if isinstance(X, pd.DataFrame):
-            self.vectorizer.fit(X[self.column])
-        elif isinstance(X, np.ndarray):
-            self.vectorizer.fit(X[:, self.column])
-        else:
-            print("unknox")
+        self.tokenizer.fit_on_texts(X[:, self.column])
+
+        print("The document count", self.tokenizer.document_count)
+
         return self    
         
     def transform(self, X):
 
-        X_copy = X.copy()
+        sequences = self.tokenizer.texts_to_sequences(X[:, self.column])
 
-        if isinstance(X, pd.DataFrame):
-            X_vec = self.vectorizer.transform(X_copy[self.column]).toarray()
+        if not self.embedding:
+            return self.tokenizer.sequences_to_matrix(sequences, mode=self.vectorizer)
+        else:
+            return pad_sequences(sequences,
+                padding="post",
+                truncating='post',
+                maxlen=self.max_len)
+        
 
-            df_vec = pd.DataFrame(
-                X_vec,
-                index=X_copy.index,
-                columns=self.vectorizer.get_feature_names_out()
-            )
-
-            return X_copy.join(df_vec, rsuffix= "_" + self.vectorize_type) #On ajoute un suffixe pour pas qu'un mot sorti du vectorizer soit identique aux noms des colonnes deja présentent
-        elif isinstance(X, np.ndarray):
-            X_vec = self.vectorizer.transform(X_copy[:, self.column]).toarray()
-
-            return np.concatenate([X_copy, X_vec], axis=1)
-        else :
-            print("Unknow datatype")
-
-
-# Construction du pipeline pour le modèle texte
-def build_pipeline_model(name="kn", input_dim=10007, **kwargs):
-
-    if name == "lr":
-        clf, params = logistic_regression()
-        kwargs={}
-    elif name == "rf":
-        clf, params = random_forest()
-        kwargs={}
-    elif name == "kn":
-        clf, params = kneighbors()
-        kwargs={}
-    elif name == "dt":
-        clf, params = logistic_regression()
-        kwargs={}
-    elif name == "gb":
-        clf, params = gradient_boost()
-        kwargs={}
-    elif name == "ab":
-        clf, params = ada_boost()
-        kwargs={}
-    elif name == "nn_simple":
-        clf, params = nn_simple(input_dim)
-    else :
-        print("unknown model name")
-
-
-    return clf, params, kwargs
 
 # Construction du pipeline pour le chargement des données
-def build_pipeline_load(path):
+def pipeline_loader():
     loader = Pipeline(steps=[
-        ('linker', LinksMaker(path)),
         ('counter', TextCounter(columns=["designation", "description"])),
         ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
-        ("dropper", ColumnDropper(columns=["designation", "description", "imageid", "productid"])),
+        ("dropper", ColumnDropper(columns=["Unnamed: 0", "designation", "description", "imageid", "productid"])),
     ])
     return loader
 
@@ -238,13 +229,15 @@ def build_pipeline_lang(translate=False):
     return translater
 
 # Construction du pipeline pour le preprocessing
-def build_pipeline_preprocessor(vectorize_type="tfidf"):
+def pipeline_preprocess(vectorizer="", embedding=False, max_words_featured=2000, max_words_tokenized=100, max_len=100):
 
     preprocessor = Pipeline(steps=[        
-        ('vectorizer', Vectorizer(column=5, vectorize_type=vectorize_type)),
-        ("dropper", ColumnDropper(columns=[0, 5, 6])),
-        ("scaler", StandardScaler()),
+        ('cleaner', TextCleaner(column=4, max_len=max_len)),
+        ('vectorizer', Vectorizer(column=4, vectorizer=vectorizer, embedding=embedding, max_words_featured=max_words_featured, max_words_tokenized=max_words_tokenized, max_len=max_len)),
         ])
+
+    # if not embedding:
+    #     preprocessor.steps.append(['dropper',ColumnDropper(columns=[4, 5])])
 
     return preprocessor
 
@@ -253,7 +246,7 @@ def stemmatize_text(text):
     return [FrenchStemmer().stem(w) for w in word_tokenize(text)]
 
 #Nettoyage des textes
-def clean_text(text):
+def clean_text(text, max_words):
    
     #Suppression des balises
     text = re.sub('<[^<]+?>', ' ', text)
@@ -268,8 +261,8 @@ def clean_text(text):
     text = unidecode(text)
 
     #Ajustement de la taille des textes
-    if MAX_TEXT_LENGTH > 0:
-        text = text[:MAX_TEXT_LENGTH]
+    if max_words > 0:
+        text = text[:int(max_words*10)]
 
     return text
 
