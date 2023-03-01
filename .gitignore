@@ -92,6 +92,7 @@ src/**/*.pb
 src/**/variables*
 src/**/*.jpg
 src/models/**/events.*
+src/models/**/clf_report*
 
 # Corpora
 tokenizers/
