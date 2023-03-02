@@ -23,14 +23,13 @@ class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy)
 METRICS = [
     'accuracy',
     tf.keras.metrics.SparseCategoricalAccuracy(),
-    BalancedSparseCategoricalAccuracy(),
+    #BalancedSparseCategoricalAccuracy(),
 ]
 
 
 class memoryCallback(Callback):
     def on_epoch_end(self, epoch, log={}):
         print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
-        # Housekeeping
         gc.collect()
         keras.backend.clear_session()
 
@@ -39,16 +38,6 @@ def call_memory():
 
 def call_tqdm():
     return TqdmCallback(verbose=2)
-
-# class resetLR(Callback):
-#     def __init__ (self, model, value): # initialization of the callback
-#         super(resetLR, self).__init__()
-#         self.model=model
-#         self.lr=value
-
-#     def on_train_begin(self, logs=None): # this runs on the beginning of training 
-#         tf.keras.backend.set_value(self.model.optimizer.lr, float(self.lr)) # set the learning rate in the optimizer
-
 
 def call_dashboard(log_dir):
     return TensorBoard(

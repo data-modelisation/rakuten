@@ -1,6 +1,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
 from keras.applications.vgg16 import VGG16 
+from sklearn.svm import SVC
 
 from src.models.models_utils import METRICS
 from src.models.models import Model
@@ -10,6 +11,7 @@ class ModelImage(Model):
     def __init__(self, 
         *args,
         target_shape=[10, 10, 3],
+        name=None,
         **kwargs):
         
         super().__init__(*args, **kwargs)
@@ -21,6 +23,25 @@ class ModelImage(Model):
 
     def get_preprocessor(self):
         return None#build_pipeline_preprocessor(**self.preprocess_parameters)
+
+class ModelImage_SVC(ModelImage):
+    def __init__(self, 
+        *args,
+        **kwargs):
+        
+        self.name="image_SVC"
+        self.model_neural = True
+        self.clf_parameters = {}
+        self.preprocess_parameters = {}
+
+        super().__init__(*args, **kwargs)
+
+    def init_model(self,):
+        
+        return SVC()
+
+    def get_preprocessor(self):
+        return build_pipeline_preprocessor()
 
 class ModelImage_CNN_Lenet(ModelImage):
     def __init__(self, 

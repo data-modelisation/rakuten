@@ -52,10 +52,10 @@ def convert_to_readable_categories(serie:pd.Series):
         ]
 
     categories_des = [
-        "Livre", "Jeu Console", "Accessoire Console", "Tech", "Figurine", "Carte Collection", "Jeu Plateau",
+        "Livre occasion", "Jeu vidéos", "Accessoire Console", "Consoles", "Figurine", "Carte Collection", "Jeu Plateau",
         "Déguisement", "Boite de jeu", "Jouet Tech", "Chaussette", "Gadget", "Bébé", "Salon",
         "Chambre", "Cuisine", "Chambre enfant", "Animaux", "Affiche", "Vintage",
-        "Jeu oldschool", "Bureautique", "Décoration", "Aquatique", "Soin et Bricolage", "Livre 2", "Jeu Console 2"
+        "Jeu oldschool", "Bureautique", "Décoration", "Aquatique", "Soin et Bricolage", "Livre neuf", "Jeu PC"
         ]
 
     categories_des_num = [f"{category_des}_{category_num}" for category_des, category_num in zip(categories_des, categories_num)]

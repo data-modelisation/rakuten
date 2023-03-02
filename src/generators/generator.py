@@ -4,6 +4,7 @@ import tensorflow as tf
 import os
 import copy
 from collections.abc import Iterable
+import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.class_weight import compute_class_weight
@@ -16,7 +17,6 @@ class CommonGenerator(tf.keras.utils.Sequence):
         ):
 
         self.batch_size = kwargs.get("batch_size")
-        self.encoder = kwargs.get("encoder")
         self.csv_texts = kwargs.get("csv_texts")
         self.csv_labels = kwargs.get("csv_labels")
         self.preprocessor = kwargs.get("preprocessor")
@@ -31,31 +31,32 @@ class CommonGenerator(tf.keras.utils.Sequence):
             self.features = self.preprocessor.transform(self.features)
 
     def encode_targets(self,):
-        if not self.encoded:
+        if self.encoder is None:
             self.encoder = LabelEncoder()
+        
+        if not self.encoded:
             self.targets = self.encoder.fit_transform(self.labels)
         else:
             self.targets = self.encoder.transform(self.labels)
 
         self.__set_class_weigth__()
 
-    def __splitter__(self, split_indexes, is_batch=True):
+    def __splitter__(self, split_indexes, type_=None, is_batch=True):
         
         splitted_generator = copy.deepcopy(self)
         if is_batch:
             indexes = list(self.flatten([self.__get_batch_indexes__(idx_1D) for idx_1D in split_indexes]))
         else:
             indexes = split_indexes
-        
+
         splitted_generator.targets = splitted_generator.targets[indexes]
         splitted_generator.features = splitted_generator.features[indexes]
 
         return splitted_generator
 
-    def split(self, split_indexes=[], is_batch=True):
-
-        return [self.__splitter__(indexes, is_batch=is_batch) for indexes in split_indexes]
-
+    def split(self, split_indexes=[], types=["train", "test"], is_batch=True):
+        
+        return [self.__splitter__(indexes, is_batch=is_batch, type_=type_) for indexes, type_ in zip(split_indexes, types)]
 
     def __set_class_weigth__(self,):
         values = self.targets
@@ -80,7 +81,18 @@ class CommonGenerator(tf.keras.utils.Sequence):
 
     def decode(self, values):
         return self.encoder.inverse_transform(values)
-        
+
+    def plot_bits(self):
+
+        bits = np.array(255.0 / (self.targets + 1), dtype=np.int)
+        num_pixels = int(np.ceil(np.sqrt(len(self.targets))))
+
+        R = np.empty((num_pixels*num_pixels,))
+        R[np.arange(len(self.targets), dtype=int)] = bits
+        plt.imshow(R.reshape(num_pixels,num_pixels, 1), cmap="gray")
+        plt.savefig("notebooks/images/random_targets.png")
+
+
     def __getitem__(self, batch_idx):
 
         indexes = self.__get_batch_indexes__(batch_idx)
@@ -89,3 +101,6 @@ class CommonGenerator(tf.keras.utils.Sequence):
         targets = np.array(self.targets[indexes])
 
         return features, targets
+
+    
+    

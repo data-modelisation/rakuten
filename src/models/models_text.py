@@ -9,9 +9,9 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
 
 import keras
-from keras.models import Sequential
-from keras.layers import Dense, Input, Dropout, Flatten
-from keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Input, Dropout, Flatten
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
 from tensorflow.keras.layers import Embedding
 
 from src.models.models_utils import METRICS
@@ -25,9 +25,11 @@ class ModelText(Model):
         max_words_featured=5000,
         max_words_tokenized=50000,
         max_len=100,
+        name=None,
         **kwargs):
 
         super().__init__(*args, **kwargs)
+
         self.type="text"
         self.use_generator=False
         self.max_words_featured = max_words_featured
@@ -49,6 +51,7 @@ class ModelText_LR(ModelText):
         super().__init__(*args, **kwargs)
 
         self.name="text_logistic_regression"
+        
         self.model_neural = False
         self.clf_parameters = {
             "solver" : "liblinear",

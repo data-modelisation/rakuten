@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from skimage import io, transform
 from sklearn.feature_selection import VarianceThreshold
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from src.generators.generator import CommonGenerator
 import copy
@@ -21,8 +22,45 @@ class ImageGenerator(CommonGenerator):
         self.root_dir = root_dir
         self.target_shape = target_shape
         self.crop = crop
-        self.features, self.labels = self.load()
+        self.links, self.labels = self.load()
         self.encode_targets()
+        self.generator=ImageDataGenerator(
+            rescale=1/255
+        )
+
+    def __splitter__(self, split_indexes, type_="train", is_batch=True):
+        
+        splitted_generator = copy.deepcopy(self.generator)
+        
+        if type_ == "train":
+            kwargs = {
+                "width_shift_range":0.1,
+                "height_shift_range":0.1,
+                "shear_range":0.1,
+                "zoom_range":0.1,
+                "fill_mode":'nearest',
+                "horizontal_flip":True,
+                "vertical_flip":False,
+            }
+        else:
+            kwargs = {}
+        df = pd.DataFrame.from_dict(
+            {
+                "links" : self.links[split_indexes],
+                "labels" : self.labels[split_indexes]
+            }
+            ).astype({"links": str, "labels":str})
+
+        return splitted_generator.flow_from_dataframe(
+            dataframe=df,
+            x_col="links",
+            y_col="labels",
+            target_size=self.target_shape[:2],
+            batch_size=self.batch_size,
+            class_mode="sparse",
+            shuffle=False,
+            **kwargs)
+            
 
     def load(self):
 
@@ -32,22 +70,6 @@ class ImageGenerator(CommonGenerator):
         links = self.root_dir + "image_" + texts.imageid.map(str) + "_product_" + texts.productid.map(str) + ".jpg"
 
         return links.values, labels.values
-
-        
-    def __getitem__(self, batch_idx):
-
-        indexes = self.__get_batch_indexes__(batch_idx)
-        links = self.features[indexes]
-        images = [io.imread(link) for link in links]
-
-        if self.crop:
-            images = [image[50:450, 50:450] for image in images]
-
-        images = [transform.resize(image, self.target_shape[:2]) for image in images]
-        images = np.array(images)
-        targets = np.array(self.targets[indexes])
-
-        return images, targets
 
     def show_mask_variance(self,threshold=.075):
 

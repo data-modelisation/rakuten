@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-#from ftlangdetect import detect
+from ftlangdetect import detect
 import re
 import logging
 from unidecode import unidecode
@@ -133,13 +133,13 @@ class LanguageTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         X_copy = X.copy()
 
-        X_copy["lang"] = X_copy[self.column].apply(lambda text : get_lang(text, text_length=self.text_length))
-        
+        lang = np.apply_along_axis(get_lang, 1, X[:,self.column].reshape(-1,1))
+
+        translate_fct_vectorized = np.vectorize(translate_text)
         if self.translate:
-            mask_not_fr = X_copy.lang != "fr"
-            X_copy.loc[mask_not_fr, self.column] = X_copy.loc[mask_not_fr].swifter.apply(lambda row: translate_text(row[self.column], src=row.lang, dest="fr"), axis=1)
-            
-        return X_copy
+            mask_not_fr = lang != "fr"
+            X_copy[mask_not_fr, self.column] = translate_fct_vectorized(X_copy[:, self.column], src=lang, dest="fr")
+        return lang
 
 #Transformeur pour nettoyer le texte
 class TextCleaner(BaseEstimator, TransformerMixin):
@@ -221,10 +221,10 @@ def pipeline_loader():
     return loader
 
 # Construction du pipeline pour la traduction des langues
-def build_pipeline_lang(translate=False):
+def pipeline_lang(translate=False):
 
     translater = Pipeline(steps=[
-        ('trans', LanguageTransformer(column="text", text_length=500, translate=translate)),
+        ('trans', LanguageTransformer(column=4, text_length=500, translate=translate)),
     ])
     return translater
 
@@ -288,12 +288,15 @@ def translate_serie(df):
     return df.swifter.apply(lambda x: translate_text(x.text_clean, src=x.lang, dest="fr"), axis=1)
 
 #Langue d'un texte
-def get_lang(text:str, text_length=300):
-    
+def get_lang(text, text_length=300):
+
+    if isinstance(text, np.ndarray):
+        text = text[0]
+
     if text_length > 0:
         max_length = min(text_length, len(text), ) #Limitation de longueur
         text = text[:max_length]
-
+    
     try:
         return detect(text=text, low_memory=True).get("lang")
     except Exception as exce:

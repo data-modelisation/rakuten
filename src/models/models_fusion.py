@@ -77,22 +77,26 @@ class ModelFusion(Model):
         features=[],
         targets=[],
         batch_size=64,
+        name=None,
         **kwargs):
         
         super().__init__(*args, **kwargs)
 
+        if name is not None:
+            self.name = name
         self.type="fusion"
         self.use_generator=True
         self.models = models
         self.models_concat_layer_num=models_concat_layer_num
         self.batch_size=batch_size
+
         return self
 
     def get_preprocessor(self,):
         return None
 
     def load_models(self,):
-        self.class_weight = self.targets.class_weight
+        # self.class_weight = self.targets.class_weight
         
         for model in self.models:
             model.load_model()
@@ -100,18 +104,31 @@ class ModelFusion(Model):
 
         return self
 
+    def rename_layers(self,):
+
+        for idx, model in enumerate(self.models):
+            if model.model is None:
+                print(f"model {model.name} wasn't loaded")
+                model.model = model.load_model()
+
+            for layer in model.model.layers:
+                layer._name = f'{layer.name}_{model.name}_{idx}'
+                print(layer.name)
+
+
     def freeze_models(self,):
+        print("freezing layers for fusion model")
         #On bloque l'entrainement des layers qui précèdent
         for model, layer_concat in zip(self.models, self.models_concat_layer_num):
-
-            if model.model is None:
-                model.model = model.load_model()
 
             for layer in model.model.layers[:layer_concat]:
                 layer.trainable = False
 
+        print("not trainable layers are now freezed")
+
     def merged_layers(self,):
 
+        print("merging layers for fusion model")
         concat_layers = []
         for model, layer_concat in zip(self.models, self.models_concat_layer_num):
             layer_name = model.model.layers[layer_concat].name
@@ -119,6 +136,7 @@ class ModelFusion(Model):
             layer = model.model.get_layer(layer_name).output
             concat_layers.append(layer)
 
+        print("layers merged")
         return concat_layers
 
 
@@ -137,13 +155,14 @@ class ModelFusion_Concat(ModelFusion):
 
     def init_model(self,):
 
+        self.rename_layers()
         self.freeze_models()
 
         #On créé le modèle
         combined = concatenate(self.merged_layers(), axis=1, name="fusion_concat")
-        x = Dense(128, activation="relu")(combined)
+        x = Dense(128, activation="relu", name="fusion_dense1")(combined)
         x = Dropout(.2, name="fusion_drop1")(x)
-        output = Dense(27, activation="softmax")(x)
+        output = Dense(27, activation="softmax",name="fusion_output")(x)
         
         model = KerasModel(inputs=[model.model.input for model in self.models], outputs=[output,])
 

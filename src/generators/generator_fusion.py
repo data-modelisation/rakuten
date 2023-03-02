@@ -26,6 +26,5 @@ class FusionGenerator(CommonGenerator):
 
         extracted = [generator[batch_idx] for generator in self.generators]
         extracted_features = [extract[0] for extract in extracted]
-        extracted_targets = extracted[0][1]
 
-        return extracted_features, extracted_targets
+        return extracted_features, targets
