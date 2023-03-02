@@ -91,7 +91,8 @@ src/**/*.joblib
 src/**/*.pb
 src/**/variables*
 src/**/*.jpg
-logs/**/events.*
+src/models/**/events.*
+src/models/**/clf_report*
 
 # Corpora
 tokenizers/
