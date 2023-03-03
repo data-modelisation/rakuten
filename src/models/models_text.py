@@ -7,6 +7,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
+from sklearn.cluster import KMeans
 
 import keras
 from tensorflow.keras.models import Sequential
@@ -84,7 +85,7 @@ class ModelText_RF(ModelText):
     def init_model(self,):
         return RandomForestClassifier(**self.clf_parameters)
 
-class ModelText_KN(ModelText):
+class ModelText_KNN(ModelText):
     def __init__(self, 
         *args,
         **kwargs):
@@ -103,6 +104,27 @@ class ModelText_KN(ModelText):
 
     def init_model(self,):
         return KNeighborsClassifier(**self.clf_parameters)
+
+
+class ModelText_KMC(ModelText):
+    def __init__(self, 
+        *args,
+        **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.name="text_kmeans"
+        self.model_neural = False
+        self.clf_parameters = {
+            "n_clusters" : 27,
+        }
+        self.preprocess_parameters = {
+            "vectorizer" : "tfidf",
+            "embedding" : False,
+        }
+
+    def init_model(self,):
+        return KMeans(**self.clf_parameters)
 
 
 

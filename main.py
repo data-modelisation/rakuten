@@ -25,7 +25,7 @@ from src.models.models_text import *
 from src.models.models_image import *
 from src.models.models_fusion import *
 
-BATCH_SIZE = 64
+BATCH_SIZE = 30
 EPOCHS_TEXT= 30
 EPOCHS_IMAGE = 10
 EPOCHS_FUSION = 50
@@ -48,17 +48,20 @@ if __name__ == "__main__":
         save=False,
         report=False,
         summary=False,
+        random_state=RANDOM_STATE,
     )
     
-    model_image = ModelImage_VGG16(
+    model_image = ModelImage_CNN_Lenet(
+        suffix="",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_IMAGE,
         batch_size=BATCH_SIZE,
-        load=False,
-        save=True,
-        report=True,
-        summary=True,
-        target_shape=TARGET_SHAPE
+        load=True,
+        save=False,
+        report=False,
+        summary=False,
+        target_shape=TARGET_SHAPE,
+        random_state=RANDOM_STATE,
     )
     model_fusion = ModelFusion_Concat(
         num_folds=NUM_FOLDS,
@@ -70,6 +73,7 @@ if __name__ == "__main__":
         save=True,
         report=True,
         summary=True,
+        random_state=RANDOM_STATE,
     )
     text_generator = TextGenerator(
         csv_texts="data/raw/X_train_update.csv",
@@ -91,24 +95,27 @@ if __name__ == "__main__":
         csv_labels="data/raw/Y_train_CVw08PX.csv",
         target_shape=TARGET_SHAPE,
         batch_size=BATCH_SIZE,
-        preprocessor = model_image.get_preprocessor()
+        preprocessor = model_image.get_preprocessor(),
+        encoder=text_generator.encoder,
+        encoder_fitted=True
     )
-    train_image_generator, test_image_generator = image_generator.split(split_indexes=[index_train, index_test], is_batch=False)
-    
-    model_text.kfit(
-        train_data=train_text_generator,
-        validation_data=test_text_generator,
-        class_weight=train_text_generator.class_weight
-    )
+    train_image_generator, test_image_generator = image_generator.split(split_indexes=[index_train, index_test], is_batch=False, )
+
+    # model_text.kfit(
+    #     train_data=train_text_generator,
+    #     validation_data=test_text_generator,
+    #     class_weight=train_text_generator.class_weight
+    # )
         
     model_image.kfit(
         train_data=train_image_generator,
         validation_data=test_image_generator,
-        class_weight=train_text_generator.class_weight
+        class_weight=train_text_generator.class_weight,
     )
 
     model_fusion.kfit(
-        train_data=[train_text_generator, train_image_generator],
-        validation_data=[test_text_generator, test_image_generator],
-        class_weight=train_text_generator.class_weight
+        train_data=[train_text_generator, train_image_generator.flow()],
+        validation_data=[test_text_generator, test_image_generator.flow()],
+        class_weight=train_text_generator.class_weight,
+        force=True
     )

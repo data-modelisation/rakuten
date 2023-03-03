@@ -22,16 +22,14 @@ class ImageGenerator(CommonGenerator):
         self.root_dir = root_dir
         self.target_shape = target_shape
         self.crop = crop
-        self.links, self.labels = self.load()
-        self.encode_targets()
-        self.generator=ImageDataGenerator(
-            rescale=1/255
-        )
+        self.features, self.labels = self.load()
 
-    def __splitter__(self, split_indexes, type_="train", is_batch=True):
-        
-        splitted_generator = copy.deepcopy(self.generator)
-        
+        print(f"Nombre d'images traitées : {len(self.features)}")
+        self.encode_targets()
+        print(f"Nombre de targets traitées : {len(self.targets)}")
+
+        print(f"targets : {self.targets}")
+    def flow(self, type_="train"):
         if type_ == "train":
             kwargs = {
                 "width_shift_range":0.1,
@@ -41,32 +39,36 @@ class ImageGenerator(CommonGenerator):
                 "fill_mode":'nearest',
                 "horizontal_flip":True,
                 "vertical_flip":False,
-            }
+            } 
         else:
-            kwargs = {}
+            kwargs={}
+
         df = pd.DataFrame.from_dict(
             {
-                "links" : self.links[split_indexes],
-                "labels" : self.labels[split_indexes]
+                "links" : self.features,
+                "labels" : self.targets,
             }
             ).astype({"links": str, "labels":str})
 
-        return splitted_generator.flow_from_dataframe(
-            dataframe=df,
-            x_col="links",
-            y_col="labels",
-            target_size=self.target_shape[:2],
-            batch_size=self.batch_size,
-            class_mode="sparse",
-            shuffle=False,
-            **kwargs)
-            
-
+        return ImageDataGenerator(
+                    rescale=1/255
+                ).flow_from_dataframe(
+                    dataframe=df,
+                    x_col="links",
+                    y_col="labels",
+                    target_size=self.target_shape[:2],
+                    batch_size=self.batch_size,
+                    class_mode="sparse",
+                    shuffle=False,
+                    **kwargs
+                )
+       
+                
     def load(self):
 
         labels = pd.read_csv(self.csv_labels).prdtypecode
-
         texts = pd.read_csv(self.csv_texts)
+
         links = self.root_dir + "image_" + texts.imageid.map(str) + "_product_" + texts.productid.map(str) + ".jpg"
 
         return links.values, labels.values

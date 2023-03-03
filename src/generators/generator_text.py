@@ -28,16 +28,19 @@ class TextGenerator(CommonGenerator):
         self.max_len = max_len
 
         self.features, self.labels = self.load()
+        print(f"Nombre de textes traités : {len(self.features)}")
 
-        self.get_counts()
-        self.get_imbalanced()
-        self.get_correlation()
+        # self.get_counts()
+        # self.get_imbalanced()
+        # self.get_correlation()
 
-        if self.translate:
-            self.translation()
+        # if self.translate:
+        #     self.translation()
 
         self.fit_preprocess()
         self.encode_targets()
+
+        print(f"targets : {self.targets}")
 
     def get_correlation(self,):
 
@@ -133,6 +136,5 @@ class TextGenerator(CommonGenerator):
 
         labels = pd.read_csv(self.csv_labels).prdtypecode
         texts = pd.read_csv(self.csv_texts)
-
         text_loader = pipeline_loader()
         return text_loader.fit_transform(texts).values, labels.values

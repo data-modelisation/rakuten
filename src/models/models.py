@@ -31,7 +31,8 @@ class Model():
         predict=False,
         folder="src/models/",
         name=None,
-        suffix=""
+        suffix="",
+        random_state=42,
         ):
 
         self.preprocessor = None
@@ -39,6 +40,7 @@ class Model():
         self.model_fitted = False
         self.model = None
         self.suffix=suffix
+        self.random_state=random_state
         
         self.generator = generator
         self.generator_test = generator_test
@@ -129,7 +131,7 @@ class Model():
             path = Path(self.model_path)
 
         if self.model_neural:
-            model = tf.keras.models.load_model(path)
+            model = tf.keras.models.load_model(path)#(Path(path, "saved_model.hdf5"))
         else:
             model = joblib.load(Path(path, "saved_model.pb"))
         
@@ -176,12 +178,27 @@ class Model():
             y.append(array[1])
         return np.concatenate(x), np.concatenate(y)
 
-    def kfit(self, model=None, train_data=None, validation_data=None, fold=-1, class_weight=None):
+    def set_folder(self, fold=-1):
+        #If there is no model path, we create it
+        if not self.model_path:
+            self.set_model_folder()
+
+        #If there is no fold path, we create it
+        if not fold < 0:
+            self.set_model_fold_folder(fold)
+
+
+    def flow_if_necessary(self, input):
         
+        return input.flow() if isinstance(input, ImageGenerator) else input
+
+    def kfit(self, model=None, train_data=None, validation_data=None, fold=-1, class_weight=None, force=False):
+        
+
         self.class_weight = class_weight if class_weight is not None else train_data.class_weight 
 
-        if self.type == "image" and isinstance(train_data, keras.preprocessing.image.DataFrameIterator):
-            fold = 0
+        #if isinstance(train_data, keras.preprocessing.image.DataFrameIterator):
+            
 
         #If it's a fusion model, we build a special sequence with texts and images
         if self.type == "fusion" and not isinstance(train_data, FusionGenerator):
@@ -191,13 +208,8 @@ class Model():
             print("data transformed to sequences for fusion")
             fold = 0
 
-        #If there is no model path, we create it
-        if not self.model_path:
-            self.set_model_folder()
-
-        #If there is no fold path, we create it
-        if not fold < 0:
-            self.set_model_fold_folder(fold)
+        #Creation du dossier
+        self.set_folder(fold=fold)
 
         #Get the model
         model = self.get_model(fold=fold)
@@ -208,19 +220,19 @@ class Model():
             #Save the scores
             scores = []
 
-            #Run the cross validation process
-            for idx_fold, (train_index, valid_index) in enumerate(KFold(self.num_folds).split(train_data)):
-
+            #Run the cross validation process (pas besoin de random_state car on a pas suffle)
+            for idx_fold, (train_index, valid_index) in enumerate(KFold(self.num_folds, ).split(train_data)):
+                print(idx_fold, (train_index, valid_index))
                 #Split
                 train_gen, valid_gen = train_data.split(split_indexes=[train_index, valid_index], is_batch=True)
-
+                print(train_gen)
                 #Call the training
                 model = self.kfit(
                     train_data=train_gen,
                     validation_data=valid_gen,
                     fold=idx_fold
                 )
-                               
+                            
                 #Make prediction on the validation dataset
                 if self.model_neural:
                     y_pred = self.predict(generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
@@ -231,15 +243,16 @@ class Model():
                 y_true = valid_gen.decode(valid_gen.targets)
 
                 #Calculation of the recall score
+                
                 score = recall_score(y_true, y_pred, average="weighted", zero_division=0)
-                scores.append(score)      
+                scores.append(score)    
+                print(score)  
             
             #Select the best model an push it as attribute
             self.model = self.select_best_fold(scores)
             
             #Save the best model in the main folder
-            if not self.load:
-                self.save_model(self.model, in_fold=False)
+            self.save_model(self.model, in_fold=False)
 
             #Make prediction on the test dataset with the best model
             print("prediciton with best model")
@@ -260,6 +273,9 @@ class Model():
 
                 #Fitting the model to the features for neural
                 if self.model_neural:
+                    train_data = self.flow_if_necessary(train_data)
+                    validation_data = self.flow_if_necessary(validation_data)
+                    
                     model.fit(train_data, **self.fit_kwargs(validation_data))
                 #Fitting the model to the features for non neural
                 else:
@@ -274,6 +290,10 @@ class Model():
                 # Save the layers in the model summary file
                 self.save_model_summary(model)
 
+                import pdb; pdb.set_trace()
+                if force:
+                    y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=model)
+        
             self.model = model
             #Return the model
             return model
@@ -287,7 +307,8 @@ class Model():
         if features is not None:
             y_pred = model.predict(features)
         else:
-            y_pred = model.predict(generator)
+            generator_flowed = self.flow_if_necessary(generator)
+            y_pred = model.predict(generator_flowed)
         
         #Get the class if neural
         if self.model_neural:
