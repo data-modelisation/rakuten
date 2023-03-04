@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from skimage import io, transform
 from sklearn.feature_selection import VarianceThreshold
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import matplotlib.image as mpimg
 
 from src.generators.generator import CommonGenerator
 import copy
@@ -83,3 +84,29 @@ class ImageGenerator(CommonGenerator):
         plt.imshow(mask.reshape((224, 224)), cmap="gray")
         plt.savefig("notebooks/images/mask.png")
         
+
+    def show_images_per_category(self, num_images=5):
+
+
+        unique_labels = np.unique(self.labels)[:10]
+        num_labels = len(unique_labels)
+
+        fig, axs = plt.subplots(num_images, len(unique_labels), 
+            figsize=(num_labels, num_images))
+
+        for idx_label, label in enumerate(unique_labels):
+            mask = self.labels == label
+            seleted_features = self.features[mask][:num_images]
+            
+
+            for idx_image, seleted_feature in enumerate(seleted_features): 
+                image = mpimg.imread(seleted_feature)
+                axs[idx_image, idx_label].imshow(image)
+                axs[idx_image, idx_label].axis('off')
+
+            title = axs[idx_image, idx_label].set_title(f"Label {label}", loc='center', y=5.5, fontdict={"fontsize":8, "fontweight":"bold"})
+            
+
+        fig.subplots_adjust(wspace=0.1, hspace=0.1)
+        plt.savefig("notebooks/images/images_category.png")
+
