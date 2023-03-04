@@ -95,7 +95,6 @@ class ModelText_KNN(ModelText):
         self.name="text_kneighbours"
         self.model_neural = False
         self.clf_parameters = {
-            "n_neighbors" : 5,
         }
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
