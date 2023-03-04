@@ -25,9 +25,9 @@ from src.models.models_text import *
 from src.models.models_image import *
 from src.models.models_fusion import *
 
-BATCH_SIZE = 30
+BATCH_SIZE = 64
 EPOCHS_TEXT= 30
-EPOCHS_IMAGE = 10
+EPOCHS_IMAGE = 30
 EPOCHS_FUSION = 50
 NUM_FOLDS = 3
 NUM_TARGETS = 84916
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     
     index_train, index_test = train_test_split(np.arange(NUM_TARGETS), test_size=TEST_SPLIT, random_state=RANDOM_STATE)
 
-    model_text = ModelText_Neural_Simple(
+    model_text = ModelText_Neural_Embedding(
         suffix="",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_TEXT,
@@ -52,18 +52,19 @@ if __name__ == "__main__":
     )
     
     model_image = ModelImage_CNN_Lenet(
-        suffix="",
+        suffix="_50",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_IMAGE,
         batch_size=BATCH_SIZE,
-        load=True,
-        save=False,
-        report=False,
-        summary=False,
+        load=False,
+        save=True,
+        report=True,
+        summary=True,
         target_shape=TARGET_SHAPE,
         random_state=RANDOM_STATE,
     )
     model_fusion = ModelFusion_Concat(
+        suffix="_embedding_50",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_FUSION,
         batch_size=BATCH_SIZE,
@@ -88,7 +89,8 @@ if __name__ == "__main__":
         sampler=np.arange(NUM_TARGETS)
     )
     train_text_generator, test_text_generator = text_generator.split(split_indexes=[index_train, index_test], is_batch=False)
-    
+    print("train_targets : " , train_text_generator.targets)
+    print("test_targets : " , test_text_generator.targets)
     image_generator = ImageGenerator(
         root_dir="data/raw/images/image_train/",
         csv_texts="data/raw/X_train_update.csv",
@@ -100,22 +102,23 @@ if __name__ == "__main__":
         encoder_fitted=True
     )
     train_image_generator, test_image_generator = image_generator.split(split_indexes=[index_train, index_test], is_batch=False, )
-
-    # model_text.kfit(
-    #     train_data=train_text_generator,
-    #     validation_data=test_text_generator,
-    #     class_weight=train_text_generator.class_weight
-    # )
+    print("train_targets : " , train_image_generator.targets)
+    print("test_targets : " , test_image_generator.targets)
+    model_text.kfit(
+        train_data=train_text_generator,
+        validation_data=test_text_generator,
+        class_weight=text_generator.class_weight
+    )
         
     model_image.kfit(
         train_data=train_image_generator,
         validation_data=test_image_generator,
-        class_weight=train_text_generator.class_weight,
+        class_weight=image_generator.class_weight,
     )
 
     model_fusion.kfit(
         train_data=[train_text_generator, train_image_generator.flow()],
         validation_data=[test_text_generator, test_image_generator.flow()],
-        class_weight=train_text_generator.class_weight,
+        class_weight=text_generator.class_weight,
         force=True
     )

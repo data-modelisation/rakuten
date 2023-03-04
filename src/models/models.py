@@ -206,13 +206,12 @@ class Model():
             validation_data = FusionGenerator(validation_data)
 
             print("data transformed to sequences for fusion")
-            fold = 0
+            fold = 1
 
-        #Creation du dossier
-        self.set_folder(fold=fold)
+
 
         #Get the model
-        model = self.get_model(fold=fold)
+        
 
         #If fold is negtiv, we perform the cross validation process
         if fold < 0:
@@ -222,48 +221,105 @@ class Model():
 
             #Run the cross validation process (pas besoin de random_state car on a pas suffle)
             for idx_fold, (train_index, valid_index) in enumerate(KFold(self.num_folds, ).split(train_data)):
+                
+                #Creation du dossier
+                self.set_folder(fold=idx_fold)
 
+                print("indexes", train_index)
                 #Split
                 train_gen, valid_gen = train_data.split(split_indexes=[train_index, valid_index], is_batch=True)
                 
-                #Call the training
-                model = self.kfit(
-                    train_data=train_gen,
-                    validation_data=valid_gen,
-                    fold=idx_fold
-                )
-                            
-                #Make prediction on the validation dataset
-                if self.model_neural:
-                    y_pred = self.predict(generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
-                else:
-                    valid_gen_unpacked, _ = self.unpack_iterator(valid_gen)
-                    y_pred = self.predict(features=valid_gen_unpacked, generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
-                    
-                y_true = valid_gen.decode(valid_gen.targets)
-
-                #Calculation of the recall score
+                train_gen_flow = self.flow_if_necessary(train_gen)
+                valid_gen_flow = self.flow_if_necessary(valid_gen)
                 
+                model = self.get_model(fold=idx_fold)
+
+                if not self.load:
+                    model.fit(
+                        train_gen_flow,
+                        **self.fit_kwargs(valid_gen_flow)
+                    )
+
+                y_pred = model.predict(valid_gen_flow)
+
+                y_pred = np.argmax(y_pred, axis=1)
+                y_true = valid_gen.targets
+
+                y_pred = train_data.decode(y_pred)
+                y_true = train_data.decode(y_true)
+
+                #Get the classification report
+                report = self.report_df(y_true, y_pred, fold=idx_fold)
+
+                #Save the crosstab
+                self.crosstab(y_true, y_pred, fold=idx_fold)
+
                 score = recall_score(y_true, y_pred, average="weighted", zero_division=0)
-                scores.append(score)    
-                print(score)  
-            
-            #Select the best model an push it as attribute
+                scores.append(score)
+                self.save_model(model, in_fold=True)
+
+                #Save it in the summary if asked
+                if self.summary:
+                    self.save_summary(report)
+
             self.model = self.select_best_fold(scores)
-            
-            #Save the best model in the main folder
             self.save_model(self.model, in_fold=False)
+            train_gen_flow = self.flow_if_necessary(train_data)
+            valid_gen_flow = self.flow_if_necessary(validation_data)    
 
-            #Make prediction on the test dataset with the best model
-            print("prediction with best model")
-            if self.model_neural:
-                y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=self.model)
-            else:
-                validation_data_unpacked, _ = self.unpack_iterator(validation_data)
-                y_pred = self.predict(features=validation_data_unpacked, generator=validation_data, targets=validation_data.targets, model=model)
+            y_pred = self.model.predict(valid_gen_flow)
+
+            y_pred = np.argmax(y_pred, axis=1)
+            y_true = validation_data.targets
+
+            y_pred = train_data.decode(y_pred)
+            y_true = train_data.decode(y_true)
+
+            #Get the classification report
+            report = self.report_df(y_true, y_pred)
+
+            #Save the crosstab
+            self.crosstab(y_true, y_pred)
+
+            #Save it in the summary if asked
+            if self.summary:
+                self.save_summary(report)
+
+            #     #Call the training
+            #     model = self.kfit(
+            #         train_data=train_gen,
+            #         validation_data=valid_gen,
+            #         fold=idx_fold
+            #     )
+                            
+            #     #Make prediction on the validation dataset
+            #     if self.model_neural:
+            #         y_pred = self.predict(generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
+            #     else:
+            #         valid_gen_unpacked, _ = self.unpack_iterator(valid_gen)
+            #         y_pred = self.predict(features=valid_gen_unpacked, generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
                     
+            #     y_true = valid_gen.decode(valid_gen.targets)
+            #     #Calculation of the recall score
+            #     import pdb; pdb.set_trace()
+            #     score = recall_score(y_true, y_pred, average="weighted", zero_division=0)
+            #     scores.append(score) 
 
             
+            # #Select the best model an push it as attribute
+            # self.model = self.select_best_fold(scores)
+            
+            # #Save the best model in the main folder
+            # self.save_model(self.model, in_fold=False)
+
+            # #Make prediction on the test dataset with the best model
+            # print("prediction with best model")
+            # if self.model_neural:
+            #     y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=self.model)
+            # else:
+            #     validation_data_unpacked, _ = self.unpack_iterator(validation_data)
+            #     y_pred = self.predict(features=validation_data_unpacked, generator=validation_data, targets=validation_data.targets, model=model)
+              
 
         #If fold is positiv, we make the fit
         else:
@@ -273,10 +329,10 @@ class Model():
 
                 #Fitting the model to the features for neural
                 if self.model_neural:
-                    train_data = self.flow_if_necessary(train_data)
-                    validation_data = self.flow_if_necessary(validation_data)
+                    train_data_flow = self.flow_if_necessary(train_data)
+                    validation_data_flow = self.flow_if_necessary(validation_data)
                     
-                    model.fit(train_data, **self.fit_kwargs(validation_data))
+                    model.fit(train_data_flow, **self.fit_kwargs(validation_data_flow))
                 #Fitting the model to the features for non neural
                 else:
                     train_data, validation_data = self.unpack_iterator(train_data)
@@ -290,15 +346,16 @@ class Model():
                 # Save the layers in the model summary file
                 self.save_model_summary(model)
 
-                if force:
-                    y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=model)
-        
+            if force:
+                y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=model)
+
             self.model = model
             #Return the model
             return model
 
     def predict(self, features=None, generator=None, targets=None, model=None, fold=-1):
 
+        print("prediction")
         #Get the model
         model = model if model is not None else self.model
 
@@ -308,17 +365,17 @@ class Model():
         else:
             generator_flowed = self.flow_if_necessary(generator)
             y_pred = model.predict(generator_flowed)
-        
+
         #Get the class if neural
         if self.model_neural:
             y_pred = np.argmax(y_pred, axis=1)
-        
+
         #Decode
         y_pred = generator.decode(y_pred)
         
         #If there is a target, we can make a report
         if targets is not None:
-
+            
             #Decode targets
             y_true = generator.decode(targets)
 
@@ -342,9 +399,9 @@ class Model():
             normalize="index"
         )
         #Save it in a csv file
-        if self.save:
-            path = self.get_path(fold)
-            crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
+        #if self.save:
+        path = self.get_path(fold)
+        crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
 
     def report_df(self, y_true, y_pred, fold=-1):
         
@@ -355,9 +412,9 @@ class Model():
         clf_report = pd.DataFrame(clf_report).transpose()
 
         #Save the dataframe as csv file
-        if self.save:
-            path = self.get_path(fold)
-            clf_report.to_csv(Path(path, f'clf_report.csv'), index= True)
+        #if self.save:
+        path = self.get_path(fold)
+        clf_report.to_csv(Path(path, f'clf_report.csv'), index= True)
         
         #Return the clf report
         return clf_report
