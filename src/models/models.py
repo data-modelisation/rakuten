@@ -222,10 +222,10 @@ class Model():
 
             #Run the cross validation process (pas besoin de random_state car on a pas suffle)
             for idx_fold, (train_index, valid_index) in enumerate(KFold(self.num_folds, ).split(train_data)):
-                print(idx_fold, (train_index, valid_index))
+
                 #Split
                 train_gen, valid_gen = train_data.split(split_indexes=[train_index, valid_index], is_batch=True)
-                print(train_gen)
+                
                 #Call the training
                 model = self.kfit(
                     train_data=train_gen,
@@ -255,12 +255,12 @@ class Model():
             self.save_model(self.model, in_fold=False)
 
             #Make prediction on the test dataset with the best model
-            print("prediciton with best model")
+            print("prediction with best model")
             if self.model_neural:
                 y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=self.model)
             else:
                 validation_data_unpacked, _ = self.unpack_iterator(validation_data)
-                y_pred = self.predict(features=validation_data_unpacked, generator=validation_data, targets=validation_data.targets, model=model, fold=idx_fold)
+                y_pred = self.predict(features=validation_data_unpacked, generator=validation_data, targets=validation_data.targets, model=model)
                     
 
             
@@ -290,7 +290,6 @@ class Model():
                 # Save the layers in the model summary file
                 self.save_model_summary(model)
 
-                import pdb; pdb.set_trace()
                 if force:
                     y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=model)
         
@@ -336,10 +335,11 @@ class Model():
         return y_pred
         
     def crosstab(self, y_true, y_pred, fold=-1):
-        #Calculate the crosstab
+        #Calculate the crosstab, normalisé selon les colonnes
         crosstab = pd.crosstab(
             y_true, y_pred,
-            rownames=['Realité'], colnames=['Prédiction']
+            rownames=['Realité'], colnames=['Prédiction'],
+            normalize="index"
         )
         #Save it in a csv file
         if self.save:
