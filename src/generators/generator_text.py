@@ -16,11 +16,13 @@ class TextGenerator(CommonGenerator):
                  translate=True,
                  max_words=100,
                  max_len=100,
+                 samples=None,
                  **kwargs
                  ):
 
         super().__init__(**kwargs)
 
+        self.samples=samples
         self.translate = translate
         self.stem = stem
         self.clean = clean
@@ -40,7 +42,6 @@ class TextGenerator(CommonGenerator):
         self.fit_preprocess()
         self.encode_targets()
 
-        print(f"targets : {self.targets}")
 
     def get_correlation(self,):
 
@@ -136,5 +137,10 @@ class TextGenerator(CommonGenerator):
 
         labels = pd.read_csv(self.csv_labels).prdtypecode
         texts = pd.read_csv(self.csv_texts)
+
+        if self.samples:
+            texts = texts.head(self.samples)
+            labels = labels[:self.samples]
+
         text_loader = pipeline_loader()
         return text_loader.fit_transform(texts).values, labels.values

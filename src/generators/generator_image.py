@@ -15,11 +15,13 @@ class ImageGenerator(CommonGenerator):
         root_dir="",
         target_shape=[100, 100, 3],
         crop=True,
+        samples=None,
         **kwargs
         ):
 
         super().__init__(**kwargs)
 
+        self.samples=samples
         self.root_dir = root_dir
         self.target_shape = target_shape
         self.crop = crop
@@ -29,17 +31,17 @@ class ImageGenerator(CommonGenerator):
         self.encode_targets()
         print(f"Nombre de targets traitées : {len(self.targets)}")
 
-        print(f"targets : {self.targets}")
     def flow(self, type_="train"):
+
         if type_ == "train":
             kwargs = {
-                "width_shift_range":0.1,
-                "height_shift_range":0.1,
-                "shear_range":0.1,
-                "zoom_range":0.1,
-                "fill_mode":'nearest',
-                "horizontal_flip":True,
-                "vertical_flip":False,
+                # "width_shift_range":0.1,
+                # "height_shift_range":0.1,
+                # "shear_range":0.1,
+                # "zoom_range":0.1,
+                # "fill_mode":'nearest',
+                # "horizontal_flip":True,
+                # "vertical_flip":False,
             } 
         else:
             kwargs={}
@@ -70,6 +72,10 @@ class ImageGenerator(CommonGenerator):
         labels = pd.read_csv(self.csv_labels).prdtypecode
         texts = pd.read_csv(self.csv_texts)
 
+        if self.samples:
+            texts = texts.head(self.samples)
+            labels = labels[:self.samples]
+
         links = self.root_dir + "image_" + texts.imageid.map(str) + "_product_" + texts.productid.map(str) + ".jpg"
 
         return links.values, labels.values
@@ -88,7 +94,7 @@ class ImageGenerator(CommonGenerator):
     def show_images_per_category(self, num_images=5):
 
 
-        unique_labels = np.unique(self.labels)[:10]
+        unique_labels = np.unique(self.labels)
         num_labels = len(unique_labels)
 
         fig, axs = plt.subplots(num_images, len(unique_labels), 
@@ -105,7 +111,7 @@ class ImageGenerator(CommonGenerator):
                 axs[idx_image, idx_label].axis('off')
 
             title = axs[idx_image, idx_label].set_title(f"Label {label}", loc='center', y=5.5, fontdict={"fontsize":8, "fontweight":"bold"})
-            
+
 
         fig.subplots_adjust(wspace=0.1, hspace=0.1)
         plt.savefig("notebooks/images/images_category.png")
