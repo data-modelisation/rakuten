@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 332.95441 218.31989"
+   version="1.1"
+   id="svg202"
+   sodipodi:docname="epoch_accuracy.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   width="332.95441"
+   height="218.31989"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs206" />
+  <sodipodi:namedview
+     id="namedview204"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2.3228458"
+     inkscape:cx="155.62807"
+     inkscape:cy="142.28237"
+     inkscape:window-width="1600"
+     inkscape:window-height="833"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g190" />
+  <g
+     id="g200"
+     transform="translate(3.9544154,5.0999999)">
+    <g
+       id="g198">
+      <g
+         id="g66">
+        <g
+           id="g64">
+          <g
+             id="g30">
+            <line
+               x1="51.532001"
+               y1="176.89999"
+               x2="46.532001"
+               y2="176.89999"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line2" />
+            <line
+               x1="51.532001"
+               y1="163.29231"
+               x2="46.532001"
+               y2="163.29231"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line4" />
+            <line
+               x1="51.532001"
+               y1="149.68462"
+               x2="46.532001"
+               y2="149.68462"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line6" />
+            <line
+               x1="51.532001"
+               y1="136.07692"
+               x2="46.532001"
+               y2="136.07692"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line8" />
+            <line
+               x1="51.532001"
+               y1="122.46923"
+               x2="46.532001"
+               y2="122.46923"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line10" />
+            <line
+               x1="51.532001"
+               y1="108.86154"
+               x2="46.532001"
+               y2="108.86154"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line12" />
+            <line
+               x1="51.532001"
+               y1="95.253845"
+               x2="46.532001"
+               y2="95.253845"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line14" />
+            <line
+               x1="51.532001"
+               y1="81.646156"
+               x2="46.532001"
+               y2="81.646156"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line16" />
+            <line
+               x1="51.532001"
+               y1="68.03846"
+               x2="46.532001"
+               y2="68.03846"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line18" />
+            <line
+               x1="51.532001"
+               y1="54.430771"
+               x2="46.532001"
+               y2="54.430771"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line20" />
+            <line
+               x1="51.532001"
+               y1="40.823078"
+               x2="46.532001"
+               y2="40.823078"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line22" />
+            <line
+               x1="51.532001"
+               y1="27.215385"
+               x2="46.532001"
+               y2="27.215385"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line24" />
+            <line
+               x1="51.532001"
+               y1="13.607693"
+               x2="46.532001"
+               y2="13.607693"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line26" />
+            <line
+               x1="51.532001"
+               y1="0"
+               x2="46.532001"
+               y2="0"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line28" />
+          </g>
+          <g
+             transform="translate(41.532001)"
+             id="g60">
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="176.89999"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text32">0.82</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="163.29231"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text34">0.83</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="149.68462"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text36">0.84</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="136.07692"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text38">0.85</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="122.46923"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text40">0.86</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="108.86154"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text42">0.87</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="95.253845"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text44">0.88</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="-52.030155"
+               y="-36.366417"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text44-5"
+               transform="rotate(-90)">val_accuracy [-]</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="196.59814"
+               y="210.38788"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text44-5-3">epochs [-]</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="81.646156"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text46">0.89</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="68.03846"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text48">0.9</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="54.430771"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text50">0.91</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="40.823078"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text52">0.92</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+               x="0"
+               y="27.215385"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text54">0.93</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="13.607693"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text56">0.94</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden"
+               x="0"
+               y="0"
+               dx="0em"
+               dy="0.30000001em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text58">0.95</text>
+          </g>
+          <line
+             x1="51.532001"
+             y1="0"
+             x2="51.532001"
+             y2="176.89999"
+             fill="#000000"
+             stroke="#cccccc"
+             stroke-width="1px"
+             id="line62" />
+        </g>
+      </g>
+      <g
+         transform="translate(51)"
+         clip-path="url(#clip_0)"
+         id="g151">
+        <clipPath
+           id="clip_0">
+          <rect
+             width="278"
+             height="176"
+             id="rect68"
+             x="0"
+             y="0" />
+        </clipPath>
+        <g
+           id="g121">
+          <g
+             id="g119">
+            <g
+               id="g87">
+              <line
+                 x1="0"
+                 y1="0"
+                 x2="0"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line71" />
+              <line
+                 x1="23.205666"
+                 y1="0"
+                 x2="23.205666"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line73" />
+              <line
+                 x1="69.616997"
+                 y1="0"
+                 x2="69.616997"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line75" />
+              <line
+                 x1="116.02834"
+                 y1="0"
+                 x2="116.02834"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line77" />
+              <line
+                 x1="162.43967"
+                 y1="0"
+                 x2="162.43967"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line79" />
+              <line
+                 x1="208.851"
+                 y1="0"
+                 x2="208.851"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line81" />
+              <line
+                 x1="255.26233"
+                 y1="0"
+                 x2="255.26233"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line83" />
+              <line
+                 x1="278.46799"
+                 y1="0"
+                 x2="278.46799"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line85" />
+            </g>
+            <g
+               id="g117">
+              <line
+                 x1="0"
+                 y1="176.89999"
+                 x2="278.46799"
+                 y2="176.89999"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line89" />
+              <line
+                 x1="0"
+                 y1="163.29231"
+                 x2="278.46799"
+                 y2="163.29231"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line91" />
+              <line
+                 x1="0"
+                 y1="149.68462"
+                 x2="278.46799"
+                 y2="149.68462"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line93" />
+              <line
+                 x1="0"
+                 y1="136.07692"
+                 x2="278.46799"
+                 y2="136.07692"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line95" />
+              <line
+                 x1="0"
+                 y1="122.46923"
+                 x2="278.46799"
+                 y2="122.46923"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line97" />
+              <line
+                 x1="0"
+                 y1="108.86154"
+                 x2="278.46799"
+                 y2="108.86154"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line99" />
+              <line
+                 x1="0"
+                 y1="95.253845"
+                 x2="278.46799"
+                 y2="95.253845"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line101" />
+              <line
+                 x1="0"
+                 y1="81.646156"
+                 x2="278.46799"
+                 y2="81.646156"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line103" />
+              <line
+                 x1="0"
+                 y1="68.03846"
+                 x2="278.46799"
+                 y2="68.03846"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line105" />
+              <line
+                 x1="0"
+                 y1="54.430771"
+                 x2="278.46799"
+                 y2="54.430771"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line107" />
+              <line
+                 x1="0"
+                 y1="40.823078"
+                 x2="278.46799"
+                 y2="40.823078"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line109" />
+              <line
+                 x1="0"
+                 y1="27.215385"
+                 x2="278.46799"
+                 y2="27.215385"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line111" />
+              <line
+                 x1="0"
+                 y1="13.607693"
+                 x2="278.46799"
+                 y2="13.607693"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line113" />
+              <line
+                 x1="0"
+                 y1="0"
+                 x2="278.46799"
+                 y2="0"
+                 fill="#000000"
+                 stroke="#424242"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line115" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g127">
+          <g
+             id="g125">
+            <line
+               x1="0"
+               y1="1292.7307"
+               x2="278.46799"
+               y2="1292.7307"
+               fill="#000000"
+               stroke="#999999"
+               stroke-width="1.5px"
+               id="line123" />
+          </g>
+        </g>
+        <g
+           id="g133">
+          <g
+             id="g131">
+            <line
+               x1="23.205666"
+               y1="0"
+               x2="23.205666"
+               y2="176.89999"
+               fill="#000000"
+               stroke="#999999"
+               stroke-width="1.5px"
+               id="line129" />
+          </g>
+        </g>
+        <g
+           id="g149">
+          <g
+             id="g147">
+            <g
+               id="g145">
+              <g
+                 id="g143">
+                <g
+                   id="g137">
+                  <path
+                     style="fill:none;stroke-dasharray:2, 2;stroke-dashoffset:0"
+                     stroke="#0077bb"
+                     stroke-width="2px"
+                     d="m 23.205667,166.7185 46.411333,1.40212 46.41133,-1.10161 46.41134,-1.1017 46.41133,3.305 46.41133,-3.40516"
+                     fill="none"
+                     id="path135" />
+                </g>
+                <g
+                   id="g141">
+                  <path
+                     style="fill:none;stroke:#0077bb"
+                     stroke="rgb(255, 112, 67)"
+                     stroke-width="2px"
+                     d="M 23.205667,101.54022 69.617,23.284873 116.02833,17.962312 162.43967,12.582488 208.851,9.8353547 255.26233,8.2710215"
+                     fill="none"
+                     id="path139" />
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g
+         transform="translate(51,176)"
+         clip-path="url(#clip_1)"
+         id="g196">
+        <clipPath
+           id="clip_1">
+          <rect
+             width="278"
+             height="23"
+             id="rect153"
+             x="0"
+             y="0" />
+        </clipPath>
+        <g
+           id="g194">
+          <g
+             id="g172">
+            <line
+               x1="0"
+               y1="0"
+               x2="0"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line156" />
+            <line
+               x1="23.205666"
+               y1="0"
+               x2="23.205666"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line158" />
+            <line
+               x1="69.616997"
+               y1="0"
+               x2="69.616997"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line160" />
+            <line
+               x1="116.02834"
+               y1="0"
+               x2="116.02834"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line162" />
+            <line
+               x1="162.43967"
+               y1="0"
+               x2="162.43967"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line164" />
+            <line
+               x1="208.851"
+               y1="0"
+               x2="208.851"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line166" />
+            <line
+               x1="255.26233"
+               y1="0"
+               x2="255.26233"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line168" />
+            <line
+               x1="278.46799"
+               y1="0"
+               x2="278.46799"
+               y2="5"
+               style="visibility:inherit"
+               fill="#000000"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line170" />
+          </g>
+          <g
+             transform="translate(0,8)"
+             id="g190">
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:hidden"
+               x="0"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text174">-500m</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="23.205666"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text176">0</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="69.616997"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text178">1</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="116.02834"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text180">2</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="162.43967"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text182">3</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="208.851"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text184">4</text>
+            <text
+               style="font-weight:200;font-size:12px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit"
+               x="255.26233"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               fill="#212121"
+               stroke="none"
+               stroke-width="1px"
+               id="text186">5</text>
+          </g>
+          <line
+             x1="0"
+             y1="0"
+             x2="278.46799"
+             y2="0"
+             fill="#000000"
+             stroke="#cccccc"
+             stroke-width="1px"
+             id="line192" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

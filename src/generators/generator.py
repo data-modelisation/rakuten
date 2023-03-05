@@ -22,7 +22,8 @@ class CommonGenerator(tf.keras.utils.Sequence):
         self.preprocessor = kwargs.get("preprocessor")
         self.preprocessor_fit = kwargs.get("preprocessor_fit")
         self.encoder = kwargs.get("encoder")
-        self.encoded = kwargs.get("encoded")
+        self.encoder_fitted = kwargs.get("encoder_fitted")
+        self.encoder_params = kwargs.get("encoder_params")
 
     def fit_preprocess(self,):
         if self.preprocessor_fit:
@@ -33,9 +34,11 @@ class CommonGenerator(tf.keras.utils.Sequence):
     def encode_targets(self,):
         if self.encoder is None:
             self.encoder = LabelEncoder()
-        
-        if not self.encoded:
+            
+        if not self.encoder_fitted:
             self.targets = self.encoder.fit_transform(self.labels)
+            self.encoder.get_params()
+
         else:
             self.targets = self.encoder.transform(self.labels)
 

@@ -31,7 +31,8 @@ class Model():
         predict=False,
         folder="src/models/",
         name=None,
-        suffix=""
+        suffix="",
+        random_state=42,
         ):
 
         self.preprocessor = None
@@ -39,6 +40,7 @@ class Model():
         self.model_fitted = False
         self.model = None
         self.suffix=suffix
+        self.random_state=random_state
         
         self.generator = generator
         self.generator_test = generator_test
@@ -52,8 +54,12 @@ class Model():
         self.load = load
         self.save = save
         self.model_path = None
+        self.model_current_path = None
 
         return None
+
+    def set_model_path(self,):
+        self.model_path = Path(self.models_folder, self.type, self.get_name())
 
     def get_name(self):
         return self.name + self.suffix
@@ -78,28 +84,13 @@ class Model():
         return [
                 call_memory(),
                 call_tqdm(),
-                call_dashboard(self.model_fold_path),
-                call_checkpoint(self.model_fold_path),
+                call_dashboard(self.model_current_path),
+                call_checkpoint(self.model_current_path),
                 call_earlystopping(),
                 call_reducelr(),
             ] if self.model_neural else []
 
-    def get_path(self, fold=-1):
-        return self.model_path if fold < 0 else self.model_fold_path
     
-    def set_model_folder(self,):
-        self.model_path = Path(self.models_folder, self.type , self.get_name())
-        self.model_path.mkdir(parents=True, exist_ok=True)
-        print(f"{self.model_path} created")
-  
-    def set_model_fold_folder(self, fold=0):
-
-        if self.model_path is None:
-            self.set_model_folder()
-
-        self.model_fold_path = Path(self.model_path, "folds", f"fold_{fold:02d}")
-        self.model_fold_path.mkdir(parents=True, exist_ok=True)
-        print(f"{self.model_fold_path} created")
 
     def load_preprocess(self):
         if self.model_path is None:
@@ -117,35 +108,24 @@ class Model():
             joblib.dump(self.preprocessor, path)
             print(f"preprocess savec in {path}")
             
-    def load_model(self, fold=-1):
-
-        if self.model_path is None:
-            self.set_model_folder()
-
-        if not fold < 0:
-            self.set_model_fold_folder(fold=fold)
-            path = Path(self.model_fold_path)
-        else :
-            path = Path(self.model_path)
+    def load_model(self, fold=None):
+        
+        self.set_current_folder(fold=fold)
 
         if self.model_neural:
-            model = tf.keras.models.load_model(path)
+            model = tf.keras.models.load_model(self.model_current_path)#(Path(path, "saved_model.hdf5"))
         else:
-            model = joblib.load(Path(path, "saved_model.pb"))
+            model = joblib.load(Path(self.model_current_path, "saved_model.pb"))
         
-        print(f"model loaded from {path}")
+        print(f"model loaded from {self.model_current_path}")
         return model
 
     def save_model(self, model, in_fold=False):
-        if self.save :
-            path = self.model_path if not in_fold else self.model_fold_path
-            #joblib.dump(model, Path(path, 'model.joblib'))
-            
-            if self.model_neural:
-                model.save(Path(path))
-            else:
-                joblib.dump(model, Path(path, "saved_model.pb"))
-            print(f"model saved in {path}")
+        if self.model_neural:
+            model.save(self.model_current_path)
+        else:
+            joblib.dump(model, Path(self.model_current_path, "saved_model.pb"))
+        print(f"model saved in {self.model_current_path}")
 
     def fit_preprocessor(self, values):
 
@@ -160,7 +140,7 @@ class Model():
 
         return values_transformed
 
-    def get_model(self, fold=-1):
+    def get_model(self, fold=None):
         if self.load:                
             return self.load_model(fold=fold)
         else:
@@ -176,12 +156,29 @@ class Model():
             y.append(array[1])
         return np.concatenate(x), np.concatenate(y)
 
-    def kfit(self, model=None, train_data=None, validation_data=None, fold=-1, class_weight=None):
+    def set_current_folder(self, fold=None):
         
-        self.class_weight = class_weight if class_weight is not None else train_data.class_weight 
+        if self.model_path is None:
+            self.set_model_path()
 
-        if self.type == "image" and isinstance(train_data, keras.preprocessing.image.DataFrameIterator):
-            fold = 0
+
+        if fold is None or fold < -1:
+            self.model_current_path = self.model_path
+        else:
+            self.model_current_path = Path(self.model_path, "folds", f"fold_{fold:02d}")
+
+        self.model_current_path.mkdir(exist_ok=True, parents=True)
+ 
+
+    def flow_if_necessary(self, input, type="validation"):
+        
+        return input.flow(type_=type) if isinstance(input, ImageGenerator) else input
+
+
+    def fit(self, model=None, train_data=None, validation_data=None, fold=None, crossval=True, class_weight=None):
+        
+        #Set the weights
+        self.class_weight = class_weight if class_weight is not None else train_data.class_weight 
 
         #If it's a fusion model, we build a special sequence with texts and images
         if self.type == "fusion" and not isinstance(train_data, FusionGenerator):
@@ -189,143 +186,123 @@ class Model():
             validation_data = FusionGenerator(validation_data)
 
             print("data transformed to sequences for fusion")
-            fold = 0
-
-        #If there is no model path, we create it
-        if not self.model_path:
-            self.set_model_folder()
-
-        #If there is no fold path, we create it
-        if not fold < 0:
-            self.set_model_fold_folder(fold)
-
-        #Get the model
-        model = self.get_model(fold=fold)
-
-        #If fold is negtiv, we perform the cross validation process
-        if fold < 0:
-
-            #Save the scores
+            fold = 1
+      
+        if crossval:
             scores = []
 
-            #Run the cross validation process
-            for idx_fold, (train_index, valid_index) in enumerate(KFold(self.num_folds).split(train_data)):
+            for kfold, (train_index, valid_index) in enumerate(KFold(self.num_folds).split(train_data)):
 
-                #Split
-                train_gen, valid_gen = train_data.split(split_indexes=[train_index, valid_index], is_batch=True)
-
-                #Call the training
-                model = self.kfit(
-                    train_data=train_gen,
-                    validation_data=valid_gen,
-                    fold=idx_fold
-                )
-                               
-                #Make prediction on the validation dataset
-                if self.model_neural:
-                    y_pred = self.predict(generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
-                else:
-                    valid_gen_unpacked, _ = self.unpack_iterator(valid_gen)
-                    y_pred = self.predict(features=valid_gen_unpacked, generator=valid_gen, targets=valid_gen.targets, model=model, fold=idx_fold)
-                    
-                y_true = valid_gen.decode(valid_gen.targets)
-
-                #Calculation of the recall score
-                score = recall_score(y_true, y_pred, average="weighted", zero_division=0)
-                scores.append(score)      
-            
-            #Select the best model an push it as attribute
-            self.model = self.select_best_fold(scores)
-            
-            #Save the best model in the main folder
-            if not self.load:
-                self.save_model(self.model, in_fold=False)
-
-            #Make prediction on the test dataset with the best model
-            print("prediciton with best model")
-            if self.model_neural:
-                y_pred = self.predict(generator=validation_data, targets=validation_data.targets, model=self.model)
-            else:
-                validation_data_unpacked, _ = self.unpack_iterator(validation_data)
-                y_pred = self.predict(features=validation_data_unpacked, generator=validation_data, targets=validation_data.targets, model=model, fold=idx_fold)
-                    
-
-            
-
-        #If fold is positiv, we make the fit
-        else:
-            print(f"starting fit process for fold {fold} : {self.type}")
-
-            if not self.load:
-
-                #Fitting the model to the features for neural
-                if self.model_neural:
-                    model.fit(train_data, **self.fit_kwargs(validation_data))
-                #Fitting the model to the features for non neural
-                else:
-                    train_data, validation_data = self.unpack_iterator(train_data)
-                    model.fit(train_data, validation_data)
+                kfold_train_data = train_data 
+                kfold_valid_data = validation_data 
                 
-                print(f"end of fit in fold {fold}")
+                # Entrainement sur les donne entrainement
+                model = self.fit( 
+                    train_data=kfold_train_data, 
+                    validation_data=kfold_valid_data, 
+                    fold=kfold,
+                    crossval=False, 
+                    class_weight=class_weight)
+
+                #Make a prediciton
+                kscore = self.predict(model, 
+                    validation_data,
+                    validation_data.targets,
+                    train_data)
+                
+                scores.append(kscore)
             
-                # Save model in the kfold folder
-                self.save_model(model, in_fold=True)
+            #Copy the best to the model root folder
+            model = self.select_best_fold(
+                scores
+            )
 
-                # Save the layers in the model summary file
-                self.save_model_summary(model)
+            self.set_current_folder(fold=None)
+            self.save_model(model)
 
-            self.model = model
-            #Return the model
+            #Make a prediction
+            self.predict(model, 
+                validation_data,
+                validation_data.targets,
+                train_data)
+        
+        else:
+
+            #Set the folder
+            self.set_current_folder(fold=fold)
+            print(f"Current fold : {self.model_current_path}")
+
+            #Get the model
+            model = self.get_model(fold=fold)
+
+            #Flow the imagegenerator if required
+            train_data_flow = self.flow_if_necessary(train_data)
+            valid_data_flow = self.flow_if_necessary(validation_data)
+
+            #Fit the model
+            if not self.load:
+                model.fit(
+                    train_data_flow,
+                    **self.fit_kwargs(valid_data_flow)
+                )
+            
+            #Make a prediction
+            self.predict(model, 
+                validation_data,
+                validation_data.targets,
+                train_data)
+            
             return model
 
-    def predict(self, features=None, generator=None, targets=None, model=None, fold=-1):
 
-        #Get the model
-        model = model if model is not None else self.model
+    def predict(self, model, features, targets, generator):
 
-        #Predict the targets
-        if features is not None:
-            y_pred = model.predict(features)
-        else:
-            y_pred = model.predict(generator)
-        
-        #Get the class if neural
+        #Flow the imagegenerator if required
+        features_flow = self.flow_if_necessary(features)
+
+        y_pred = model.predict(features_flow)
         if self.model_neural:
             y_pred = np.argmax(y_pred, axis=1)
-        
-        #Decode
+
+        y_true = targets
+
+        score = balanced_accuracy_score(y_true, y_pred)
+
+        print(y_pred)
+        print(y_true)
+            
+        #Decode the targets
         y_pred = generator.decode(y_pred)
+        y_true = generator.decode(y_true)
+
+        #Build the classification report
+        report = self.report_df(y_true, y_pred)
+
+        #Build the crosstab
+        self.crosstab(y_true, y_pred)
+
+        #Push the score in summary
+        self.save_summary(report)
+
+        #Save summary
+        self.save_model_summary(model)
+
+
+        return score
         
-        #If there is a target, we can make a report
-        if targets is not None:
-
-            #Decode targets
-            y_true = generator.decode(targets)
-
-            #Get the classification report
-            report = self.report_df(y_true, y_pred, fold=fold)
-
-            #Save the crosstab
-            self.crosstab(y_true, y_pred, fold=fold)
-
-            #Save it in the summary if asked
-            if self.summary:
-                self.save_summary(report)
-        
-        return y_pred
-        
-    def crosstab(self, y_true, y_pred, fold=-1):
-        #Calculate the crosstab
+    def crosstab(self, y_true, y_pred):
+        #Calculate the crosstab, normalisé selon les colonnes
         crosstab = pd.crosstab(
             y_true, y_pred,
-            rownames=['Realité'], colnames=['Prédiction']
+            rownames=['Realité'], colnames=['Prédiction'],
+            normalize="index"
         )
         #Save it in a csv file
-        if self.save:
-            path = self.get_path(fold)
-            crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
+        #if self.save:
+        path = self.model_current_path
+        crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
 
-    def report_df(self, y_true, y_pred, fold=-1):
+    def report_df(self, y_true, y_pred):
         
         #Create clf report
         clf_report = classification_report(y_true, y_pred, output_dict=True, zero_division=0)
@@ -334,9 +311,9 @@ class Model():
         clf_report = pd.DataFrame(clf_report).transpose()
 
         #Save the dataframe as csv file
-        if self.save:
-            path = self.get_path(fold)
-            clf_report.to_csv(Path(path, f'clf_report.csv'), index= True)
+        #if self.save:
+        path = self.model_current_path
+        clf_report.to_csv(Path(path, f'clf_report.csv'), index= True)
         
         #Return the clf report
         return clf_report
@@ -358,7 +335,7 @@ class Model():
     def save_model_summary(self, model):
 
         if self.model_neural:
-            path = Path(self.model_path, "model_summary.txt")
+            path = Path(self.model_current_path, "model_summary.txt")
             if path.exists():
                 os.remove(path)
 

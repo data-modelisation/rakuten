@@ -114,3 +114,17 @@ class ModelImage_VGG16(ModelImage):
         print(model.summary())
         return model
     
+class ModelImage_VGG16_Transfer(ModelImage):
+    def __init__(self, 
+        *args,
+        **kwargs):
+        
+        self.name="image_VGG16_transfer"
+        self.model_neural = True
+        self.clf_parameters = {}
+        self.preprocess_parameters = {}
+
+        super().__init__(*args, **kwargs)
+
+    def init_model(self,):
+        pass
