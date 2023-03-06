@@ -110,21 +110,12 @@ class ModelImage_VGG16(ModelImage):
             layer.trainable = False  
         
         model.add(base_model) # Ajout du modèle VGG16  
-<<<<<<< HEAD
-        model.add(GlobalAveragePooling2D(name="image_averagepooling_1"))   
-        model.add(Dense(units=1024, activation='relu', name="image_dense_1"))   
-        model.add(Dropout(rate=0.2, name="image_drop_1"))
-        model.add(Dense(units=512, activation='relu', name="image_dense_2"))   
-        model.add(Dropout(rate=0.2, name="image_drop_2"))  
-        model.add(Dense(units=27, activation="softmax", name="image_output"))
-=======
         model.add(GlobalAveragePooling2D())
         model.add(Dense(1024, activation='relu'))
         model.add(Dropout(rate=0.2))
         model.add(Dense(512, activation='relu'))
         model.add(Dropout(rate=0.2))
         model.add(Dense(n_class, activation='softmax'))
->>>>>>> 4535f09 (Ajout preprocessing_input et modifie modèle vgg16)
 
         model.compile(
                     loss="sparse_categorical_crossentropy",
