@@ -26,6 +26,7 @@ class ImageGenerator(CommonGenerator):
         self.target_shape = target_shape
         self.crop = crop
         self.features, self.labels = self.load()
+        
 
         print(f"Nombre d'images traitées : {len(self.features)}")
         self.encode_targets()
@@ -54,7 +55,8 @@ class ImageGenerator(CommonGenerator):
             ).astype({"links": str, "labels":str})
 
         return ImageDataGenerator(
-                    rescale=1/255
+                    rescale=1/255,
+                    preprocessing_function=self.preprocessing_function
                 ).flow_from_dataframe(
                     dataframe=df,
                     x_col="links",

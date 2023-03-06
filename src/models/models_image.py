@@ -1,7 +1,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
 from keras.applications.vgg16 import VGG16 
-from keras.applications.vgg16 import preprocess_input_vgg16
+from keras.applications.vgg16 import preprocess_input as preprocess_input_vgg16
 from sklearn.svm import SVC
 
 from src.models.models_utils import METRICS
@@ -94,7 +94,7 @@ class ModelImage_VGG16(ModelImage):
         super().__init__(*args, **kwargs)
 
     def init_model(self,):
-        
+        n_class = 27
         model = Sequential()
         base_model = VGG16(weights='imagenet', include_top=False)   
         # Freezer les couches du VGG16  
