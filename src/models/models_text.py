@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input, Dropout, Flatten
-from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, RNN, GRUCell
 from tensorflow.keras.layers import Embedding
 
 from src.models.models_utils import METRICS
@@ -251,3 +251,40 @@ class ModelText_Neural_Embedding(ModelText):
         return model
 
 
+
+class ModelText_Neural_RNN(ModelText):
+    def __init__(self, 
+        *args,
+        **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.name="text_neural_rnn"
+        self.model_neural = True
+        self.clf_parameters = {
+        }
+        self.preprocess_parameters = {
+            "vectorizer" : "tfidf",
+            "embedding" : True,
+        }
+
+    def init_model(self,):
+
+        model = Sequential()
+        model.add(Embedding(self.max_words_tokenized, self.max_len, name="text_input"))
+        model.add(RNN(GRUCell(128), return_sequences=True, name="text_rnn"))
+        model.add(Dropout(.3, name="text_drop_1"))
+        model.add(GlobalAveragePooling1D(name="text_average"))
+        model.add(Dense(256, activation="relu", name="text_dense_1"))
+        model.add(Dropout(.3, name="text_drop_2"))
+        model.add(Dense(27, activation="softmax", name="text_output"))
+
+
+        
+        model.compile(
+            loss='sparse_categorical_crossentropy', 
+            optimizer='adam', 
+            metrics=METRICS)
+
+        print(model.summary())
+        return model

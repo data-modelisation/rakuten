@@ -39,15 +39,15 @@ if __name__ == "__main__":
     
     index_train, index_test = train_test_split(np.arange(NUM_TARGETS), test_size=TEST_SPLIT, random_state=RANDOM_STATE)
 
-    model_text = ModelText_Neural_Embedding(
+    model_text = ModelText_Neural_RNN(
         suffix="",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_TEXT,
         batch_size=BATCH_SIZE,
-        load=True,
-        save=False,
-        report=False,
-        summary=False,
+        load=False,
+        save=True,
+        report=True,
+        summary=True,
         random_state=RANDOM_STATE,
     )
     
@@ -56,15 +56,15 @@ if __name__ == "__main__":
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_IMAGE,
         batch_size=BATCH_SIZE,
-        load=False,
-        save=True,
-        report=True,
-        summary=True,
+        load=True,
+        save=False,
+        report=False,
+        summary=False,
         target_shape=TARGET_SHAPE,
         random_state=RANDOM_STATE,
     )
     model_fusion = ModelFusion_Concat(
-        suffix="_embedding_224",
+        suffix="_rnn_224",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_FUSION,
         batch_size=BATCH_SIZE,
