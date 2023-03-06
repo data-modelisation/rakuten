@@ -39,32 +39,32 @@ if __name__ == "__main__":
     
     index_train, index_test = train_test_split(np.arange(NUM_TARGETS), test_size=TEST_SPLIT, random_state=RANDOM_STATE)
 
-    model_text = ModelText_Neural_RNN(
+    model_text = ModelText_Neural_Embedding(
         suffix="",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_TEXT,
-        batch_size=BATCH_SIZE,
-        load=False,
-        save=True,
-        report=True,
-        summary=True,
-        random_state=RANDOM_STATE,
-    )
-    
-    model_image = ModelImage_CNN_Lenet(
-        suffix="_224",
-        num_folds=NUM_FOLDS,
-        epochs = EPOCHS_IMAGE,
         batch_size=BATCH_SIZE,
         load=True,
         save=False,
         report=False,
         summary=False,
+        random_state=RANDOM_STATE,
+    )
+    
+    model_image = ModelImage_VGG16(
+        suffix="",
+        num_folds=NUM_FOLDS,
+        epochs = EPOCHS_IMAGE,
+        batch_size=BATCH_SIZE,
+        load=True,
+        save=False,
+        report=True,
+        summary=True,
         target_shape=TARGET_SHAPE,
         random_state=RANDOM_STATE,
     )
     model_fusion = ModelFusion_Concat(
-        suffix="_rnn_224",
+        suffix="_embedding_vgg16",
         num_folds=NUM_FOLDS,
         epochs = EPOCHS_FUSION,
         batch_size=BATCH_SIZE,
