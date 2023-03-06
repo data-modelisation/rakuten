@@ -2,7 +2,7 @@ import keras
 import tensorflow as tf
 from tensorflow.keras.callbacks import Callback, EarlyStopping, TensorBoard, ReduceLROnPlateau, ModelCheckpoint
 from tqdm.keras import TqdmCallback
-import resource
+#import resource
 import gc
 
 class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy):
@@ -29,7 +29,7 @@ METRICS = [
 
 class memoryCallback(Callback):
     def on_epoch_end(self, epoch, log={}):
-        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         gc.collect()
         keras.backend.clear_session()
 
