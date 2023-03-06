@@ -1,6 +1,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
 from keras.applications.vgg16 import VGG16 
+from keras.applications.vgg16 import preprocess_input_vgg16
 from sklearn.svm import SVC
 
 from src.models.models_utils import METRICS
@@ -23,6 +24,9 @@ class ModelImage(Model):
 
     def get_preprocessor(self):
         return None#build_pipeline_preprocessor(**self.preprocess_parameters)
+    
+    def get_preprocess_input(self):
+        return None
 
 class ModelImage_SVC(ModelImage):
     def __init__(self, 
@@ -98,12 +102,21 @@ class ModelImage_VGG16(ModelImage):
             layer.trainable = False  
         
         model.add(base_model) # Ajout du modèle VGG16  
+<<<<<<< HEAD
         model.add(GlobalAveragePooling2D(name="image_averagepooling_1"))   
         model.add(Dense(units=1024, activation='relu', name="image_dense_1"))   
         model.add(Dropout(rate=0.2, name="image_drop_1"))
         model.add(Dense(units=512, activation='relu', name="image_dense_2"))   
         model.add(Dropout(rate=0.2, name="image_drop_2"))  
         model.add(Dense(units=27, activation="softmax", name="image_output"))
+=======
+        model.add(GlobalAveragePooling2D())
+        model.add(Dense(1024, activation='relu'))
+        model.add(Dropout(rate=0.2))
+        model.add(Dense(512, activation='relu'))
+        model.add(Dropout(rate=0.2))
+        model.add(Dense(n_class, activation='softmax'))
+>>>>>>> 4535f09 (Ajout preprocessing_input et modifie modèle vgg16)
 
         model.compile(
                     loss="sparse_categorical_crossentropy",
@@ -112,6 +125,9 @@ class ModelImage_VGG16(ModelImage):
             )
         print(model.summary())
         return model
+    
+    def get_preprocess_input(self):
+        return preprocess_input_vgg16
     
 class ModelImage_VGG16_Transfer(ModelImage):
     def __init__(self, 
