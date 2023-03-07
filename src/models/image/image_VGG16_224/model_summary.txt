@@ -1,0 +1,24 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ vgg16 (Functional)          (None, None, None, 512)   14714688  
+                                                                 
+ global_average_pooling2d (G  (None, 512)              0         
+ lobalAveragePooling2D)                                          
+                                                                 
+ dense (Dense)               (None, 1024)              525312    
+                                                                 
+ dropout (Dropout)           (None, 1024)              0         
+                                                                 
+ dense_1 (Dense)             (None, 512)               524800    
+                                                                 
+ dropout_1 (Dropout)         (None, 512)               0         
+                                                                 
+ dense_2 (Dense)             (None, 27)                13851     
+                                                                 
+=================================================================
+Total params: 15,778,651
+Trainable params: 1,063,963
+Non-trainable params: 14,714,688
+_________________________________________________________________
