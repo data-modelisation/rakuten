@@ -24,6 +24,7 @@ class CommonGenerator(tf.keras.utils.Sequence):
         self.encoder = kwargs.get("encoder")
         self.encoder_fitted = kwargs.get("encoder_fitted")
         self.encoder_params = kwargs.get("encoder_params")
+        self.preprocessing_function = kwargs.get("preprocessing_function")
 
     def fit_preprocess(self,):
         if self.preprocessor_fit:
