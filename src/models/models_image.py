@@ -10,6 +10,9 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobil
 from tensorflow.keras.applications.efficientnet import EfficientNetB1
 from tensorflow.keras.applications.efficientnet import preprocess_input as efficientnet_preprocess_input
 
+from tensorflow.keras.applications.resnet import ResNet50
+from tensorflow.keras.applications.resnet import preprocess_input as resnet_preprocess_input
+
 from sklearn.svm import SVC
 
 from src.models.models_utils import METRICS
@@ -230,3 +233,49 @@ class ModelImage_MobileNetV2(ModelImage):
 
     def get_preprocess_input(self):
         return mobilenet_v2_preprocess_input      
+
+
+class ModelImage_ResNet50(ModelImage):
+    def __init__(self, 
+        *args,
+        **kwargs):
+        
+        self.name="image_ResNet50"
+        self.model_neural = True
+        self.clf_parameters = {}
+        self.preprocess_parameters = {}
+
+        super().__init__(*args, **kwargs)
+
+    def init_model(self,):
+        n_class = 27
+        model = Sequential()
+        base_model = ResNet50(
+                                include_top = False,
+                                weights = 'imagenet')
+
+        for layer in base_model.layers:   
+            layer.trainable = False  
+        
+        model.add(base_model)  
+        model.add(GlobalAveragePooling2D())
+        model.add(Dense(1024, activation='relu'))
+        model.add(Dropout(rate=0.2))
+        model.add(Dense(512, activation='relu'))
+        model.add(Dropout(rate=0.2))
+        model.add(Dense(n_class, activation='softmax'))
+
+        model.compile(
+                    loss="sparse_categorical_crossentropy",
+                    optimizer="adam",
+                    metrics=METRICS
+            )
+
+        return model
+    
+    def get_preprocessor(self):
+        return None#build_pipeline_preprocessor(**self.preprocess_parameters)
+
+    def get_preprocess_input(self):
+        return resnet_preprocess_input      
+        
