@@ -1,118 +1,49 @@
 import keras
 from keras.utils import Sequence
-from tensorflow.keras.layers import concatenate, Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense
-from tensorflow.keras.models import Model as KerasModel
-
+from tensorflow.keras.layers import concatenate, Concatenate, Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense
+from tensorflow.keras.models import Model as TFModel
+import tensorflow as tf
 import numpy as np
 
 import math
 from src.models.models_utils import METRICS
-from src.models.models import Model
+from src.models.models import MyModel
 
-# class FusionSequence(Sequence):
-#     """
-#     Keras Sequence object to train a model on larger-than-memory data.
-#     """
-#     def __init__(self, data, labels=[], models=[], preprocessors=[], batch_size=12, mode='train'):
-
-#         self.data = data
-#         self.models = models
-#         self.bsz = batch_size # batch size
-#         self.mode = mode # shuffle when in train mode
-#         self.labels = labels
-#         self.preprocessors = preprocessors
-#         self.max_index = len(self.labels)
-        
-#     def __len__(self):
-#         # compute number of batches to yield
-#         return int(math.ceil(self.max_index / float(self.bsz)))
-
-#     def on_epoch_end(self):
-#         # Shuffles indexes after each epoch if in training mode
-#         self.indexes = range(self.max_index)
-#         if self.mode == 'train':
-#             self.indexes = random.sample(self.indexes, k=len(self.indexes))
-
-#     def get_batch_indexes(self, idx):
-#         max_idx_possible = min(self.max_index, (idx + 1) * self.bsz)
-#         return np.arange(start=idx * self.bsz, stop=max_idx_possible)
-        
-#     def get_batch_labels(self, idx):
-#         # Fetch a batch of labels
-#         batch_indexes = self.get_batch_indexes(idx)
-#         return self.labels[batch_indexes]
-
-#     def get_batch_features(self, idx):
-#         # Fetch a batch of inputs
-#         print("bacth featueres")
-#         batch_indexes = self.get_batch_indexes(idx)
-#         transformed_data = []
-#         for preprocessor, data, model in zip(self.preprocessors, self.data, self.models):
-#             if model.has_preprocessor:
-#                 data = preprocessor.transform(data[batch_indexes])
-            
-#             if isinstance(data, keras.preprocessing.image.DataFrameIterator):
-#                 data = data[idx][0]
-#             transformed_data.append(data)
-
-#         # transformed = [preprocess(data) ]
-#         # text_transformed = self.preprocesses[0].transform(self.texts[batch_indexes])       
-#         # images, _ = self.images[idx]
-
-#         return list(transformed_data)
-
-#     def __getitem__(self, idx):
-
-#         batch_x = self.get_batch_features(idx)
-#         batch_y = self.get_batch_labels(idx)
-
-#         return batch_x, batch_y
-
-
-class ModelFusion(Model):
+class ModelFusion(MyModel):
     def __init__(self, 
         *args,
         models=[],
         models_concat_layer_num=[],
         features=[],
         targets=[],
-        batch_size=64,
-        name=None,
         **kwargs):
         
         super().__init__(*args, **kwargs)
 
-        if name is not None:
-            self.name = name
-        self.type="fusion"
-        self.use_generator=True
+        self.clf_parameters = {}
+        self.preprocess_parameters = {}
         self.models = models
         self.models_concat_layer_num=models_concat_layer_num
-        self.batch_size=batch_size
 
-        return self
-
-    def get_preprocessor(self,):
+    def init_preprocessor(self,):
         return None
 
     def load_models(self,):
-        # self.class_weight = self.targets.class_weight
         
         for model in self.models:
-            model.load_model()
-            model.load_preprocess()
+            if model.model is None:
+                model.model = model.get_model()
+            model.preprocessor = model.load_preprocessor()
+            model.compile()
 
         return self
 
     def rename_layers(self,):
 
         for idx, model in enumerate(self.models):
-            if model.model is None:
-                print(f"model {model.name} wasn't loaded")
-                model.model = model.load_model()
-
+ 
             for layer in model.model.layers:
-                layer._name = f'{layer.name}_{model.name}_{idx}'
+                layer._name = f'{layer.name}_{model.model_name}_{idx}'
                 print(layer.name)
 
 
@@ -137,21 +68,7 @@ class ModelFusion(Model):
             concat_layers.append(layer)
 
         print("layers merged")
-        return concat_layers
-
-
-class ModelFusion_Concat(ModelFusion):
-    def __init__(self, 
-        *args,
-        **kwargs):
-        
-        super().__init__(*args, **kwargs)
-
-        self.name="fusion_concat"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
-        
+        return concat_layers      
 
     def init_model(self,):
 
@@ -164,13 +81,13 @@ class ModelFusion_Concat(ModelFusion):
         x = Dropout(.2, name="fusion_drop1")(x)
         output = Dense(27, activation="softmax",name="fusion_output")(x)
         
-        model = KerasModel(inputs=[model.model.input for model in self.models], outputs=[output,])
+        model = TFModel(inputs=[model.model.input for model in self.models], outputs=[output,])
 
         #Compilation
         model.compile(
-            loss="sparse_categorical_crossentropy",
-            optimizer="adam",
-            metrics=METRICS
+            optimizer=tf.keras.optimizers.Adam(lr=1e-4),
+            loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+            metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
         )
 
         return model

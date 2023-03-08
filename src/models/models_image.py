@@ -4,10 +4,10 @@ from keras.applications.vgg16 import VGG16
 from sklearn.svm import SVC
 
 from src.models.models_utils import METRICS
-from src.models.models import Model
+from src.models.models import MyModel
 from src.tools.image import build_pipeline_preprocessor
 
-class ModelImage(Model):
+class ModelImage(MyModel):
     def __init__(self, 
         *args,
         target_shape=[10, 10, 3],
@@ -16,12 +16,9 @@ class ModelImage(Model):
         
         super().__init__(*args, **kwargs)
 
-        self.type="image"
         self.target_shape=target_shape
-        self.use_generator=True
 
-
-    def get_preprocessor(self):
+    def init_preprocessor(self):
         return None#build_pipeline_preprocessor(**self.preprocess_parameters)
 
 class ModelImage_SVC(ModelImage):
@@ -40,7 +37,7 @@ class ModelImage_SVC(ModelImage):
         
         return SVC()
 
-    def get_preprocessor(self):
+    def init_preprocessor(self):
         return build_pipeline_preprocessor()
 
 class ModelImage_CNN_Lenet(ModelImage):
@@ -48,15 +45,13 @@ class ModelImage_CNN_Lenet(ModelImage):
         *args,
         **kwargs):
         
-        self.name="image_CNN_Lenet"
-        self.model_neural = True
         self.clf_parameters = {}
         self.preprocess_parameters = {}
 
         super().__init__(*args, **kwargs)
 
     def init_model(self,):
-        
+
         model = Sequential()
         model.add(Input(shape = self.target_shape, name="image_input"))
         model.add(Conv2D(8, kernel_size=(3,3), activation="relu", padding = 'valid', name="image_conv1"))
@@ -68,13 +63,7 @@ class ModelImage_CNN_Lenet(ModelImage):
         model.add(Flatten(name="image_flatten"))
         model.add(Dense(units=27*27, activation="relu", name="image_last"))
         model.add(Dense(units=27, activation="softmax", name="image_output"))
-
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
-
+        
         return model
 
 class ModelImage_VGG16(ModelImage):
@@ -82,8 +71,6 @@ class ModelImage_VGG16(ModelImage):
         *args,
         **kwargs):
         
-        self.name="image_VGG16"
-        self.model_neural = True
         self.clf_parameters = {}
         self.preprocess_parameters = {}
 
@@ -105,21 +92,14 @@ class ModelImage_VGG16(ModelImage):
         model.add(Dropout(rate=0.2, name="image_drop_2"))  
         model.add(Dense(units=27, activation="softmax", name="image_output"))
 
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
-        print(model.summary())
+
         return model
     
-class ModelImage_VGG16_Transfer(ModelImage):
+class ModelImage_MobileNet(ModelImage):
     def __init__(self, 
         *args,
         **kwargs):
         
-        self.name="image_VGG16_transfer"
-        self.model_neural = True
         self.clf_parameters = {}
         self.preprocess_parameters = {}
 

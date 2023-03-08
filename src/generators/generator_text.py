@@ -58,24 +58,7 @@ class TextGenerator(CommonGenerator):
             anova_table = sm.stats.anova_lm(model, typ=2)
             print(anova_table)
 
-    def get_imbalanced(self,):
-
-        df = pd.DataFrame(self.labels, columns=["prdtypecode"])
-        df["prdtypename"] = convert_to_readable_categories(df)
-
-        sns.set(rc={'figure.figsize': (10, 8)})
-
-        graph_category = sns.countplot(
-            data=df,
-            y="prdtypename",
-            order=df.prdtypename.value_counts().index)
-
-        graph_category.set(
-            xlabel='Nombre de produits [-]',
-            ylabel='Catégories [-]',
-            title='Nombre de produits par catégorie (Train)')
-        plt.savefig("notebooks/images/imbalanced.png")
-        plt.clf()
+    
 
     def get_counts(self,):
 

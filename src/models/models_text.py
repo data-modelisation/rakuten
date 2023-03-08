@@ -16,11 +16,11 @@ from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D
 from tensorflow.keras.layers import Embedding
 
 from src.models.models_utils import METRICS
-from src.models.models import Model
+from src.models.models import MyModel
 from src.tools.text import pipeline_preprocess
 
 
-class ModelText(Model):
+class ModelText(MyModel):
     def __init__(self, 
         *args,
         max_words_featured=5000,
@@ -31,18 +31,18 @@ class ModelText(Model):
 
         super().__init__(*args, **kwargs)
 
-        self.type="text"
-        self.use_generator=False
         self.max_words_featured = max_words_featured
         self.max_words_tokenized = max_words_tokenized
         self.max_len = max_len
+        print("init of ModelText finished")
 
-    def get_preprocessor(self):
+    def init_preprocessor(self):
         return pipeline_preprocess(
             max_len=self.max_len,
             max_words_featured=self.max_words_featured,
             max_words_tokenized=self.max_words_tokenized,
-            **self.preprocess_parameters)
+            **self.preprocess_parameters
+            )
 
 class ModelText_LR(ModelText):
     def __init__(self, 
@@ -51,9 +51,6 @@ class ModelText_LR(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_logistic_regression"
-        
-        self.model_neural = False
         self.clf_parameters = {
             "solver" : "liblinear",
             "class_weight": "balanced",
@@ -62,6 +59,7 @@ class ModelText_LR(ModelText):
             "vectorizer" : "tfidf",
             "embedding" : False,
         }
+        print("init of ModelText_LR finished")
 
     def init_model(self,):
         return LogisticRegression(**self.clf_parameters)
@@ -73,10 +71,7 @@ class ModelText_RF(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_random_forest"
-        self.model_neural = False
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : False,
@@ -92,10 +87,7 @@ class ModelText_KNN(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_kneighbours"
-        self.model_neural = False
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : False,
@@ -112,8 +104,6 @@ class ModelText_KMC(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_kmeans"
-        self.model_neural = False
         self.clf_parameters = {
             "n_clusters" : 27,
         }
@@ -134,10 +124,7 @@ class ModelText_DT(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_decision_tree"
-        self.model_neural = False
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : False,
@@ -154,11 +141,7 @@ class ModelText_GB(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_adaboost"
-        self.model_neural = False
-        self.clf_parameters = {
-
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : False,
@@ -174,8 +157,6 @@ class ModelText_AB(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_adaboost"
-        self.model_neural = False
         self.clf_parameters = {
             "learning_rate" : .01,
             "n_estimators":50,
@@ -195,26 +176,19 @@ class ModelText_Neural_Simple(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_neural_simple"
-        self.model_neural = True
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : False,
         }
 
     def init_model(self,):
+
         model = Sequential()
         model.add(Dense(54, activation='relu', name="text_dense_1")) #On a supprimé 3 colonnes
         model.add(Dropout(.5, name="text_drop_1"))
         model.add(Dense(27, activation='softmax',name="text_output"))
         
-        model.compile(
-            loss='sparse_categorical_crossentropy', 
-            optimizer='adam', 
-            metrics=METRICS)
-
         return model
 
 class ModelText_Neural_Embedding(ModelText):
@@ -224,16 +198,17 @@ class ModelText_Neural_Embedding(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_neural_embedding"
-        self.model_neural = True
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : True,
+            # "max_words_featured" : 5000,
+            # "max_words_tokenized" : 50000,
+            # "max_len": 100
         }
 
     def init_model(self,):
+        
         model = Sequential()
         model.add(Embedding(self.max_words_tokenized, self.max_len, name="text_input")) 
         model.add(GlobalAveragePooling1D(name="text_average"))
@@ -242,15 +217,7 @@ class ModelText_Neural_Embedding(ModelText):
         model.add(Dropout(.2, name="text_drop_2"))
         model.add(Dense(27, activation='softmax', name="text_output"))
         
-        model.compile(
-            loss='sparse_categorical_crossentropy', 
-            optimizer='adam', 
-            metrics=METRICS)
-
-        print(model.summary())
         return model
-
-
 
 class ModelText_Neural_RNN(ModelText):
     def __init__(self, 
@@ -259,10 +226,7 @@ class ModelText_Neural_RNN(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.name="text_neural_rnn"
-        self.model_neural = True
-        self.clf_parameters = {
-        }
+        self.clf_parameters = {}
         self.preprocess_parameters = {
             "vectorizer" : "tfidf",
             "embedding" : True,
@@ -278,13 +242,5 @@ class ModelText_Neural_RNN(ModelText):
         model.add(Dense(256, activation="relu", name="text_dense_1"))
         model.add(Dropout(.3, name="text_drop_2"))
         model.add(Dense(27, activation="softmax", name="text_output"))
-
-
         
-        model.compile(
-            loss='sparse_categorical_crossentropy', 
-            optimizer='adam', 
-            metrics=METRICS)
-
-        print(model.summary())
         return model
