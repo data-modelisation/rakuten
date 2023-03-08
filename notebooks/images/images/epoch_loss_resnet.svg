@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 677.50067 451.95865"
+   version="1.1"
+   id="svg236"
+   sodipodi:docname="epoch_loss_resnet.svg"
+   width="677.50067"
+   height="451.95865"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="epoch_loss_vgg16.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs240" />
+  <sodipodi:namedview
+     id="namedview238"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.6425"
+     inkscape:cx="413.39422"
+     inkscape:cy="98.325723"
+     inkscape:window-width="1600"
+     inkscape:window-height="833"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g2431" />
+  <g
+     id="g2431"
+     transform="translate(60.398801,4.5101502)"
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+    <g
+       id="g2399"
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+      <g
+         id="g2397"
+         style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+        <g
+           id="g2395"
+           style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+          <g
+             id="g2381"
+             style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+            <path
+               stroke="#ee3377"
+               stroke-width="2px"
+               d="m 101.5,144.82834 50.75,6.5938 50.75,4.00563 50.75,2.61899 50.75,3.15083 50.75,0.75148 50.75,3.3605 50.75,3.01898 50.75,-1.01627 50.75,2.05669"
+               style="fill:none;font-variation-settings:normal;vector-effect:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+               fill="none"
+               id="path2379" />
+          </g>
+          <g
+             id="g2385"
+             style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+            <path
+               stroke="#33bbee"
+               stroke-width="2px"
+               d="m 101.5,27.943257 50.75,13.613217 50.75,8.583394 50.75,5.415374 50.75,4.024372 50.75,4.409596 50.75,3.166643 50.75,2.805872 50.75,1.913887 50.75,2.301983"
+               style="fill:none;font-variation-settings:normal;vector-effect:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+               fill="none"
+               id="path2383" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <g
+       opacity="0.2"
+       id="g2429"
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+      <g
+         id="g2427"
+         style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+        <g
+           id="g2425"
+           style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+          <g
+             id="g2411"
+             style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+            <path
+               stroke="#ee3377"
+               stroke-width="2px"
+               d="m 101.5,144.82834 50.75,10.55009 50.75,3.89474 50.75,1.85353 50.75,4.18461 50.75,-2.32267 50.75,7.12651 50.75,2.6151 50.75,-6.91676 50.75,6.60941"
+               style="fill:none;font-variation-settings:normal;vector-effect:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+               fill="none"
+               id="path2409" />
+          </g>
+          <g
+             id="g2415"
+             style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1">
+            <path
+               stroke="#33bbee"
+               stroke-width="2px"
+               d="m 101.5,27.943257 50.75,21.781147 50.75,8.655522 50.75,3.543795 50.75,2.910114 50.75,5.255434 50.75,1.594935 50.75,2.36851 50.75,0.645509 50.75,2.897548"
+               style="fill:none;font-variation-settings:normal;vector-effect:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+               fill="none"
+               id="path2413" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g
+     id="g234"
+     transform="translate(21.484878,5.519986)">
+    <g
+       id="g232">
+      <g
+         id="g54"
+         style="fill:#000000;fill-opacity:1">
+        <g
+           id="g52"
+           style="fill:#000000;fill-opacity:1">
+          <g
+             id="g24"
+             style="fill:#000000;fill-opacity:1">
+            <line
+               x1="40"
+               y1="377"
+               x2="35"
+               y2="377"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line2" />
+            <line
+               x1="40"
+               y1="339.29999"
+               x2="35"
+               y2="339.29999"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line4" />
+            <line
+               x1="40"
+               y1="301.60001"
+               x2="35"
+               y2="301.60001"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line6" />
+            <line
+               x1="40"
+               y1="263.89999"
+               x2="35"
+               y2="263.89999"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line8" />
+            <line
+               x1="40"
+               y1="226.2"
+               x2="35"
+               y2="226.2"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line10" />
+            <line
+               x1="40"
+               y1="188.5"
+               x2="35"
+               y2="188.5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line12" />
+            <line
+               x1="40"
+               y1="150.8"
+               x2="35"
+               y2="150.8"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line14" />
+            <line
+               x1="40"
+               y1="113.1"
+               x2="35"
+               y2="113.1"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line16" />
+            <line
+               x1="40"
+               y1="75.400002"
+               x2="35"
+               y2="75.400002"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line18" />
+            <line
+               x1="40"
+               y1="37.700001"
+               x2="35"
+               y2="37.700001"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line20" />
+            <line
+               x1="40"
+               y1="0"
+               x2="35"
+               y2="0"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line22" />
+          </g>
+          <g
+             transform="translate(30)"
+             id="g48"
+             style="fill:#000000;fill-opacity:1">
+            <text
+               x="0"
+               y="377"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text26">0</text>
+            <text
+               x="0"
+               y="339.29999"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text28">0.5</text>
+            <text
+               x="0"
+               y="301.60001"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text30">1</text>
+            <text
+               x="0"
+               y="263.89999"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text32">1.5</text>
+            <text
+               x="0"
+               y="226.2"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text34">2</text>
+            <text
+               x="0"
+               y="188.5"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text36">2.5</text>
+            <text
+               x="0"
+               y="150.8"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text38">3</text>
+            <text
+               x="0"
+               y="113.1"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text40">3.5</text>
+            <text
+               x="0"
+               y="75.400002"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text42">4</text>
+            <text
+               x="0"
+               y="37.700001"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text44">4.5</text>
+            <text
+               x="0"
+               y="0"
+               dx="0em"
+               dy="0.30000001em"
+               style="font-weight:200;font-size:13.3333px;font-family:Roboto, sans-serif;text-anchor:end;visibility:hidden;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text46">5</text>
+          </g>
+          <line
+             x1="40"
+             y1="0"
+             x2="40"
+             y2="377"
+             fill="rgb(0, 0, 0)"
+             stroke="#cccccc"
+             stroke-width="1px"
+             id="line50"
+             style="fill:#000000;fill-opacity:1" />
+        </g>
+      </g>
+      <g
+         transform="translate(40)"
+         clip-path="url(#clip_0)"
+         id="g181">
+        <clipPath
+           id="clip_0">
+          <rect
+             width="812"
+             height="377"
+             id="rect56"
+             x="0"
+             y="0" />
+        </clipPath>
+        <g
+           id="g105">
+          <g
+             id="g103">
+            <g
+               id="g77">
+              <line
+                 x1="0"
+                 y1="0"
+                 x2="0"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line59" />
+              <line
+                 x1="101.5"
+                 y1="0"
+                 x2="101.5"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line61" />
+              <line
+                 x1="203"
+                 y1="0"
+                 x2="203"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line63" />
+              <line
+                 x1="304.5"
+                 y1="0"
+                 x2="304.5"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line65" />
+              <line
+                 x1="406"
+                 y1="0"
+                 x2="406"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line67" />
+              <line
+                 x1="507.5"
+                 y1="0"
+                 x2="507.5"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line69" />
+              <line
+                 x1="609"
+                 y1="0"
+                 x2="609"
+                 y2="377"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line71" />
+            </g>
+            <g
+               id="g101">
+              <line
+                 x1="0"
+                 y1="339.29999"
+                 x2="609.31195"
+                 y2="339.29999"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line81" />
+              <line
+                 x1="0"
+                 y1="301.60001"
+                 x2="609.31195"
+                 y2="301.60001"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line83" />
+              <line
+                 x1="0"
+                 y1="263.89999"
+                 x2="609.31195"
+                 y2="263.89999"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line85" />
+              <line
+                 x1="0"
+                 y1="226.2"
+                 x2="609.31195"
+                 y2="226.2"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line87" />
+              <line
+                 x1="0"
+                 y1="188.5"
+                 x2="609.31195"
+                 y2="188.5"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line89" />
+              <line
+                 x1="0"
+                 y1="150.8"
+                 x2="609.31195"
+                 y2="150.8"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line91" />
+              <line
+                 x1="0"
+                 y1="113.1"
+                 x2="609.31195"
+                 y2="113.1"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line93" />
+              <line
+                 x1="0"
+                 y1="75.400002"
+                 x2="609.31195"
+                 y2="75.400002"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line95" />
+              <line
+                 x1="0"
+                 y1="37.700001"
+                 x2="609.31195"
+                 y2="37.700001"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line97" />
+              <line
+                 x1="0"
+                 y1="0"
+                 x2="609.31195"
+                 y2="0"
+                 fill="#000000"
+                 stroke="#bdbdbd"
+                 stroke-width="1px"
+                 opacity="0.25"
+                 id="line99" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g111"
+           transform="matrix(0.75187306,0,0,1,0,0.04630125)">
+          <g
+             id="g109">
+            <line
+               x1="0"
+               y1="377"
+               x2="812"
+               y2="377"
+               fill="#000000"
+               stroke="#999999"
+               stroke-width="1.5px"
+               id="line107" />
+          </g>
+        </g>
+        <g
+           id="g117">
+          <g
+             id="g115">
+            <line
+               x1="101.5"
+               y1="0"
+               x2="101.5"
+               y2="377"
+               fill="#000000"
+               stroke="#999999"
+               stroke-width="1.5px"
+               id="line113" />
+          </g>
+        </g>
+      </g>
+      <g
+         transform="matrix(1.0002435,0,0,1,40,377)"
+         clip-path="url(#clip_1)"
+         id="g230"
+         style="fill:#000000;fill-opacity:1">
+        <clipPath
+           id="clip_1">
+          <rect
+             width="812"
+             height="23"
+             id="rect183"
+             x="0"
+             y="0" />
+        </clipPath>
+        <g
+           id="g228"
+           style="fill:#000000;fill-opacity:1">
+          <g
+             id="g204"
+             style="fill:#000000;fill-opacity:1">
+            <line
+               x1="0"
+               y1="0"
+               x2="0"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line186" />
+            <line
+               x1="101.5"
+               y1="0"
+               x2="101.5"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line188" />
+            <line
+               x1="203"
+               y1="0"
+               x2="203"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line190" />
+            <line
+               x1="304.5"
+               y1="0"
+               x2="304.5"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line192" />
+            <line
+               x1="406"
+               y1="0"
+               x2="406"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line194" />
+            <line
+               x1="507.5"
+               y1="0"
+               x2="507.5"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line196" />
+            <line
+               x1="609"
+               y1="0"
+               x2="609"
+               y2="5"
+               style="visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(0, 0, 0)"
+               stroke="#cccccc"
+               stroke-width="1px"
+               id="line198" />
+          </g>
+          <g
+             transform="translate(0,8)"
+             id="g224"
+             style="fill:#000000;fill-opacity:1">
+            <text
+               x="0"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:hidden;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text206">-2</text>
+            <text
+               x="101.5"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text208">0</text>
+            <text
+               x="203"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text210">2</text>
+            <text
+               x="304.5"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text212">4</text>
+            <text
+               x="406"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text214">6</text>
+            <text
+               x="507.5"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text216">8</text>
+            <text
+               x="609"
+               y="0"
+               dx="0em"
+               dy="0.94999999em"
+               style="font-weight:200;font-size:13.3317px;font-family:Roboto, sans-serif;text-anchor:middle;visibility:inherit;fill:#000000;fill-opacity:1"
+               fill="rgb(255, 255, 255)"
+               stroke="none"
+               stroke-width="1px"
+               id="text218">10</text>
+          </g>
+          <line
+             x1="0"
+             y1="0.90809536"
+             x2="609.55359"
+             y2="0.90809536"
+             fill="rgb(0, 0, 0)"
+             stroke="#cccccc"
+             stroke-width="0.866419px"
+             id="line226"
+             style="fill:#000000;fill-opacity:1" />
+        </g>
+      </g>
+    </g>
+  </g>
+  <text
+     style="font-weight:200;font-size:17.6141px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+     x="-156.40799"
+     y="16.367165"
+     fill="#212121"
+     stroke="none"
+     stroke-width="1.46783px"
+     id="text1522-3"
+     transform="rotate(-90)">val_loss [-]</text>
+  <text
+     style="font-weight:200;font-size:17.9384px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+     x="462.68848"
+     y="424.06866"
+     fill="#212121"
+     stroke="none"
+     stroke-width="1.49486px"
+     id="text1522-3-6">epochs [-]</text>
+  <text
+     style="font-weight:200;font-size:18.7619px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+     x="341.25079"
+     y="451.77103"
+     fill="#212121"
+     stroke="none"
+     stroke-width="1.56355px"
+     id="text8064-5-5-3">Entraînement Resnet</text>
+  <text
+     style="font-weight:200;font-size:18.7619px;font-family:Roboto, sans-serif;text-anchor:end;visibility:inherit"
+     x="652.2179"
+     y="451.72412"
+     fill="#212121"
+     stroke="none"
+     stroke-width="1.56355px"
+     id="text8064-5-5-3-7">Validation Resnet</text>
+  <path
+     style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+     d="m 458.80291,444.68841 h 40.42575"
+     id="path932-0" />
+  <path
+     style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ff8080;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+     d="m 117.3409,444.68841 h 40.42575"
+     id="path932-0-3" />
+</svg>
