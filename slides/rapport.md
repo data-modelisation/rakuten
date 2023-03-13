@@ -153,21 +153,6 @@ ___
 <!--
 _header: 'Préparation des données / Text' 
 -->
-
-Les étapes suivantes sont exécutées via des pipelines afin de transformer les données textuelles :
-  * Fusion de deux colonnes `designation` et `description` dans `text`
-  * Détection la langue dans `text` et ensuite traduire les textes vers le français
-  * Nettoyage de la colonne `text` : supprimer les caractères spéciaux, supprimer la ponctuation et etc. 
-  * Suppression des *stopwords* 
-  * Extraction de la racine des mots 
-  * Vectorisation du texte via un `Tokenizer`
-
-L'étape de vectorisation varie en fonction du modèle utilisé par la suite.
-___
-
-<!--
-_header: 'Préparation des données / Text' 
--->
 Les étapes suivantes sont exécutées via des pipelines afin de transformer les données textuelles :
   * Fusion de deux colonnes `designation` et `description` dans `text`
   * Détection la langue dans `text` et ensuite traduire les textes vers le français
