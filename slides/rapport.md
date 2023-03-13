@@ -153,19 +153,30 @@ ___
 <!--
 _header: 'Préparation des données / Text' 
 -->
-Les étapes suivantes sont exécutées via des pipelines afin de transformer les données textuelles :
-  * Fusion de deux colonnes `designation` et `description` dans `text`
-  * Détection la langue dans `text` et ensuite traduire les textes vers le français
+<style scoped>
+table {
+  font-size: 17px;
+}
+section {
+  font-size: 17px;
+}
+</style>
+L'exemple de transformations appliquées : 
+* `designation` : Une table très jolie! 
+* `description` : <ul><li>\&#43;Dimensions : 60 x 33 cm</li>
 
-| Etape                                                 |     Résultat     | 
-| :---------------------------------------------------- | :--------------: | 
-| Suppression les balises html                          |    <p> Blabla      |
-| Suppression de la ponctuation  et caractères spéciaux |     Bla bla      |
-| Suppression les valeurs numériques                    |     Bla bla      |
-| Suppression les majuscules                            |     Bla bla      |
-| Suppression des *stopwords*                           |     Bla bla      | 
-| Extraction de la racine des mots                      |     Bla bla      | 
-| Vectorisation du texte via un `Tokenizer`             |     [86, 1, 2 ... ]      | 
+| Etape                                                 |     Résultat                                   | 
+| :----- | :----------------------------------------------- | 
+| Fusion de deux colonnes                               | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li> | 
+| Détection la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li> | 
+| Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
+| Suppression des caractères non alphanumériques          | Une table très jolie Dimensions x cm           |
+| Passage en minuscule                                  | une table très jolie dimensions x cm           |
+| Encodage                                              | une table tres jolie dimensions x cm           |
+| Les mots d'un caractère                               | une table tres jolie dimensions cm             |
+| Suppression des *stopwords*                           | table tres jolie dimensions cm                 | 
+| Extraction de la racine des mots                      | tabl tres jol dimens cm                        | 
+| Vectorisation du texte via un `Tokenizer`             | [6, 1, 2, 4, 5 ]                               | 
 ___
 
 <!--
@@ -188,11 +199,17 @@ ___
 <!--
 _header: 'Les modèles / Deep learning / Fusion ' 
 -->
-![bg width:65%](images/models_dl_text.jpg)
-![bg width:100%](../notebooks/images/fusion_methodology.png)
-![bg width:50%](images/models_fusion.jpg)
-___
 
+![width:90%](../notebooks/images/fusion_methodology.png)
+Explication de fusion ....
+___
+<!--
+_header: 'Les modèles / Deep learning / Fusion ' 
+-->
+![bg width:42%](images/models_dl_text.jpg)
+![bg]()
+![bg width:32%](images/models_fusion.jpg)
+___
 <!--
 _header: 'Analyse du meilleur modèle' 
 -->
