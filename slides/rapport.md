@@ -4,7 +4,7 @@ marp: true
 class: 
     #- lead
     #- invert
-footer:  DST - Bootcamp - DEC22 - Rakuten Challenge 
+footer:  DST - Bootcamp - DEC22 - Rakuten Challenge
 header: ''
 paginate: true
 
@@ -98,8 +98,7 @@ _header: 'Description des données'
 * La  description est plus longs et contient entre 0 (certaines descriptions sont vides) et 2 068 mots
 * Images : couleur, `500x500px` encodées au format JPG 
 
-
-___
+---
 <!--
 _header: 'Description des données / Nombre de produits par catégorie' 
 -->
@@ -149,13 +148,7 @@ ___
 _header: 'Exploration des donnéess / Images' 
 -->
 ![bg width:90%](../notebooks/images/white.png)
-![bg width:85%](../notebooks/images/channels.png)
-___
-<!--
-_header: 'Exploration des donnéess / Images' 
--->
 ![bg width:90%](../notebooks/images/mask.png)
-![bg width:90%](../notebooks/images/random_targets.png)
 ___
 <!--
 _header: 'Préparation des données / Text' 
