@@ -180,51 +180,9 @@ __ImageDataGenerator__:
 ![bg right width:80%](../notebooks/images/rescale.png)
 ___
 <!--
-_header: 'Les modèles / Machine Learning  / Text' 
--->
-* Catégorie `10` (Livre d'occasion) souvent confondue avec `2705` (Livre neuf) et `2403` (Revue) 
-* Catégorie `40` (Jeu console) souvent confondue avec `10` (Livre occasion)  et `2462` (Jeu oldschool)
-* Catégorie `1280` (Déguisement) souvent confondue avec `1281` (Boîte de jeu) et `1140` (Figurine)
-
-
-![bg right:48% width:75%](images/models_ml_text.jpg)
-
-
-___
-<!--
-_header: 'Les modèles / Machine Learning / Image' 
--->
-
-| Classifier | Acc. | Precision weighted | Recall weighted | F1 weighted |
-|------------|----------|--------------------|-----------------|-------------|
-| LogReg     | 0.18     | 0.16               | 0.18            | 0.16        |
-| RF         | 0.12     | 0.04               | 0.12            | 0.04        |
-| KNN        | 0.18     | 0.16               | 0.18            | 0.16        |
-| SVC        | 0.18     | 0.17               | 0.18            | 0.17        |
-| GradBoost  | 0.09     | 0.08               | 0.09            | 0.06        |
-
-![bg right:39% width:100%](../notebooks/images/SVCHeatmap.png)
-
-
-
-___
-<!--
 _header: 'Les modèles / Deep learning / Text ' 
 -->
-![bg width:85%](../notebooks/images/texts/epoch_accuracy.png)
 ![bg height:95%](images/models_dl_text.jpg)
-
-___
-<!--
-_header: 'Les modèles / Deep learning / Image ' 
--->
- |Model                        |Accuracy                 | Val accuracy    | 
-|-----------------------------|-------------------------|-----------------|
-| VGG16                       |0.50                     |0.49             | 
-| ResNet                      |0.16                     |0.18             | 
-| MobileNet                   |0.87                     |0.47             |
-
-![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
 
 ___
 <!--
@@ -299,9 +257,45 @@ Le projet ![height:35px](https://upload.wikimedia.org/wikipedia/commons/thumb/0/
 L'exploration de données, le travail de groupe, les différentes implémentations et sprints ont fait de ce projet un projet répondant, nous l'espérons, aux besoins d'une entreprise.
 ![bg left:50% ](https://static.vecteezy.com/system/resources/previews/006/161/114/large_2x/conclusion-word-on-red-keyboard-button-free-photo.jpg)
 
+---
+<!--
+_header: 'Annexe : Machine Learning  / Text' 
+-->
+* Catégorie `10` (Livre d'occasion) souvent confondue avec `2705` (Livre neuf) et `2403` (Revue) 
+* Catégorie `40` (Jeu console) souvent confondue avec `10` (Livre occasion)  et `2462` (Jeu oldschool)
+* Catégorie `1280` (Déguisement) souvent confondue avec `1281` (Boîte de jeu) et `1140` (Figurine)
 
 
+![bg right:48% width:75%](images/models_ml_text.jpg)
 
+___
+<!--
+_header: 'Annexe : Machine Learning / Image' 
+-->
+# Machine Learning / Image
+| Classifier | Acc. | Precision weighted | Recall weighted | F1 weighted |
+|------------|----------|--------------------|-----------------|-------------|
+| LogReg     | 0.18     | 0.16               | 0.18            | 0.16        |
+| RF         | 0.12     | 0.04               | 0.12            | 0.04        |
+| KNN        | 0.18     | 0.16               | 0.18            | 0.16        |
+| SVC        | 0.18     | 0.17               | 0.18            | 0.17        |
+| GradBoost  | 0.09     | 0.08               | 0.09            | 0.06        |
 
+![bg right:39% width:100%](../notebooks/images/SVCHeatmap.png)
+___
+<!--
+_header: 'Annexe : Les modèles / Deep learning / Text ' 
+-->
+![bg width:60%](../notebooks/images/texts/epoch_accuracy.png)
 
+___
+<!--
+_header: 'Annexe : Les modèles / Deep learning / Image ' 
+-->
+ |Model                        |Accuracy                 | Val accuracy    | 
+|-----------------------------|-------------------------|-----------------|
+| VGG16                       |0.50                     |0.49             | 
+| ResNet                      |0.16                     |0.18             | 
+| MobileNet                   |0.87                     |0.47             |
 
+![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
