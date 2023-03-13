@@ -13,7 +13,7 @@ class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy)
         y_flat = y_true
         if y_true.shape.ndims == y_pred.shape.ndims:
             y_flat = tf.squeeze(y_flat, axis=[-1])
-        y_true_int = tf.cast(y_flat, tf.int32)
+        y_true_int = tf.cast(y_flat, tf.float32)
 
         cls_counts = tf.math.bincount(y_true_int)
         cls_counts = tf.math.reciprocal_no_nan(tf.cast(cls_counts, self.dtype))
@@ -22,14 +22,14 @@ class BalancedSparseCategoricalAccuracy(keras.metrics.SparseCategoricalAccuracy)
 
 METRICS = [
     'accuracy',
-    tf.keras.metrics.SparseCategoricalAccuracy(),
+    #tf.keras.metrics.SparseCategoricalAccuracy(),
     #BalancedSparseCategoricalAccuracy(),
 ]
 
 
 class memoryCallback(Callback):
     def on_epoch_end(self, epoch, log={}):
-        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         gc.collect()
         keras.backend.clear_session()
 
@@ -52,14 +52,14 @@ def call_dashboard(log_dir):
         embeddings_metadata=None,
     )
 
-def call_checkpoint(path, monitor="accuracy"):
+def call_checkpoint(path, monitor="val_loss"):
     return ModelCheckpoint(
         path,
         monitor = monitor,
         verbose = 0,
         save_best_only = True,
         save_weights_only= False,
-        mode="auto",
+        mode="min",
         save_freq="epoch",
         options=None,
         initial_value_threshold=None,
@@ -70,7 +70,7 @@ def call_earlystopping():
         monitor='val_loss',
         min_delta=0,
         restore_best_weights=True,
-        patience=5, 
+        patience=10, 
         verbose=2, 
         mode='min')
 

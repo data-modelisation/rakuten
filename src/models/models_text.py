@@ -8,41 +8,43 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
 from sklearn.cluster import KMeans
-
+import joblib
 import keras
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input, Dropout, Flatten
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, RNN, GRUCell
-from tensorflow.keras.layers import Embedding
+from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Rescaling, TextVectorization
 
-from src.models.models_utils import METRICS
-from src.models.models import MyModel
-from src.tools.text import pipeline_preprocess
+from models.models_utils import METRICS
+from models.models import MyDataSetModel
+#from tools.text import pipeline_preprocess
 
 
-class ModelText(MyModel):
+class ModelText(MyDataSetModel):
     def __init__(self, 
         *args,
-        max_words_featured=5000,
-        max_words_tokenized=50000,
-        max_len=100,
+        vocab_size=-404,
+        sequence_length=50000,
+        embedding_dim=200,
         name=None,
         **kwargs):
 
         super().__init__(*args, **kwargs)
 
-        self.max_words_featured = max_words_featured
-        self.max_words_tokenized = max_words_tokenized
-        self.max_len = max_len
+        self.vocab_size = vocab_size
+        self.sequence_length = sequence_length
+        self.embedding_dim = embedding_dim
         print("init of ModelText finished")
 
     def init_preprocessor(self):
-        return pipeline_preprocess(
-            max_len=self.max_len,
-            max_words_featured=self.max_words_featured,
-            max_words_tokenized=self.max_words_tokenized,
-            **self.preprocess_parameters
-            )
+        return None
+        # pipeline_preprocess(
+        #     max_len=self.max_len,
+        #     max_words_featured=self.max_words_featured,
+        #     max_words_tokenized=self.max_words_tokenized,
+        #     **self.preprocess_parameters
+        #     )
 
 class ModelText_LR(ModelText):
     def __init__(self, 
@@ -176,19 +178,33 @@ class ModelText_Neural_Simple(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.clf_parameters = {}
-        self.preprocess_parameters = {
-            "vectorizer" : "tfidf",
-            "embedding" : False,
-        }
+    def init_model(self, train_dataset):
 
-    def init_model(self,):
+        # VectorizationLayer = TextVectorization(
+        #     max_tokens=self.vocab_size,
+        #     output_mode='tf-idf',
+        #     split="whitespace",
+        #     ngrams=(1,),
+        # )
+        
+        # VectorizationLayer.adapt(
+        #     train_dataset.map(lambda text, label: text))
+        
+        # import pickle
+        # pickle.dump({
+        #     'config': VectorizationLayer.get_config(),
+        #     'weights': VectorizationLayer.get_weights(),
+        #     'vocabulary': VectorizationLayer.get_vocabulary(),
+        #     }
+        #     , open("tv_layer.pkl", "wb"))
 
         model = Sequential()
-        model.add(Dense(54, activation='relu', name="text_dense_1")) #On a supprimé 3 colonnes
-        model.add(Dropout(.5, name="text_drop_1"))
-        model.add(Dense(27, activation='softmax',name="text_output"))
-        
+        model.add(Input(shape=(self.sequence_length,), name = "te_input"))
+        model.add(Embedding(self.vocab_size + 1, self.embedding_dim, name="te_emb"))
+        model.add(Dropout(0.2, name="te_drop"))
+        model.add(GlobalAveragePooling1D(name="te_global"))
+        model.add(Dense(27, activation="softmax", name="te_output"))
+
         return model
 
 class ModelText_Neural_Embedding(ModelText):
@@ -198,24 +214,18 @@ class ModelText_Neural_Embedding(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.clf_parameters = {}
-        self.preprocess_parameters = {
-            "vectorizer" : "tfidf",
-            "embedding" : True,
-            # "max_words_featured" : 5000,
-            # "max_words_tokenized" : 50000,
-            # "max_len": 100
-        }
 
-    def init_model(self,):
+    def init_model(self, train_dataset):
         
         model = Sequential()
-        model.add(Embedding(self.max_words_tokenized, self.max_len, name="text_input")) 
-        model.add(GlobalAveragePooling1D(name="text_average"))
-        model.add(Dropout(.2, name="text_drop_1"))
-        model.add(Dense(54, activation='relu', name="text_dense_1")) #On a supprimé 3 colonnes
-        model.add(Dropout(.2, name="text_drop_2"))
-        model.add(Dense(27, activation='softmax', name="text_output"))
+        model.add(Input(shape=(1,), dtype=tf.string, name = "te_input"))
+        #model.add(VectorizationLayer)
+        model.add(Embedding(self.vocab_size, self.embedding_dim, name="te_emb"))
+        model.add(GlobalAveragePooling1D(name="te_avg"))
+        model.add(Dropout(.3, name="te_drop_1"))
+        model.add(Dense(64, activation='relu', name="te_dense_1")) #On a supprimé 3 colonnes
+        model.add(Dropout(.3, name="te_drop_2"))
+        model.add(Dense(27, activation='softmax',name="te_output"))
         
         return model
 
@@ -226,21 +236,27 @@ class ModelText_Neural_RNN(ModelText):
 
         super().__init__(*args, **kwargs)
 
-        self.clf_parameters = {}
-        self.preprocess_parameters = {
-            "vectorizer" : "tfidf",
-            "embedding" : True,
-        }
+    def init_model(self, train_dataset):
 
-    def init_model(self,):
+        VectorizationLayer = TextVectorization(
+            max_tokens=self.vocab_size,
+            output_mode='tf-idf',
+            split="whitespace",
+            ngrams=(1,2)
+        )
+
+        VectorizationLayer.adapt(
+            train_dataset.map(lambda text, label: text))
 
         model = Sequential()
-        model.add(Embedding(self.max_words_tokenized, self.max_len, name="text_input"))
-        model.add(RNN(GRUCell(128), return_sequences=True, name="text_rnn"))
-        model.add(Dropout(.3, name="text_drop_1"))
-        model.add(GlobalAveragePooling1D(name="text_average"))
-        model.add(Dense(256, activation="relu", name="text_dense_1"))
-        model.add(Dropout(.3, name="text_drop_2"))
-        model.add(Dense(27, activation="softmax", name="text_output"))
+        model.add(Input(shape=(1,), dtype=tf.string, name = "te_input"))
+        model.add(VectorizationLayer)
+        model.add(Embedding(self.max_words_tokenized, self.max_len, name="te_emb"))
+        model.add(Bidirectional(LSTM(64), name="te_bidir"))
+        model.add(Dropout(.3, name="te_drop_1"))
+        model.add(GlobalAveragePooling1D(name="te_average"))
+        model.add(Dense(64, activation="relu", name="te_dense_1"))
+        model.add(Dropout(.3, name="te_drop_2"))
+        model.add(Dense(27, activation="softmax", name="te_output"))
         
         return model
