@@ -97,31 +97,30 @@ _header: 'Description des données'
 * Le titre du produit est composé de 4 à 54 mots
 * La  description est plus longs et contient entre 0 (certaines descriptions sont vides) et 2 068 mots
 * Images : couleur, `500x500px` encodées au format JPG 
-
----
-<!--
-_header: 'Description des données / Nombre de produits par catégorie' 
--->
-![bg height:90%](../notebooks/images/images_category.png)
-
 ___
-
 <!--
-_header: 'Description des données /Les catégories et leurs descriptions' 
+_header: 'Description des données ' 
 -->
+<style scoped>
+table {
+  font-size: 15px;
+}
+</style>
+![bg right:48% height:50%](../notebooks/images/images_category.png)
 
-|Catégorie | Description|Catégorie| Description|Catégorie| Description|
+![height:2px](https://svgsilh.com/svg/1294801.svg)
+
+|Code | Description|Code| Description|Code| Description|
 |---:|------------|----:|------------|-------------------:|------------|
-| 10 | Livre d'occasion   | 1301 | Chaussette | 2462 | Jeu oldschool |
-| 40 | Jeu Console        | 1302 | Gadget     | 2522 | Bureautique |
-| 50 | Accessoire Console | 1320 | Bébé       | 2582 | Décoration |
-| 60 | Tech               | 1560 | Salon      | 2583 | Aquatique |
-| 1140 | Figurine         | 1920 | Chambre    |2585 | Soin et Bricolage |
-| 1160 | Carte Collection | 1940 | Cuisine    | 2705 | Livre neuf |
-| 1180 | Jeu Plateau      | 2060 | Chambre enfant | 2905 | Jeu PC |
-| 1280 | Déguisement      | 2220 | Animaux    | | |
-| 1281 | Boite de jeu     | 2280 | Affiche    | | |
-| 1300 | Jouet Tech       | 2403 | Revue    | | |
+| 10   | Livre d'occasion   | 1300 | Jouet Tech     | 2280 | Affiche       |
+| 40   | Jeu Console        | 1301 | Chaussette     | 2403 | Revue         |
+| 50   | Accessoire Console | 1302 | Gadget         | 2462 | Jeu oldschool |
+| 60   | Tech               | 1320 | Bébé           | 2522 | Bureautique   |
+| 1140 | Figurine           | 1560 | Salon          | 2582 | Décoration    |
+| 1160 | Carte Collection   | 1920 | Chambre        | 2583 | Aquatique     |
+| 1180 | Jeu Plateau        | 1940 | Cuisine        | 2585 | Soin et Bricolage |
+| 1280 | Déguisement        | 2060 | Chambre enfant | 2705 | Livre neuf    |     
+| 1281 | Boite de jeu       | 2220 | Animaux        | 2905 | Jeu PC        |    
 
 ___
 <!--
@@ -163,12 +162,12 @@ section {
 </style>
 L'exemple de transformations appliquées : 
 * `designation` : Une table très jolie! 
-* `description` : <ul><li>\&#43;Dimensions : 60 x 33 cm</li>
+* `description` : <ul><li>\&#43;Dimensions : 60 x 33 cm</li><ul>
 
 | Etape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
-| Fusion de deux colonnes                               | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li> | 
-| Détection la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li> | 
+| Fusion de deux colonnes                               | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
+| Détection la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
 | Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
 | Suppression des caractères non alphanumériques          | Une table très jolie Dimensions x cm           |
 | Passage en minuscule                                  | une table très jolie dimensions x cm           |
