@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+
+  fastapi:
+    container_name: ds_fastapi
+    build: src/.
+    command: "uvicorn fast:app --host 127.0.0.1 --port 8008 --reload"
+    network_mode: host
+    ports:
+      - "8008:8008"
+    
+  streamlit:
+    container_name: ds_streamlit
+    build: streamlit_app/.
+    command: "streamlit run --server.port 8080 --server.enableCORS false app.py"
+    ports:
+      - "8080:8080"
+    network_mode: host
+      
+networks:
+  host:
+    name: host
+    external: true
