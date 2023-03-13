@@ -6,8 +6,6 @@ import re
 import logging
 from unidecode import unidecode
 from googletrans import Translator, LANGUAGES
-#import swifter 
-import fasttext
 import pathlib
 
 import nltk
@@ -29,13 +27,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 from . import commons
 
-fasttext.FastText.eprint = lambda x: None
-
 current_path = pathlib.Path().absolute()
 nltk.data.path.append(current_path)
-# nltk.download('stopwords', download_dir=current_path)
-# nltk.download('punkt', download_dir=current_path)
-# nltk.download('wordnet', download_dir=current_path)
+nltk.download('stopwords', download_dir=current_path)
+nltk.download('punkt', download_dir=current_path)
+nltk.download('wordnet', download_dir=current_path)
 
 languages = {
         "en": "english",
@@ -86,7 +82,7 @@ class LinksMaker(BaseEstimator, TransformerMixin):
     
     def transform(self, X):
         X_copy = X.copy()
-        X_copy["links"] = self.path + "/images/image_train/image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
+        X_copy["links"] = self.path + "image_" + X_copy.imageid.map(str) + "_product_" + X_copy.productid.map(str) + ".jpg"
         return X_copy
     
 #Transformeur pour fusionner des colonnes de texte
@@ -131,36 +127,35 @@ class LanguageTransformer(BaseEstimator, TransformerMixin):
         return self    
         
     def transform(self, X):
-        X_copy = X.copy()
 
-        lang = np.apply_along_axis(get_lang, 1, X[:,self.column].reshape(-1,1))
+        X["lang"] = X[self.column].apply(lambda x: get_lang(x))
 
-        translate_fct_vectorized = np.vectorize(translate_text)
         if self.translate:
-            mask_not_fr = lang != "fr"
-            X_copy[mask_not_fr, self.column] = translate_fct_vectorized(X_copy[:, self.column], src=lang, dest="fr")
-        return lang
+            mask_not_fr = X.lang != "fr"
+            X.loc[mask_not_fr, "text"] = X[mask_not_fr].apply(lambda row: translate_text(row["text"], src=row["lang"], dest="fr"), axis=1)
+
+        return X
 
 #Transformeur pour nettoyer le texte
 class TextCleaner(BaseEstimator, TransformerMixin):
 
-    def __init__(self, column, max_len=10):
+    def __init__(self, column, clean=False, stem=False):
         self.column = column
-        self.max_len=max_len
+        self.stem=stem
+        self.clean=clean
     
     def fit(self, X, y=None):
         return self
 
     def transform(self, X, y=None):
-        X_copy = X.copy()
 
-        clean_fct_vectorized = np.vectorize(clean_text)
-        stemm_fct_vectorized = np.vectorize(stemmatize_text)
+        if self.clean:
+            X["text"] = X[self.column].apply(lambda x: clean_text(x))
+        
+        if self.stem:
+            X["text"] = X[self.column].apply(lambda x: stemmatize_text(x))
 
-        X_copy[:, self.column] = clean_fct_vectorized(X_copy[:, self.column], self.max_len)
-        #X_copy[:, self.column] = stemm_fct_vectorized(X_copy[:, self.column])
-
-        return X_copy
+        return X
 
 #Transformeur pour vectoriser le texte
 class Vectorizer(BaseEstimator, TransformerMixin):
@@ -212,10 +207,13 @@ class Vectorizer(BaseEstimator, TransformerMixin):
 
 
 # Construction du pipeline pour le chargement des données
-def pipeline_loader():
+def pipeline_loader(path, clean=False, stem=False, translate=False):
     loader = Pipeline(steps=[
+        ('links', LinksMaker(path)),
         ('counter', TextCounter(columns=["designation", "description"])),
         ('merger', TextColumnMerger(columns=["designation", "description"], name="text")),
+        ('trans', LanguageTransformer(column="text", text_length=500, translate=translate)),
+        ('cleaner', TextCleaner(column="text", clean=clean, stem=stem)),
         ("dropper", ColumnDropper(columns=["Unnamed: 0", "designation", "description", "imageid", "productid"])),
     ])
     return loader
@@ -224,7 +222,7 @@ def pipeline_loader():
 def pipeline_lang(translate=False):
 
     translater = Pipeline(steps=[
-        ('trans', LanguageTransformer(column=4, text_length=500, translate=translate)),
+        ('trans', LanguageTransformer(column="text", text_length=500, translate=translate)),
     ])
     return translater
 
@@ -232,7 +230,6 @@ def pipeline_lang(translate=False):
 def pipeline_preprocess(vectorizer="", embedding=False, max_words_featured=2000, max_words_tokenized=100, max_len=100):
 
     preprocessor = Pipeline(steps=[        
-        ('cleaner', TextCleaner(column=4, max_len=max_len)),
         ('vectorizer', Vectorizer(column=4, vectorizer=vectorizer, embedding=embedding, max_words_featured=max_words_featured, max_words_tokenized=max_words_tokenized, max_len=max_len)),
         ])
 
@@ -243,10 +240,10 @@ def pipeline_preprocess(vectorizer="", embedding=False, max_words_featured=2000,
 
 #Stemmatisation d'un texte en francais
 def stemmatize_text(text):
-    return [FrenchStemmer().stem(w) for w in word_tokenize(text)]
+    return " ".join([FrenchStemmer().stem(w) for w in word_tokenize(text)])
 
 #Nettoyage des textes
-def clean_text(text, max_words):
+def clean_text(text):
    
     #Suppression des balises
     text = re.sub('<[^<]+?>', ' ', text)
@@ -260,10 +257,17 @@ def clean_text(text, max_words):
     #Suppression des accents
     text = unidecode(text)
 
-    #Ajustement de la taille des textes
-    if max_words > 0:
-        text = text[:int(max_words*10)]
-
+    #Suppression es mot à 1 caracteres
+    text = re.sub(r'\b\w{1,1}\b', '', text)    
+    
+    #Suppression des espaces multiples
+    text = re.sub(' +', ' ', text)
+    
+    #Remove Stopwords
+    text_tokens = text.split(" ")
+    final_list = [word for word in text_tokens if not word in french_stopwords]
+    text = ' '.join(final_list)
+    
     return text
 
 #Traduction d'un texte
@@ -288,7 +292,7 @@ def translate_serie(df):
     return df.swifter.apply(lambda x: translate_text(x.text_clean, src=x.lang, dest="fr"), axis=1)
 
 #Langue d'un texte
-def get_lang(text, text_length=300):
+def get_lang(text, text_length=500):
 
     if isinstance(text, np.ndarray):
         text = text[0]
