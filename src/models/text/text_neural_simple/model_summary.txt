@@ -2,14 +2,17 @@ Model: "sequential"
 _________________________________________________________________
  Layer (type)                Output Shape              Param #   
 =================================================================
- text_dense_1 (Dense)        (None, 54)                270054    
+ te_emb (Embedding)          (None, 500, 200)          10000200  
                                                                  
- text_drop_1 (Dropout)       (None, 54)                0         
+ te_drop (Dropout)           (None, 500, 200)          0         
                                                                  
- text_output (Dense)         (None, 27)                1485      
+ te_global (GlobalAveragePoo  (None, 200)              0         
+ ling1D)                                                         
+                                                                 
+ te_output (Dense)           (None, 27)                5427      
                                                                  
 =================================================================
-Total params: 271,539
-Trainable params: 271,539
+Total params: 10,005,627
+Trainable params: 10,005,627
 Non-trainable params: 0
 _________________________________________________________________
