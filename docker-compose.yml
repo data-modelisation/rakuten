@@ -17,6 +17,8 @@ services:
     ports:
       - "8080:8080"
     network_mode: host
+    depends_on : 
+    - fastapi
       
 networks:
   host:
