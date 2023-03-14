@@ -156,18 +156,28 @@ class MyDataSetModel():
     
     def predict(self, features, model=None, is_=None,for_api=False, enc_trues=None, generator=None):
         
+
         if (for_api is True) and (is_ == "text"):
+
+            features_texts = np.array(features)
             lang_texts = np.array([get_lang(text) for text in features])
             translated_texts = np.array([translate_text(text, src=lang) for text, lang in zip(features, lang_texts)])
-            cleaned_texts = np.array([clean_text(text, max_words=100) for text in translated_texts])
-            encoded_texts = np.array([" ".join(stemmatize_text(text)) for text in cleaned_texts])
-
-            features = np.array(features)
-
+            cleaned_texts = np.array([clean_text(text) for text in translated_texts])
+            encoded_texts = np.array([stemmatize_text(text) for text in cleaned_texts])
+            dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
+            features = dataset.map(lambda x: generator.vectorize_text(x)).batch(1)
+            print("features",features)
+        
+        elif (for_api is True) and (is_ == "image"):
+            dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
+            features = dataset.map(lambda x: generator.load_image(x)).batch(1)
+                
         path = self.generate_path()
         model = self.load_model(path, features)
-        
+        model.compile(**self.compilation_kwargs)
+
         probas = model.predict(features)
+
         enc_preds = np.argmax(probas, axis=1)
         rates = np.array([probas[idx, target] for idx, target in enumerate(enc_preds)])
 
@@ -210,7 +220,7 @@ class MyDataSetModel():
                 } 
 
             if is_ == "text":
-                response["texts"] = features.tolist()
+                response["texts"] = features_texts.tolist()
                 response["lang texts"] = lang_texts.tolist()
                 response["translated texts"] = translated_texts.tolist()
                 response["cleaned texts"] = cleaned_texts.tolist()
