@@ -199,7 +199,7 @@ class MyDataSetModel():
             print(path)
             self.save_crosstab(dec_trues, dec_preds, path)
             report = self.save_classification_report(dec_trues, dec_preds, path)
-
+            self.push_classification_to_summary(report)
         else:
             enc_trues = np.array([-1 for _ in enc_preds])
             dec_trues = np.array([-1 for _ in enc_preds])
@@ -267,3 +267,33 @@ class MyDataSetModel():
         
         #Return the clf report
         return clf_report
+
+    def push_classification_to_summary(self, report, metrics=["precision", "recall", "f1-score"]):
+
+        #For all metrics
+        for metric in metrics:
+
+            #Create a path to the summary file
+            summary_path = Path(self.models_folder, self.model_type, f"summary_{metric}.csv")
+            
+            #Get the columns (targets) and the values (scores per category)
+            columns = report[metric].index.tolist()
+            values = report[metric].values
+
+            #Expand the values : it's possible that a class does not exist in the predicted values
+            expected_columns = COLUMNS + ["accuracy", "macro avg", "weighted avg"]
+            expected_values = []   
+            for column in expected_columns:
+                if str(column) in columns:
+                    expected_values.append(report[metric].loc[str(column)])
+                else:
+                    expected_values.append(0.0)
+
+            # Read the existing dataframe or create it
+            df = pd.read_csv(summary_path, delimiter=",", index_col=0) if summary_path.exists() else pd.DataFrame(index=expected_columns)
+
+            #Create or replace the scores obtained by the model
+            df[self.model_name] = expected_values
+            
+            #Save it back to the summary file
+            df.to_csv(summary_path)
