@@ -103,24 +103,101 @@ _header: 'Description des données '
 -->
 <style scoped>
 table {
-  font-size: 15px;
+  font-size: 14px;
+}
+table tr:nth-child(1) td:nth-child(1), 
+table tr:nth-child(1) td:nth-child(2), 
+table tr:nth-child(2) td:nth-child(5), 
+table tr:nth-child(2) td:nth-child(6),
+table tr:nth-child(4) td:nth-child(5), 
+table tr:nth-child(4) td:nth-child(6),
+table tr:nth-child(8) td:nth-child(5), 
+table tr:nth-child(8) td:nth-child(6) 
+{ 
+  background: #B8CEC2;  
+}
+
+table tr:nth-child(2) td:nth-child(1), 
+table tr:nth-child(2) td:nth-child(2),
+table tr:nth-child(3) td:nth-child(1), 
+table tr:nth-child(3) td:nth-child(2),
+table tr:nth-child(4) td:nth-child(1), 
+table tr:nth-child(4) td:nth-child(2), 
+table tr:nth-child(1) td:nth-child(3), 
+table tr:nth-child(1) td:nth-child(4),
+table tr:nth-child(1) td:nth-child(5), 
+table tr:nth-child(1) td:nth-child(6),
+table tr:nth-child(3) td:nth-child(5), 
+table tr:nth-child(3) td:nth-child(6),
+table tr:nth-child(9) td:nth-child(5), 
+table tr:nth-child(9) td:nth-child(6)
+{ 
+  background: #2C4F71;
+  color: white; 
+}
+
+table tr:nth-child(5) td:nth-child(1),
+table tr:nth-child(5) td:nth-child(2),
+table tr:nth-child(6) td:nth-child(1),
+table tr:nth-child(6) td:nth-child(2), 
+table tr:nth-child(7) td:nth-child(1),
+table tr:nth-child(7) td:nth-child(2), 
+table tr:nth-child(8) td:nth-child(1),
+table tr:nth-child(8) td:nth-child(2), 
+table tr:nth-child(9) td:nth-child(1),
+table tr:nth-child(9) td:nth-child(2),
+table tr:nth-child(3) td:nth-child(3),
+table tr:nth-child(3) td:nth-child(4)
+{ 
+  background: #F8E6CE; color: #2C4F71; 
+}
+table tr:nth-child(5)  td:nth-child(3),
+table tr:nth-child(5)  td:nth-child(4),
+table tr:nth-child(6)  td:nth-child(3),
+table tr:nth-child(6)  td:nth-child(4),
+table tr:nth-child(7)  td:nth-child(3),
+table tr:nth-child(7)  td:nth-child(4),
+table tr:nth-child(8)  td:nth-child(3),
+table tr:nth-child(8)  td:nth-child(4),
+table tr:nth-child(5)  td:nth-child(5),
+table tr:nth-child(5)  td:nth-child(6)
+{ 
+  background: #EBC8B4;  color: green;
+}
+
+table tr:nth-child(6) td:nth-child(5),
+table tr:nth-child(6) td:nth-child(6),
+table tr:nth-child(7) td:nth-child(5),
+table tr:nth-child(7) td:nth-child(6),
+table tr:nth-child(9) td:nth-child(3),
+table tr:nth-child(9) td:nth-child(4)
+{ 
+  background:  #D77a61; color: white; 
+}
+
+table tr:nth-child(2) td:nth-child(3),
+table tr:nth-child(2) td:nth-child(4),
+table tr:nth-child(4) td:nth-child(3),
+table tr:nth-child(4) td:nth-child(4)
+{ 
+  background:  #DBD3D8;
 }
 </style>
-![bg right:48% height:50%](../notebooks/images/images_category.png)
 
-![height:2px](https://svgsilh.com/svg/1294801.svg)
 
-|Code | Description|Code| Description|Code| Description|
+![bg right:46% height:50%](../notebooks/images/images_category.png)
+
+|Cat. | Code et libellé|Cat.| Code et libellé|Cat.| Code et libellé|
 |---:|------------|----:|------------|-------------------:|------------|
-| 10   | Livre d'occasion   | 1300 | Jouet Tech     | 2280 | Affiche       |
-| 40   | Jeu Console        | 1301 | Chaussette     | 2403 | Revue         |
-| 50   | Accessoire Console | 1302 | Gadget         | 2462 | Jeu oldschool |
-| 60   | Tech               | 1320 | Bébé           | 2522 | Bureautique   |
-| 1140 | Figurine           | 1560 | Salon          | 2582 | Décoration    |
-| 1160 | Carte Collection   | 1920 | Chambre        | 2583 | Aquatique     |
-| 1180 | Jeu Plateau        | 1940 | Cuisine        | 2585 | Soin et Bricolage |
-| 1280 | Déguisement        | 2060 | Chambre enfant | 2705 | Livre neuf    |     
-| 1281 | Boite de jeu       | 2220 | Animaux        | 2905 | Jeu PC        |    
+| ![height:30px](https://www.icone-png.com/png/40/39859.png)   | 10 - Livre d'occasion   | ![height:30px](https://cdn-icons-png.flaticon.com/512/1223/1223280.png) | 1300 - Jouet Tech     |  ![height:30px](https://cdn-icons-png.flaticon.com/512/13/13282.png) | 2280  - Affiche       |
+|  ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)   | 40 - Jeu Console        | ![height:30px ](https://cdn-icons-png.flaticon.com/512/6824/6824500.png)  | 1301 - Chaussette     |  ![height:30px](https://www.icone-png.com/png/40/39859.png) | 2403 - Revue         |
+|   ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)|  50 -  Accessoire Console  |  ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png) | 1302 - Gadget         | ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png) | 2462 - Jeu oldschool |
+| ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)   | 60 - Tech               |  ![height:30px](https://cdn-icons-png.flaticon.com/512/6824/6824500.png)| 1320 - Bébé           |  ![height:30px](https://www.icone-png.com/png/40/39859.png)  | 2522 - Bureautique   |
+|![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)    | 1140 -  Figurine          |   ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png)| 1560 - Salon          |  ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 2582 - Décoration    |
+| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png) |  1160 - Carte colllect.   | ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 1920 - Chambre        | ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png) |  2583 - Aquatique     |
+| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)  |  1180 - Jeu Plateau        | ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png)    | 1940 - Cuisine        |  ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png) | 2585 - Soin et Bricolage |
+| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)   |  1280 - Déguisement        |   ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 2060 - Chambre enfant | ![height:30px](https://www.icone-png.com/png/40/39859.png)  | 2705 - Livre neuf    |     
+|  ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)  | 1281 - Boite de jeu       | ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png)  | 2220 - Animaux        |   ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)| 2905  - Jeu PC       |   
 
 ___
 <!--
@@ -156,9 +233,10 @@ _header: 'Préparation des données / Text'
 table {
   font-size: 17px;
 }
-section {
+section p, li {
   font-size: 17px;
 }
+
 </style>
 L'exemple de transformations appliquées : 
 * `designation` : Une table très jolie! 
@@ -167,11 +245,11 @@ L'exemple de transformations appliquées :
 | Etape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
 | Fusion de deux colonnes                               | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
-| Détection la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
+| Détection de la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
 | Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
-| Suppression des caractères non alphanumériques          | Une table très jolie Dimensions x cm           |
-| Passage en minuscule                                  | une table très jolie dimensions x cm           |
-| Encodage                                              | une table tres jolie dimensions x cm           |
+| Suppression des caractères non alpha-numériques          | Une table très jolie Dimensions x cm           |
+| Passage en minuscules                                  | une table très jolie dimensions x cm           |
+| Supression des accènts                                              | une table tres jolie dimensions x cm           |
 | Les mots d'un caractère                               | une table tres jolie dimensions cm             |
 | Suppression des *stopwords*                           | table tres jolie dimensions cm                 | 
 | Extraction de la racine des mots                      | tabl tres jol dimens cm                        | 
@@ -181,10 +259,9 @@ ___
 <!--
 _header: 'Préparation des données / Images' 
 -->
-__ImageDataGenerator__:
+__Generateur d'image__:
 * streaming per batch : les images sont transmises sous de batchs ce qui évite de traiter l'ensemble des données d'un coup
-* augmentation de données via les transformation appliqués 
-* rédimensionnement en taille 224x224
+* rédimensionnement en taille `224x224 px`
 * application de la fonctionne `preprocess_input` spécifique pour chaque modèle 
 
 ![bg right width:80%](../notebooks/images/rescale.png)
@@ -199,19 +276,36 @@ ___
 _header: 'Les modèles / Deep learning / Fusion ' 
 -->
 
-![width:90%](../notebooks/images/fusion_methodology.png)
-Explication de fusion ....
+![bg right width:90%](../notebooks/images/fusion_methodology.png)
+
+Un schéma simplifié du fonctionnement de concaténation.
+
+* concaténation est faite sur les avant-dernières couches de deux modèles. 
+* les autres couches sont *freezées*. 
+* couches denses completent la fusion pour obtenir une classification sur 27 classes. 
 ___
 <!--
 _header: 'Les modèles / Deep learning / Fusion ' 
 -->
 ![bg width:42%](images/models_dl_text.jpg)
-![bg]()
+![bg width:20%](https://png.pngtree.com/png-clipart/20220620/ourmid/pngtree-arrow-shape-black-simple-icon-png-image_5235837.png)
 ![bg width:32%](images/models_fusion.jpg)
+
 ___
 <!--
 _header: 'Analyse du meilleur modèle' 
 -->
+<style scoped>
+section p, li {
+  font-size: 16px;
+  
+}
+header {
+  padding-right:2px;
+  margin: 0;
+}
+</style>
+![bg right:75% height:76%](images/fusion_crosstab.jpg)
 Pas d'impacte sur les performances réduites du modèle d'image.
   * Toutes les catégories dépassent le score de 54% et 
   * Une catégorie sur trois dépasse le score de 90%
@@ -219,9 +313,8 @@ Pas d'impacte sur les performances réduites du modèle d'image.
 Le modèle concaténé s'aide du modèle d'image pour catégoriser les produits où le modèle de texte sous-performait : 
   * La catégorie 1080 (Jeu Plateau) gagne 25 points
   * La catégorie 2705 (Livre neuf) gagne 23 points
-
-![bg right:58% width:98%](images/models_fusion_crosstab.jpg)
 ___
+
 <!--
 _header: 'Limites' 
 -->
@@ -315,3 +408,42 @@ _header: 'Annexe : Les modèles / Deep learning / Image '
 | MobileNet                   |0.87                     |0.47             |
 
 ![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
+
+--- 
+<style>
+section.split {
+    overflow: visible;
+    display: grid;
+    grid-template-columns: 500px 500px;
+    grid-template-rows: 100px auto;
+    grid-template-areas: 
+      "slideheading slideheading"
+        "leftpanel rightpanel";
+}
+/* debug */
+section.split h3, 
+section.split .ldiv, 
+section.split .rdiv { border: 1.5pt dashed dimgray; }
+section.split h3 {
+    grid-area: slideheading;
+    font-size: 50px;
+}
+section.split .ldiv { grid-area: leftpanel; }
+section.split .rdiv { grid-area: rightpanel; }
+</style>
+
+### A split slide
+<!-- _class: split -->
+
+
+#### Title for the left panel
+- listed item
+- listed item
+- listed item
+
+
+#### Title for the right panel
+- listed item
+- listed item
+- listed item
+
