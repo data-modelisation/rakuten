@@ -70,7 +70,7 @@ class DataGenerator():
         self.encoder_path = Path("./labelencoder.joblib")
         
 
-        if Path("tv_layer.pkl").exists():
+        if Path("textvectorization_layer.pkl").exists():
             from_disk = pickle.load(open("textvectorization_layer.pkl", "rb"))
             self.vectorize_layer = TextVectorization.from_config(from_disk['config'])
             self.vectorize_layer.set_weights(from_disk['weights'])
