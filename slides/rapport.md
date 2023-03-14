@@ -7,15 +7,16 @@ class:
 footer:  DST - Bootcamp - DEC22 - Rakuten Challenge
 header: ''
 paginate: true
-
 ---
+
 <style>
 @import 'default';
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 section {
   background-image: none;
-  font-family:  'Verdana'; 
+  font-family:  'Roboto'; 
   font-weight: normal; 
-  font-size: 1.5em;
+  font-size: 1.4em;
   padding-top: 90px;
   padding-left: 40px;
   padding-right: 40px;
@@ -24,21 +25,31 @@ section {
 /* https://github.com/marp-team/marpit/issues/271 */
 section::after {
   #font-weight: 700;
-  font-size: 0.7em;
+  font-size: 0.6em;
   content: attr(data-marpit-pagination) '/' attr(data-marpit-pagination-total);
 }
 section.lead h1, section.lead h2, section.lead h3{
-  color: #800000;
+  color: #bf0000;
   text-align: left;
 }
 header {
-  background-color: #800000;
+  background-color: #bf0000;
   color: #fff;
   font-size: 1em;
   font-weight: 700;
   padding: 0.2em 2em 0.2em 2em;
+  opacity:.5;
+  border-radius: 15px;
 }
-
+footer {
+  font-size: 0.6em;
+}
+container{
+  display:flex;
+}
+col{
+  flex:1
+}
 
 blockquote {
   max-width: 90%;
@@ -62,48 +73,80 @@ _footer: ''
 _header: '' 
 -->
 
+![bg left height: 100px](https://img.freepik.com/free-vector/ai-technology-brain-background-vector-digital-transformation-concept_53876-112224.jpg?w=826&t=st=1678478673~exp=1678479273~hmac=30056e96f26cfed14acb6d22fe55d7329c23fe2998a8ee425cc206b63a812474)
 
-![width:600px center](https://challengedata.ens.fr/logo/public/RIT_logo_big_YnFAcFo.jpg) __Participants :__
+![top:0px width:600px](https://challengedata.ens.fr/logo/public/RIT_logo_big_YnFAcFo.jpg) 
+
+![height:60px right](https://i0.wp.com/datascientest.com/wp-content/uploads/2022/03/logo-2021.png?w=429&ssl=1)
+
+
+__Participants :__
 Olga TOLSTOLUTSKA
 Mohamed BACHKAT
 Charly LAGRESLE
-![bg left height: 100px](https://img.freepik.com/free-vector/ai-technology-brain-background-vector-digital-transformation-concept_53876-112224.jpg?w=826&t=st=1678478673~exp=1678479273~hmac=30056e96f26cfed14acb6d22fe55d7329c23fe2998a8ee425cc206b63a812474)
 
-![height:60px right](https://i0.wp.com/datascientest.com/wp-content/uploads/2022/03/logo-2021.png?w=429&ssl=1)
 
 __Mentor :__ Manu POTREL
 __Promotion:__ DST Bootcamp DEC22
 
 ___
 
+
 <!--
-_header: 'Context' 
+_header: 'Contexte' 
 -->
 
-![bg height:80%](https://rit.rakuten.com/wp-content/uploads/2022/03/RakutenDataChallenge_RIT_Paris-1024x493.jpg)
+## Rakuten
+
+* Site de e-commerce avec 1.3 milliards d'utilisateurs
+* Suggestions de recherche et recommandations pour l'utilisateur
+* Classification des produits nécessaire
+* Manuellement impossible
+
+## Objectifs
+
+Prédire la catégorie d'un produit sur la base de son **titre**, sa **description** et de son **image**
+
+
+
+![bg top:50% height:50%](https://rit.rakuten.com/wp-content/uploads/2022/03/RakutenDataChallenge_RIT_Paris-1024x493.jpg)
 
 
 
 ___
 
 <!--
-_header: 'Description des données' 
+_header: 'Présentation des données' 
 -->
 
-* 27 variables cibles 
-* 84 916 observations: `des données textuelles ainsi que des images`.
-* Pas de duplications des données 
-* Les données textuelles sont divisés en deux colonnes : `designation`   et `description`. Elles represent un titre du produit et sa decription. 
-* Le titre du produit est composé de 4 à 54 mots
-* La  description est plus longs et contient entre 0 (certaines descriptions sont vides) et 2 068 mots
-* Images : couleur, `500x500px` encodées au format JPG 
+
+* **84 916** observations
+* **27** catégories à déterminer 
+* **0** données dupliquées 
+* **Textes** 
+  * Un produit est désigné par : `designation`   et `description` soit un titre et sa description
+  * 35% de NaNs pour `description`
+* **Images**
+  * Une image couleur par produit
+  * Peut comporter un support ou une mise en scène
+  * Taille `500x500px` en JPG
+
+![bg right:46% height:50% opacity:.7](../notebooks/images/images_category.png)
 ___
 <!--
-_header: 'Description des données ' 
+_header: 'Exploration des données | Cibles' 
 -->
+
+* 27 catégories labelisées
+* 6 domaines différents trouvés (non labelisés)
+* Cible déséquilibrée
+
+&rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits du même domaine
+
 <style scoped>
 table {
-  font-size: 14px;
+  font-size: 12px;
+  padding:0px;
 }
 table tr:nth-child(1) td:nth-child(1), 
 table tr:nth-child(1) td:nth-child(2), 
@@ -185,7 +228,7 @@ table tr:nth-child(4) td:nth-child(4)
 </style>
 
 
-![bg right:46% height:50%](../notebooks/images/images_category.png)
+
 
 |Cat. | Code et libellé|Cat.| Code et libellé|Cat.| Code et libellé|
 |---:|------------|----:|------------|-------------------:|------------|
@@ -201,33 +244,33 @@ table tr:nth-child(4) td:nth-child(4)
 
 ___
 <!--
-_header: 'Exploration des donnéess / Target' 
+_header: 'Exploration des données / Textes' 
 -->
 
-![bg width:90%](../notebooks/images/imbalanced.png)
+## Langues
+* Détection de la langue
+  * 81% français
+  * 14% anglais
+  * Traduction
+
+## Extraction de données quantitives
+* Nombre de mots très variable
+
+
+![bg width:50%](../notebooks/images/words.png)
+
+![bg left:59%](../notebooks/images/common_words.png)
 
 ___
-<!--
-_header: 'Exploration des donnéess / Text' 
--->
-![bg width:100%](../notebooks/images/words.png)
-
-___
-<!--
-_header: 'Exploration des donnéess / Text' 
--->
-![bg width:100%](../notebooks/images/lang.png)
-![bg width:95%](../notebooks/images/common_words.png)
-___
 
 <!--
-_header: 'Exploration des donnéess / Images' 
+_header: 'Exploration des données / Images' 
 -->
 ![bg width:90%](../notebooks/images/white.png)
 ![bg width:90%](../notebooks/images/mask.png)
 ___
 <!--
-_header: 'Préparation des données / Text' 
+_header: 'Préparation des données / Textes' 
 -->
 <style scoped>
 table {
@@ -242,27 +285,27 @@ L'exemple de transformations appliquées :
 * `designation` : Une table très jolie! 
 * `description` : <ul><li>\&#43;Dimensions : 60 x 33 cm</li><ul>
 
-| Etape                                                 |     Résultat                                   | 
+| Étape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
-| Fusion de deux colonnes                               | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
+| Fusion de `description` et `designation` | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
 | Détection de la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
 | Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
 | Suppression des caractères non alpha-numériques          | Une table très jolie Dimensions x cm           |
 | Passage en minuscules                                  | une table très jolie dimensions x cm           |
-| Supression des accènts                                              | une table tres jolie dimensions x cm           |
-| Les mots d'un caractère                               | une table tres jolie dimensions cm             |
+| Suppression des accents                                              | une table tres jolie dimensions x cm           |
+| Suppression des mots d'un caractère                               | une table tres jolie dimensions cm             |
 | Suppression des *stopwords*                           | table tres jolie dimensions cm                 | 
 | Extraction de la racine des mots                      | tabl tres jol dimens cm                        | 
-| Vectorisation du texte via un `Tokenizer`             | [6, 1, 2, 4, 5 ]                               | 
+| Vectorisation TF-IDF du texte via un `Tokenizer`             | [6, 1, 2, 4, 5 ]                               | 
 ___
 
 <!--
 _header: 'Préparation des données / Images' 
 -->
-__Generateur d'image__:
-* streaming per batch : les images sont transmises sous de batchs ce qui évite de traiter l'ensemble des données d'un coup
-* rédimensionnement en taille `224x224 px`
-* application de la fonctionne `preprocess_input` spécifique pour chaque modèle 
+__Générateur d'images__:
+* Streaming per batch : les images sont transmises sous de batchs ce qui évite de traiter l'ensemble des données d'un coup
+* Redimensionnement en taille `224x224 px`
+* Application de la fonction `preprocess_input` spécifique à chaque modèle 
 
 ![bg right width:80%](../notebooks/images/rescale.png)
 ___
@@ -319,26 +362,12 @@ Le modèle concaténé s'aide du modèle d'image pour catégoriser les produits 
 ___
 
 <!--
-_header: 'Limites' 
+_header: 'Challenges' 
 -->
 * Le traitement des 84916 images nécessite d'utilisation de générateurs.
 * Disponibilité limité de ressources de calcul de type GPU ou TPU via Google Colab. 
 * Coupures de lien entre Google Drive et Google Colab ont entraîné une grande perte de temps 
 * La création d'un modèle de fusion a été une tâche ardue, principalement pour la gestion des entrées sous forme de générateurs.
-
-___
-<!--
-_header: 'Perspectives' 
--->
- 
-![bg right:60% width:70em](
-https://global.fr.shopping.rakuten.com/wp-content/uploads/2020/05/rak-monde-bottom-img.png)
-
-![width:100px](https://oxygentogo.com/wp-content/uploads/2017/05/blockquote-300x198.png)
-
-Nous continuons de croire que le monde numérique a le potentiel d'améliorer la vie de chacun d'entre nous. Oubliez la peur. Adoptez l'optimisme.
- 
- ***Hiroshi Mikitani** – Fondateur et CEO de Rakuten*
 
 
 
@@ -394,14 +423,26 @@ section p, li {
 - test un autre approche de la fusion :  utiliser un modèle pour identifier un group global et ensuite sous-group precis. Par exemple premiere model prédit un group "Livre" et deuxieme model predit "Nouveau" ou "Ancien".
 ![bg right:45% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
+
 ___
 <!--
-_header: '' 
+_header: 'Conclusion' 
 -->
-Le projet ![height:35px](https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Logo_rakuten.jpg/1200px-Logo_rakuten.jpg) a été très intéressant, car complexe et faisant appel à des notions avancées mêlant le traitement de textes et le traitement d'images. 
+ 
+ Merci à tous pour ces 3 mois très intenses et riches ! 
 
-L'exploration de données, le travail de groupe, les différentes implémentations et sprints ont fait de ce projet un projet répondant, nous l'espérons, aux besoins d'une entreprise.
-![bg left:50% ](https://static.vecteezy.com/system/resources/previews/006/161/114/large_2x/conclusion-word-on-red-keyboard-button-free-photo.jpg)
+
+
+![bg right:60% width:70em](
+https://global.fr.shopping.rakuten.com/wp-content/uploads/2020/05/rak-monde-bottom-img.png)
+
+![width:80px](https://oxygentogo.com/wp-content/uploads/2017/05/blockquote-300x198.png)
+
+Nous continuons de croire que le monde numérique a le potentiel d'améliorer la vie de chacun d'entre nous. Oubliez la peur. Adoptez l'optimisme.
+ 
+ ***Hiroshi Mikitani** – Fondateur et CEO de Rakuten*
+
+
 
 ---
 <!--
@@ -445,5 +486,40 @@ _header: 'Annexe : Les modèles / Deep learning / Image '
 | MobileNet                   |0.87                     |0.47             |
 
 ![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
+
+___
+<!--
+_header: 'Annexe Exploration des données / Target' 
+-->
+
+## Notions
+* cec
+* cze
+
+![bg height:50%](../notebooks/images/imbalanced.png)
+
+___
+
+
+___
+<!--
+_header: 'Annexe | Choix de la métrique' 
+-->
+
+## Notions
+* Connaissance du métier : une erreur de classification n'est pas fatale
+* Labelisation : comment a-t-elle été effectuée
+* Jeu de données déséquilibré : dû à une survente ou à des difficultés à classer ces produits
+* Forte tendance à l'*overfitting*
+
+
+**&rarr;** Choix de la métrique : *f1 weigthed score* pour un bon équilibre entre *accuracy* et *recall*
+
+## Remarques
+
+* Modèle aléatoire : score de 3.7% en moyenne
+* Une métrique personnalisée aurait pu être créée
+
+___
 
 

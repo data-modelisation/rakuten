@@ -5,3 +5,6 @@
 * Deep learning Fusion + Analyse de meilleur modèle  @Charly 
 * Limites + Perspectives + Conclusion @Mo  
 * Demo @Charly (@Olga en doublon)  
+
+# Charly
+* Ajouter screenshot dataframe
