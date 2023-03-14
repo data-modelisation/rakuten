@@ -164,7 +164,7 @@ class MyDataSetModel():
             translated_texts = np.array([translate_text(text, src=lang) for text, lang in zip(features, lang_texts)])
             cleaned_texts = np.array([clean_text(text) for text in translated_texts])
             encoded_texts = np.array([stemmatize_text(text) for text in cleaned_texts])
-            dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
+            dataset = tf.data.Dataset.from_tensor_slices((np.asarray(encoded_texts).astype(str), ))
             features = dataset.map(lambda x: generator.vectorize_text(x)).batch(1)
         
         elif (for_api is True) and (is_ == "image"):
