@@ -166,15 +166,17 @@ class MyDataSetModel():
             encoded_texts = np.array([stemmatize_text(text) for text in cleaned_texts])
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.vectorize_text(x)).batch(1)
-            print("features",features)
         
         elif (for_api is True) and (is_ == "image"):
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.load_image(x)).batch(1)
                 
+        
+
+        #if model is None:
         path = self.generate_path()
         model = self.load_model(path, features)
-        model.compile(**self.compilation_kwargs)
+        #model.compile(**self.compilation_kwargs)
 
         probas = model.predict(features)
 
@@ -188,7 +190,7 @@ class MyDataSetModel():
             enc_probas = np.arange(27)
             dec_probas = generator.decode(enc_probas)
             nam_probas = generator.convert_to_readable_categories(pd.Series(dec_probas)).values
-
+            name_macro_probas = generator.convert_to_readable_macrocategories(pd.Series(dec_probas)).values
         else:
             dec_preds = [-1 for _ in enc_preds]
             nam_preds = ["na" for _ in enc_preds]
@@ -196,7 +198,7 @@ class MyDataSetModel():
         if enc_trues is not None:
             dec_trues = generator.decode(enc_trues)
             nam_trues = generator.convert_to_readable_categories(pd.Series(dec_trues)).values
-            print(path)
+
             self.save_crosstab(dec_trues, dec_preds, path)
             report = self.save_classification_report(dec_trues, dec_preds, path)
             self.push_classification_to_summary(report)
@@ -215,8 +217,9 @@ class MyDataSetModel():
                     "decoded trues" : dec_trues.tolist(),
                     "named predictions":nam_preds.tolist(),
                     "named trues" : nam_trues.tolist(),
-                    "value probas":probas.tolist(),
-                    "named probas":nam_probas.tolist(),
+                    "value probas": probas.tolist(),
+                    "named probas": nam_probas.tolist(),
+                    "macro named probas": name_macro_probas.tolist(),
                 } 
 
             if is_ == "text":
@@ -225,8 +228,7 @@ class MyDataSetModel():
                 response["translated texts"] = translated_texts.tolist()
                 response["cleaned texts"] = cleaned_texts.tolist()
                 response["encoded texts"] = encoded_texts.tolist()
-                
-
+            
             return response
 
     def save_model_summary(self, model, path):
