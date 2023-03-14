@@ -71,7 +71,7 @@ class DataGenerator():
         
 
         if Path("tv_layer.pkl").exists():
-            from_disk = pickle.load(open("tv_layer.pkl", "rb"))
+            from_disk = pickle.load(open("textvectorization_layer.pkl", "rb"))
             self.vectorize_layer = TextVectorization.from_config(from_disk['config'])
             self.vectorize_layer.set_weights(from_disk['weights'])
             self.vectorize_layer.set_vocabulary(from_disk['vocabulary'])
@@ -220,7 +220,7 @@ class DataGenerator():
                             'weights': self.vectorize_layer.get_weights(),
                             'vocabulary': self.vectorize_layer.get_vocabulary(),
                             }
-                            , open("tv_layer.pkl", "wb"))
+                            , open("textvectorization_layer.pkl", "wb"))
                         
                     dataset = dataset.map(lambda x,y : (self.vectorize_text(x), y))
                 
