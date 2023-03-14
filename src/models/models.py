@@ -167,6 +167,19 @@ class MyDataSetModel():
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(encoded_texts).astype(str), ))
             features = dataset.map(lambda x: generator.vectorize_text(x)).batch(1)
         
+            
+            vocab = generator.vectorize_layer.get_vocabulary()
+            annotated = []
+            for word in encoded_texts[0].split():
+                if word in vocab:
+                    annotated.append((word+" ", "V", "#d9e6f2"))
+                else:
+                    annotated.append(word+" ")
+            
+            
+
+            
+
         elif (for_api is True) and (is_ == "image"):
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.load_image(x)).batch(1)
@@ -185,6 +198,14 @@ class MyDataSetModel():
             translated_texts = np.array([translate_text(text, src=lang) for text, lang in zip(features_texts, lang_texts)])
             cleaned_texts = np.array([clean_text(text) for text in translated_texts])
             encoded_texts = np.array([stemmatize_text(text) for text in cleaned_texts])
+
+            vocab = generator.vectorize_layer.get_vocabulary()
+            annotated = []
+            for word in encoded_texts[0].split():
+                if word in vocab:
+                    annotated.append((word+" ", "V", "#d9e6f2"))
+                else:
+                    annotated.append(word+" ")
 
             features = tf.data.Dataset.from_generator(
                         fusion_generator,
@@ -241,12 +262,13 @@ class MyDataSetModel():
                     "macro named probas": name_macro_probas.tolist(),
                 } 
 
-            if is_ == "text":
+            if is_ in ["text", "fusion"]:
                 response["texts"] = features_texts.tolist()
                 response["lang texts"] = lang_texts.tolist()
                 response["translated texts"] = translated_texts.tolist()
                 response["cleaned texts"] = cleaned_texts.tolist()
                 response["encoded texts"] = encoded_texts.tolist()
+                response["annotated texts"] = annotated
             
             return response
 
