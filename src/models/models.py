@@ -180,6 +180,12 @@ class MyDataSetModel():
             texts = np.asarray([features[0],]).astype(np.str)
             links = np.asarray([features[1],]).astype(np.str)
 
+            features_texts = np.array(texts)
+            lang_texts = np.array([get_lang(text) for text in features])
+            translated_texts = np.array([translate_text(text, src=lang) for text, lang in zip(features_texts, lang_texts)])
+            cleaned_texts = np.array([clean_text(text) for text in translated_texts])
+            encoded_texts = np.array([stemmatize_text(text) for text in cleaned_texts])
+
             features = tf.data.Dataset.from_generator(
                         fusion_generator,
                         args=[texts, links],
