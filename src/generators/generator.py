@@ -8,6 +8,7 @@ from collections.abc import Iterable
 import matplotlib.pyplot as plt
 from pathlib import Path
 import joblib
+import pickle
 import seaborn as sns
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
@@ -67,10 +68,20 @@ class DataGenerator():
         self.preprocessed = False
         self.encoder = None
         self.encoder_path = Path("./labelencoder.joblib")
-        self.vectorize_layer = TextVectorization(
-            max_tokens=self.vocab_size,
-            output_mode='int',
-            output_sequence_length=self.sequence_length)
+        
+
+        if Path("tv_layer.pkl").exists():
+            from_disk = pickle.load(open("tv_layer.pkl", "rb"))
+            self.vectorize_layer = TextVectorization.from_config(from_disk['config'])
+            self.vectorize_layer.set_weights(from_disk['weights'])
+            self.vectorize_layer.set_vocabulary(from_disk['vocabulary'])
+            print("vectorization layer form disk")
+        else:
+            self.vectorize_layer = TextVectorization(
+                max_tokens=self.vocab_size,
+                output_mode='int',
+                output_sequence_length=self.sequence_length)
+            print("new vectorization layer")
 
         if from_api:
             self.set_encoder()
@@ -91,6 +102,27 @@ class DataGenerator():
 
             self.data["names"] = convert_to_readable_categories(self.data.labels)
 
+    def convert_to_readable_macrocategories(self, serie:pd.Series):
+        categories_num = [
+            10, 40, 50, 60, 1140, 1160, 1180,
+            1280, 1281, 1300, 1301, 1302, 1320, 1560,
+            1920, 1940, 2060, 2220, 2280, 2403,
+            2462, 2522, 2582, 2583, 2585, 2705, 2905
+            ]
+
+        categories_des = [
+            "Livres", "Gaming", "Gaming", "Gaming", "Jouets", "Jouets", "Jouets",
+            "Jouets", "Jouets", "Jouets", "Bazar", "Jouets", "Equipement", "Mobilier",
+            "Décoration", "Bazar", "Décoration", "Equipement", "Livres", "Livres",
+            "Gaming", "Livres", "Mobilier", "Equipement", "Equipement", "Livres", "Gaming"
+            ]
+
+        #categories_des_num = [f"{category_des}_{category_num}" for category_des, category_num in zip(categories_des, categories_num)]
+        
+        return serie.replace(
+            to_replace = categories_num ,
+            value = categories_des
+        ) 
 
     #Conversion des numéros des categories en description
     def convert_to_readable_categories(self, serie:pd.Series):
@@ -184,7 +216,11 @@ class DataGenerator():
                     if split == "train":
                         train_text_vectorizer = dataset.map(lambda x, y: x)
                         self.vectorize_layer.adapt(train_text_vectorizer.batch(64))
-
+                        pickle.dump({'config': self.vectorize_layer.get_config(),
+                            'weights': self.vectorize_layer.get_weights(),
+                            'vocabulary': self.vectorize_layer.get_vocabulary(),
+                            }
+                            , open("tv_layer.pkl", "wb"))
                         
                     dataset = dataset.map(lambda x,y : (self.vectorize_text(x), y))
                 
