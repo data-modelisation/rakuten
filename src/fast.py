@@ -6,6 +6,7 @@ import requests
 from generators.generator import DataGenerator
 from models.models_text import *
 from models.models_image import *
+from models.models_fusion import *
 
 #Instance
 app = FastAPI()
@@ -32,11 +33,16 @@ MAX_TOKENS=10000
 
 #Modeles 
 model_text = ModelText_Neural_Simple(
-        suffix="_stemmed_translated",
+        suffix="",
         load=True,
     )
 
-model_image = ModelImage_CNN_Lenet(
+model_image = ModelImage_MobileNet(
+        suffix="_224",
+        load=True,
+    )
+    
+model_fusion = ModelFusion(
         suffix="_050",
         load=True,
     )
@@ -44,7 +50,7 @@ model_image = ModelImage_CNN_Lenet(
 #DataGenrator
 data_generator = DataGenerator(
     from_api=True,
-    target_shape=(50,50,3)
+    target_shape=(224,224,3)
 )
 
 @app.get("/api/image/layer/{idx_layer}")
@@ -58,18 +64,15 @@ def get_layer(idx_layer):
     return StreamingResponse(image.read(), media_type="image/jpeg")
 
 
-@app.get("/api/image/predict/{url:path}")
+@app.get("/api/image/predict/{image_url:path}")
 def pred_image(image_url: str):
     UPLOADED_PATH = 'uploaded_image.jpg'
     img_data = requests.get(str(image_url)).content
     with open(UPLOADED_PATH, 'wb') as handler:
         handler.write(img_data)
 
-    im = data_generator.load_image(UPLOADED_PATH)
-    
-    im = im.numpy().reshape(1,50, 50, 3)
     response = model_image.predict(
-        im, 
+        [UPLOADED_PATH,], 
         generator=data_generator,
         for_api=True,
         is_="image"
