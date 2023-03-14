@@ -15,25 +15,26 @@ from tensorflow.keras.applications.resnet import preprocess_input as resnet_prep
 
 from sklearn.svm import SVC
 
-from src.models.models_utils import METRICS
-from src.models.models import Model
-from src.tools.image import build_pipeline_preprocessor
+from models.models_utils import METRICS
+from models.models import MyDataSetModel
 
-class ModelImage(Model):
+class ModelImage(MyDataSetModel):
     def __init__(self, 
         *args,
         target_shape=[10, 10, 3],
-        name=None,
         **kwargs):
         
         super().__init__(*args, **kwargs)
 
-        self.type="image"
         self.target_shape=target_shape
-        self.use_generator=True
 
 
-    def get_preprocessor(self):
+
+    def dataset_generator(self, links, targets):
+        for link, target in zip(links, targets):
+            yield load_image(link), target
+
+    def init_preprocessor(self):
         return None#build_pipeline_preprocessor(**self.preprocess_parameters)
     
     def get_preprocess_input(self):
@@ -55,52 +56,53 @@ class ModelImage_SVC(ModelImage):
         
         return SVC()
 
-    def get_preprocessor(self):
+    def init_preprocessor(self):
         return build_pipeline_preprocessor()
+
+class ModelImage_CNN_Simple(ModelImage):
+    def __init__(self, 
+        *args,
+        **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+    def init_model(self,_):
+
+        model = Sequential()
+        model.add(Input(shape = self.target_shape, name="im_input"))
+        model.add(Conv2D(8, kernel_size=(3,3), activation="relu", padding = 'valid', name="im_conv"))
+        model.add(Flatten(name="im_flatten"))
+        model.add(Dense(units=27, activation="softmax", name="im_output"))
+        
+        return model
 
 class ModelImage_CNN_Lenet(ModelImage):
     def __init__(self, 
         *args,
         **kwargs):
         
-        self.name="image_CNN_Lenet"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
-
         super().__init__(*args, **kwargs)
 
-    def init_model(self,):
-        
+    def init_model(self,_):
+
         model = Sequential()
-        model.add(Input(shape = self.target_shape, name="image_input"))
-        model.add(Conv2D(8, kernel_size=(3,3), activation="relu", padding = 'valid', name="image_conv1"))
-        model.add(MaxPooling2D(pool_size=(3, 3), name="image_max1"))
-        model.add(Dropout(.2, name="image_frop1"))
-        model.add(Conv2D(16, kernel_size=(3,3), activation="relu", padding = 'valid', name="image_conv2"))
-        model.add(MaxPooling2D(pool_size=(3, 3), name="image_max2"))
-        model.add(Dropout(.2, name="image_drop2"))
-        model.add(Flatten(name="image_flatten"))
-        model.add(Dense(units=27*27, activation="relu", name="image_last"))
-        model.add(Dense(units=27, activation="softmax", name="image_output"))
-
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
-
+        model.add(Input(shape = self.target_shape, name="im_input"))
+        model.add(Conv2D(8, kernel_size=(3,3), activation="relu", padding = 'valid', name="im_conv1"))
+        model.add(MaxPooling2D(pool_size=(3, 3), name="im_max1"))
+        model.add(Dropout(.2, name="im_drop1"))
+        model.add(Conv2D(16, kernel_size=(3,3), activation="relu", padding = 'valid', name="im_conv2"))
+        model.add(MaxPooling2D(pool_size=(3, 3), name="im_max2"))
+        model.add(Dropout(.2, name="im_drop2"))
+        model.add(Flatten(name="im_flatten"))
+        model.add(Dense(units=128, activation="relu", name="im_last"))
+        model.add(Dense(units=27, activation="softmax", name="im_output"))
+        
         return model
 
 class ModelImage_VGG16(ModelImage):
     def __init__(self, 
         *args,
         **kwargs):
-        
-        self.name="image_VGG16"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
 
         super().__init__(*args, **kwargs)
 
@@ -120,12 +122,6 @@ class ModelImage_VGG16(ModelImage):
         model.add(Dropout(rate=0.2))
         model.add(Dense(n_class, activation='softmax'))
 
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
-        print(model.summary())
         return model
     
     def get_preprocess_input(self):
@@ -136,11 +132,6 @@ class ModelImage_VGG16_Transfer(ModelImage):
         *args,
         **kwargs):
         
-        self.name="image_VGG16_transfer"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
-
         super().__init__(*args, **kwargs)
 
     def init_model(self,):
@@ -151,10 +142,6 @@ class ModelImage_EfficientNetB1(ModelImage):
         *args,
         **kwargs):
         
-        self.name="image_EfficientNetB1"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
 
         super().__init__(*args, **kwargs)
 
@@ -176,11 +163,6 @@ class ModelImage_EfficientNetB1(ModelImage):
         model.add(Dropout(rate=0.2))
         model.add(Dense(n_class, activation='softmax'))
 
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
 
         return model
     
@@ -190,41 +172,35 @@ class ModelImage_EfficientNetB1(ModelImage):
     def get_preprocess_input(self):
         return efficientnet_preprocess_input     
 
-class ModelImage_MobileNetV2(ModelImage):
+class ModelImage_MobileNet(ModelImage):
     def __init__(self, 
         *args,
         **kwargs):
         
-        self.name="image_MobileNetV2"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
 
         super().__init__(*args, **kwargs)
 
     def init_model(self,):
-        n_class = 27
+        
         model = Sequential()
         base_model = MobileNetV2(
-                                include_top = False,
-                                weights = 'imagenet')
-        # Freezer les couches du MobileNetV2  
+            weights='imagenet', 
+            include_top=False,
+            input_shape = self.target_shape
+        )   
+        # Freezer les couches du VGG16  
         for layer in base_model.layers:   
             layer.trainable = False  
-        
-        model.add(base_model)  
-        model.add(GlobalAveragePooling2D())
-        model.add(Dense(1024, activation='relu'))
-        model.add(Dropout(rate=0.2))
-        model.add(Dense(512, activation='relu'))
-        model.add(Dropout(rate=0.2))
-        model.add(Dense(n_class, activation='softmax'))
+    
+        model.add(Input(shape = self.target_shape, name="im_input"))
+        model.add(base_model) # Ajout du modèle VGG16  
+        model.add(GlobalAveragePooling2D(name="im_avg"))   
+        model.add(Dense(units=1024, activation='relu', name="im_dense_1"))   
+        model.add(Dropout(rate=0.2, name="im_drop_1"))
+        model.add(Dense(units=512, activation='relu', name="im_dense_2"))   
+        model.add(Dropout(rate=0.2, name="im_drop_2"))  
+        model.add(Dense(units=27, activation="softmax", name="im_output"))
 
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
 
         return model
     
@@ -240,10 +216,6 @@ class ModelImage_ResNet50(ModelImage):
         *args,
         **kwargs):
         
-        self.name="image_ResNet50"
-        self.model_neural = True
-        self.clf_parameters = {}
-        self.preprocess_parameters = {}
 
         super().__init__(*args, **kwargs)
 
@@ -265,11 +237,6 @@ class ModelImage_ResNet50(ModelImage):
         model.add(Dropout(rate=0.2))
         model.add(Dense(n_class, activation='softmax'))
 
-        model.compile(
-                    loss="sparse_categorical_crossentropy",
-                    optimizer="adam",
-                    metrics=METRICS
-            )
 
         return model
     

@@ -4,11 +4,13 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
+RUN apt-get update &&\
+    apt-get install --no-install-recommends --yes build-essential
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8008
 
-CMD streamlit run --server.port 8080 --server.enableCORS false app.py
+CMD uvicorn fast:app --host 127.0.0.1 --port 8008 --reload
