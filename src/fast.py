@@ -8,6 +8,8 @@ from models.models_text import *
 from models.models_image import *
 from models.models_fusion import *
 
+UPLOADED_PATH = 'uploaded_image.jpg'
+
 #Instance
 app = FastAPI()
 
@@ -27,7 +29,7 @@ model_image = ModelImage_MobileNet(
     )
     
 model_fusion = ModelFusion(
-        suffix="_050",
+        suffix="_mobilenet_simple_224",
         load=True,
     )
 
@@ -36,6 +38,11 @@ data_generator = DataGenerator(
     from_api=True,
     target_shape=(224,224,3)
 )
+
+def save_image(url):
+    img_data = requests.get(str(url)).content
+    with open(UPLOADED_PATH, 'wb') as handler:
+        handler.write(img_data)
 
 @app.get("/api/image/layer/{idx_layer}")
 def get_layer(idx_layer):
@@ -48,12 +55,10 @@ def get_layer(idx_layer):
     return StreamingResponse(image.read(), media_type="image/jpeg")
 
 
-@app.get("/api/image/predict/{image_url:path}")
-def pred_image(image_url: str):
-    UPLOADED_PATH = 'uploaded_image.jpg'
-    img_data = requests.get(str(image_url)).content
-    with open(UPLOADED_PATH, 'wb') as handler:
-        handler.write(img_data)
+@app.get("/api/image/predict/{image_input:path}")
+def pred_image(image_input: str):
+    
+    save_image(image_input)
 
     response = model_image.predict(
         [UPLOADED_PATH,], 
@@ -62,20 +67,30 @@ def pred_image(image_url: str):
         for_api=True,
         is_="image"
     )
-    print("got response from fastapi")
     return response
 
-@app.get("/api/text/predict/{input}")
-def text_prediction(input):
+@app.get("/api/text/predict/{text_input}")
+def text_prediction(text_input):
     
     response = model_text.predict(
-        [input.split(";")[0],], 
+        [text_input.split(";")[0],], 
         generator=data_generator,
         for_api=True,
         is_="text"
         )
-    print("got response from fastapi")
     return response
 
+@app.get("/api/fusion/predict/text={text_input}$url={image_input:path}")
+def fusion_prediction(text_input, image_input):
+    
+    save_image(image_input)
+
+    response = model_fusion.predict(
+        [text_input.split(";")[0],UPLOADED_PATH], 
+        generator=data_generator,
+        for_api=True,
+        is_="fusion"
+        )
+    return response
 
 

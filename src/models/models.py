@@ -171,7 +171,20 @@ class MyDataSetModel():
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.load_image(x)).batch(1)
                 
-        
+        elif (for_api is True) and (is_ == "fusion"):
+            def fusion_generator(texts, links, expand=False):
+                    for text, link in zip(texts, links):
+                        yield {"te_input": generator.vectorize_text(text, expand=expand), "im_input": generator.load_image(link)}
+            
+            
+            texts = np.asarray([features[0],]).astype(np.str)
+            links = np.asarray([features[1],]).astype(np.str)
+
+            features = tf.data.Dataset.from_generator(
+                        fusion_generator,
+                        args=[texts, links],
+                        output_types = ({"te_input":tf.float32, "im_input":tf.float32})
+                        ).batch(1)
 
         #if model is None:
         path = self.generate_path()
