@@ -55,7 +55,7 @@ def get_layer(idx_layer):
     return StreamingResponse(image.read(), media_type="image/jpeg")
 
 
-@app.get("/api/image/predict/{image_input:path}")
+@app.get("/api/image/predict/url={image_input:path}")
 def pred_image(image_input: str):
     
     save_image(image_input)
@@ -69,7 +69,7 @@ def pred_image(image_input: str):
     )
     return response
 
-@app.get("/api/text/predict/{text_input}")
+@app.get("/api/text/predict/text={text_input}")
 def text_prediction(text_input):
     
     response = model_text.predict(
