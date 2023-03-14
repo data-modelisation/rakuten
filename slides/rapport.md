@@ -269,8 +269,13 @@ ___
 <!--
 _header: 'Les modèles / Deep learning / Text ' 
 -->
-![bg height:95%](images/models_dl_text.jpg)
+![bg height:80%](images/models_dl_text.jpg)
 
+___
+<!--
+_header: 'Les modèles / Deep learning / Image ' 
+-->
+![bg width:90%](diagram/image_schema_MobileNetv2.drawio.png)
 ___
 <!--
 _header: 'Les modèles / Deep learning / Fusion ' 
@@ -287,9 +292,8 @@ ___
 <!--
 _header: 'Les modèles / Deep learning / Fusion ' 
 -->
-![bg width:42%](images/models_dl_text.jpg)
-![bg width:20%](https://png.pngtree.com/png-clipart/20220620/ourmid/pngtree-arrow-shape-black-simple-icon-png-image_5235837.png)
-![bg width:32%](images/models_fusion.jpg)
+![bg width:43%](images/models_dl_text.jpg)
+![bg width:33%](images/models_fusion.jpg)
 
 ___
 <!--
@@ -297,8 +301,7 @@ _header: 'Analyse du meilleur modèle'
 -->
 <style scoped>
 section p, li {
-  font-size: 16px;
-  
+  font-size: 16px;  
 }
 header {
   padding-right:2px;
@@ -318,12 +321,9 @@ ___
 <!--
 _header: 'Limites' 
 -->
-Le projet est un projet mêlant de l'analyse de texte et du traitement d'images : des notions poussées de deep-learning sont nécessaires à la compréhension et l'implémentation de telles techniques.
-De nombreux limites sont apparus tout au long de ce projet :
-
-* L'accès à des ressources de calcul de type GPU ou TPU nous a été quasi impossible, notamment via Google Collab. 
-* L'accès aux 84 916 images, stockées dans un Google Drive et nécessaires à l'entraînement du modèle d'images, était érattique : de nombreuses coupures de ce lien entre Google Drive et Google Collab ont entraîné ici aussi une grande perte de temps et une grande frustration.
-* Le traitement des 84916 images nécessite d'utilisation de générateurs. Ces derniers sont à customiser manuellement afin de permettre une gestion en batch des données textuelles et d'images pour le modèle de fusion.
+* Le traitement des 84916 images nécessite d'utilisation de générateurs.
+* Disponibilité limité de ressources de calcul de type GPU ou TPU via Google Colab. 
+* Coupures de lien entre Google Drive et Google Colab ont entraîné une grande perte de temps 
 * La création d'un modèle de fusion a été une tâche ardue, principalement pour la gestion des entrées sous forme de générateurs.
 
 ___
@@ -346,18 +346,55 @@ Nous continuons de croire que le monde numérique a le potentiel d'améliorer la
 <!--
 _header: 'Perspectives' 
 -->
+<style scoped>
+section p, li {
+  font-size: 18px;
+  
+}
 
-
-* Ajout d'autres modèles au modèle de fusion.
-* Ajout d'autres modèles au modèle de fusion.
+</style>
+###### Les modifications globaux : 
 * Uniformisation des données dans le code. Actuellement, des dataframes Pandas, des tableaux Numpy, des générateurs d'images fonctionnent ensemble. Tout pourrait être géré autour d'un seul type de données, comme les tf.data.DataSet.
-* Changement de la couche d'embedding ou création d'un modèle parallèle. Le modèle de texte par exemple pourrait être doté d'une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
+
+
+
+###### Le modèle de texte: 
+- une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
+ 
+ 
+
 ![bg right:45% ](
 https://static9.depositphotos.com/1101919/1123/i/450/depositphotos_11238831-stock-photo-innovation-idea.jpg)
 
 
 ----
+<!--
+_header: 'Perspectives' 
+-->
+<style scoped>
+section p, li {
+  font-size: 18px;
+  
+}
+</style>
+###### Le modèle d'image :
+- évolution traitement et preprocessing des images  
+  * croping d'image 
+  * augmentation des données via transformation 
+- évolution de modèles testés : 
+    * implimenter _Batch Normalization_,
+    * entraîner des couches de model issue de transfer learning  
+    * configurer differement les hyperparamétres 
+    * entraînement des couches de model issue de transfer learning 
+- analyse de patterns generés par les couches 
+- test autres modèles avec autre taille des images en entrés 
 
+###### Fusion 
+- ajout d'autres modèles au modèle de fusion
+- test un autre approche de la fusion :  utiliser un modèle pour identifier un group global et ensuite sous-group precis. Par exemple premiere model prédit un group "Livre" et deuxieme model predit "Nouveau" ou "Ancien".
+![bg right:45% ](
+https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
+___
 <!--
 _header: '' 
 -->
@@ -409,41 +446,4 @@ _header: 'Annexe : Les modèles / Deep learning / Image '
 
 ![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
 
---- 
-<style>
-section.split {
-    overflow: visible;
-    display: grid;
-    grid-template-columns: 500px 500px;
-    grid-template-rows: 100px auto;
-    grid-template-areas: 
-      "slideheading slideheading"
-        "leftpanel rightpanel";
-}
-/* debug */
-section.split h3, 
-section.split .ldiv, 
-section.split .rdiv { border: 1.5pt dashed dimgray; }
-section.split h3 {
-    grid-area: slideheading;
-    font-size: 50px;
-}
-section.split .ldiv { grid-area: leftpanel; }
-section.split .rdiv { grid-area: rightpanel; }
-</style>
-
-### A split slide
-<!-- _class: split -->
-
-
-#### Title for the left panel
-- listed item
-- listed item
-- listed item
-
-
-#### Title for the right panel
-- listed item
-- listed item
-- listed item
 
