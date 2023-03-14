@@ -67,7 +67,11 @@ class DataGenerator():
         self.preprocessed = False
         self.encoder = None
         self.encoder_path = Path("./labelencoder.joblib")
-        
+        self.vectorize_layer = TextVectorization(
+            max_tokens=self.vocab_size,
+            output_mode='int',
+            output_sequence_length=self.sequence_length)
+
         if from_api:
             self.set_encoder()
         else:
@@ -141,6 +145,11 @@ class DataGenerator():
         im = tf.image.resize(im, size=self.target_shape[:2])
         return im
 
+    def vectorize_text(self,text, expand=False):
+        if expand:
+            text = tf.expand_dims(text, -1)
+        return self.vectorize_layer(text)
+
     def build_datasets(self, dfs={}, bss={}):
 
         splits = ["train", "test", "valid"]
@@ -148,17 +157,11 @@ class DataGenerator():
         subdatasets = dict.fromkeys(types, None)
         datasets = dict.fromkeys(splits, subdatasets)
         datasets = {}
-        
-        vectorize_layer = TextVectorization(
-            max_tokens=self.vocab_size,
-            output_mode='int',
-            output_sequence_length=self.sequence_length)
-            #output_sequence_length=self.sequence_length)
+               
 
         for split in splits:
             datasets[split] = {}
             
-
             for type_ in types:
 
                 print(f"building dataset for : {type_} | {split}")
@@ -169,14 +172,10 @@ class DataGenerator():
                 links = df.links.astype(np.str)
                 targets = df.targets.values.astype(np.int32)
 
-                def vectorize_text(text, expand=False):
-                    if expand:
-                        text = tf.expand_dims(text, -1)
-                    return vectorize_layer(text)
 
                 def fusion_generator(texts, links, targets, expand=False):
                     for text, link, target in zip(texts, links, targets):
-                        yield {"te_input": vectorize_text(text, expand=expand), "im_input": self.load_image(link)}, target
+                        yield {"te_input": self.vectorize_text(text, expand=expand), "im_input": self.load_image(link)}, target
 
                 if type_ == "text":
 
@@ -184,10 +183,10 @@ class DataGenerator():
                     
                     if split == "train":
                         train_text_vectorizer = dataset.map(lambda x, y: x)
-                        vectorize_layer.adapt(train_text_vectorizer.batch(64))
+                        self.vectorize_layer.adapt(train_text_vectorizer.batch(64))
 
                         
-                    dataset = dataset.map(lambda x,y : (vectorize_text(x), y))
+                    dataset = dataset.map(lambda x,y : (self.vectorize_text(x), y))
                 
                 elif type_ == "image":
                     dataset = tf.data.Dataset.from_tensor_slices((links, targets))
