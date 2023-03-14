@@ -49,22 +49,33 @@ def run():
 
         if submit_button:
             
-            if text_input != "" and url_input == "":
-              print(f"asking FastAPI to predict this Text : {text_input}")
-              res = requests.get(f"http://127.0.0.1:8008/api/text/predict/{text_input}")
-              print(f"response from fastpi : {res}")
-            elif text_input == "" and url_input != "":
-              print(f"asking FastAPI to predict this URL : {url_input}")
-              res = requests.get(f"http://127.0.0.1:8008/api/image/predict/{url_input}")
-              print(f"response from fastpi : {res}")
-            elif text_input != "" and url_input != "":
-              print(f"asking FastAPI to predict this Text {text_input} and this URL {url_input}")
-              res = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/{text_input}&url={url_input}")
-              print(f"response from fastpi : {res}")
+            with st.spinner('Classifying, please wait....'):
 
-            response = res.json()
-            with st.spinner('Classifying the image, please wait....'):
+                if text_input != "" and url_input == "":
+                    print(f"asking FastAPI to predict this Text : {text_input}")
+                    res = requests.get(f"http://127.0.0.1:8008/api/text/predict/{text_input}")
+
+                elif text_input == "" and url_input != "":
+                    print(f"asking FastAPI to predict this URL : {url_input}")
+                    res = requests.get(f"http://127.0.0.1:8008/api/image/predict/{url_input}")
+
+                elif text_input != "" and url_input != "":
+                    print(f"asking FastAPI to predict this Text {text_input} and this URL {url_input}")
+                    res = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/{text_input}&url={url_input}")
+                
+                print(f"response from fastpi : {res}")
+
+                response = res.json()
+                
+                #Creation du graphique pour les probailités sur toutes les classes  
+                df = pd.DataFrame(response.get("value probas"), columns=response.get("named probas")).reset_index()
+                df = df.melt(id_vars=['index'], var_name="Catégories [-]", value_name="Probabilité [-]")
+                df["Domaine"] = response.get("macro named probas")
+                fig = px.bar(df, x='Catégories [-]', y='Probabilité [-]', color="Domaine", barmode='group')
+                st.plotly_chart(fig, use_container_width=True)
+
                 st.write(response)
+
 
 
     tab_name = st.sidebar.radio("", list(TABS.keys()), 0)
