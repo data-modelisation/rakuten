@@ -1,7 +1,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
 from keras.applications.vgg16 import VGG16 
-#from keras.applications.mobilenet import MobileNetV2 
+from keras.applications.mobilenet_v2 import MobileNetV2 
 from sklearn.svm import SVC
 
 from models.models_utils import METRICS
@@ -124,7 +124,11 @@ class ModelImage_MobileNet(ModelImage):
     def init_model(self, _):
 
         model = Sequential()
-        base_model = MobileNetV2(weights='imagenet', include_top=False)   
+        base_model = MobileNetV2(
+            weights='imagenet', 
+            include_top=False,
+            input_shape = self.target_shape
+        )   
         # Freezer les couches du VGG16  
         for layer in base_model.layers:   
             layer.trainable = False  
@@ -137,3 +141,5 @@ class ModelImage_MobileNet(ModelImage):
         model.add(Dense(units=512, activation='relu', name="im_dense_2"))   
         model.add(Dropout(rate=0.2, name="im_drop_2"))  
         model.add(Dense(units=27, activation="softmax", name="im_output"))
+
+        return model
