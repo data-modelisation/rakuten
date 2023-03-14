@@ -61,7 +61,7 @@ def run():
 
                 elif text_input != "" and url_input != "":
                     print(f"asking FastAPI to predict this Text {text_input} and this URL {url_input}")
-                    res = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/{text_input}&url={url_input}")
+                    res = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/text={text_input}&url={url_input}")
                 
                 print(f"response from fastpi : {res}")
 

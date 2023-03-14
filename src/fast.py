@@ -80,7 +80,7 @@ def text_prediction(text_input):
         )
     return response
 
-@app.get("/api/fusion/predict/text={text_input}$url={image_input:path}")
+@app.get("/api/fusion/predict/text={text_input}&url={image_input:path}")
 def fusion_prediction(text_input, image_input):
     
     save_image(image_input)
