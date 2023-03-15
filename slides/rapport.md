@@ -290,32 +290,10 @@ _header: 'Les modèles / Deep learning / Fusion '
 
 Un schéma simplifié du fonctionnement de concaténation.
 
-<<<<<<< HEAD
-* concaténation est faite sur les avant-dernières couches de deux modèles. 
-* les autres couches sont *freezées*. 
-* couches denses completent la fusion pour obtenir une classification sur 27 classes. 
-___
-<!--
-_header: 'Les modèles / Deep learning / Fusion ' 
--->
-![bg width:43%](images/models_dl_text.jpg)
-![bg width:50%](images/models_fusion.jpg)
-||||||| 24a01b1
-* concaténation est faite sur les avant-dernières couches de deux modèles. 
-* les autres couches sont *freezées*. 
-* couches denses completent la fusion pour obtenir une classification sur 27 classes. 
-___
-<!--
-_header: 'Les modèles / Deep learning / Fusion ' 
--->
-![bg width:43%](images/models_dl_text.jpg)
-![bg width:33%](images/models_fusion.jpg)
-=======
 * La concaténation est faite sur les avant-dernières couches de deux modèles. 
 * Les autres couches des modèles sont *freezées*. 
 * Une couche de *BatchNormalization*
 * Deux couches denses complètent la fusion pour obtenir une classification sur 27 classes. 
->>>>>>> dev_slides_cla
 
 ___
 <!--
