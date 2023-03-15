@@ -24,7 +24,7 @@ model_text = ModelText_Neural_Simple(
     )
 
 model_image = ModelImage_MobileNet(
-        suffix="_224",
+        suffix="_224_crop",
         load=True,
     )
     
