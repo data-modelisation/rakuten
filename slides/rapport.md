@@ -12,6 +12,14 @@ paginate: true
 <style>
 @import 'default';
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.container{
+    display: flex;
+}
+.col{
+    flex: 1;
+}
+
 section {
   background-image: none;
   font-family:  'Roboto'; 
@@ -50,7 +58,9 @@ container{
 col{
   flex:1
 }
-
+col2{
+  flex:1
+}
 blockquote {
   max-width: 90%;
   border-top: 0.1em dashed #555;
@@ -64,6 +74,14 @@ blockquote::before {
 blockquote::after {
   content: "";
 }
+
+img[alt~="top-right"] {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width:90%;
+}
+
 </style>    
 <!--
 _class: 
@@ -231,7 +249,30 @@ ___
 <!--
 _header: 'Les modèles / Deep learning / Text ' 
 -->
-![bg height:80%](images/models_dl_text.jpg)
+
+<div class="container">
+
+<div class="col">
+  <h2>Modèle Texte</h2>
+  <ul>
+    <li> Couche de TextVectorization
+    <li> Embedding
+    <li> Couches denses + Dropout
+  </ul>
+</div>
+
+<div class="col">
+  <h2>Modèle Image</h2>
+    <ul>
+    <li> Couche de TextVectorization
+    <li> Embedding
+    <li> Couches denses + Dropout
+  </ul>
+</div>
+
+</div>
+
+![top-right](images/models.svg)
 
 ___
 <!--
@@ -316,7 +357,6 @@ section p, li {
 </style>
 
 ###### Le modèle de textes: 
-- Tester un RNN
 - Utiliser des modèles pré-entrainés
   - Word2Vec
   - CamemBERT
@@ -328,6 +368,7 @@ section p, li {
     * Implémenter _Batch Normalization_,
     * Entraîner des couches de modèles issues de transfer learning  
     * Configurer différemment les hyperparamètres 
+    * Tester les Vision Transformers
 - Analyse de patterns générés par les couches
 - Test autres modèles avec autre taille des images en entrée 
 
