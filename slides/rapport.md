@@ -158,10 +158,10 @@ _header: 'Exploration des données | Cibles'
 * 27 catégories (codes fournis)
 * 7 domaines différents trouvés (non labelisés, non utilisés)
 * Sur-représentation de la classe `2583`
-* Sous-représentation des classe `60`, `1320` et `2220`
+* Sous-représentation des classes `60`, `1320` et `2220`
 
 ## Challenge probable
-&rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits du même domaine
+&rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits appartenant même domaine
 
 ![bg right:40% height:90%](./images/categories.svg)
 
@@ -201,7 +201,7 @@ _header: 'Exploration des données / Images'
 
 ## Analayse de la variance
 * Masque de variance très net sur les bordures des images
-* Possibilité de rogner les images de 20% sans perdre trop d'information
+* Possibilité de rogner les images de 20% sans trop de perte de données
 
 ![bg right:40% height:90%](./images/channels.svg)
 ___
@@ -239,7 +239,7 @@ ___
 _header: 'Préparation des données / Images' 
 -->
 __Générateur d'images__:
-* Streaming per *batch* : images transmises forme de *batchs* ce qui évite de traiter l'ensemble des données d'un coup
+* Streaming per *batch* : images transmises forme de *batchs* ce qui évite de traiter l'ensemble des données (limite RAM + CPU)
 * Rognage des images de 20%
 * Redimensionnement en taille `224x224 px`
 * Application de la fonction `preprocess_input` spécifique à chaque modèle de *deep-learning*
@@ -324,7 +324,7 @@ _header: 'Analyse du meilleur modèle 2/2'
 * <span style="font-weight:bold;color:#ffcc5cff">Jouets</span> : `1080`, `1280` et `1281`
 * <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
 
-Nous nous attendions à avoir des erreurs au sein de produits du même domaine
+Nous nous attendions à avoir des erreurs au sein de produits du même domaine.
 ___
 
 <!--
@@ -366,9 +366,9 @@ section p, li {
   * Augmentation des données via transformations
 - Modèles
     * Implémenter _Batch Normalization_,
-    * Entraîner des couches de modèles issues de transfer learning  
+    * Entraîner des couches de modèles issues de *transfer-learning * 
     * Configurer différemment les hyperparamètres 
-    * Tester les Vision Transformers
+    * Tester les *Vision Transformers*
 - Analyse de patterns générés par les couches
 - Test autres modèles avec autre taille des images en entrée 
 
