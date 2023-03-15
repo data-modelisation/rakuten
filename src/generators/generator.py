@@ -135,7 +135,7 @@ class DataGenerator():
 
         categories_des = [
             "Livre occasion", "Jeu vidéo, accessoire tech.", "Accessoire Console", "Console de jeu", "Figurine", "Carte Collection", "Jeu Plateau",
-            "Jouet enfant, déguisement", "Jeu de société", "Jouet tech", "Paire de chaussettes", "Jeu extérieur, vêtement", "Objet pour bébé", "Mobilier intérieur",
+            "Jouet enfant, déguisement", "Jeu de société", "Jouet tech", "Paire de chaussettes", "Jeu extérieur, vêtement", "Autour du bébé", "Mobilier intérieur",
             "Chambre", "Cuisine", "Décoration intérieure", "Animal", "Revues et journaux", "Magazines, livres et BDs",
             "Jeu occasion", "Bureautique et papeterie", "Mobilier extérieur", "Autour de la piscine", "Bricolage", "Livre neuf", "Jeu PC"
             ]
