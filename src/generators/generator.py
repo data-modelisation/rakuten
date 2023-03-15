@@ -21,6 +21,8 @@ from tensorflow.keras.layers import TextVectorization
 from tools.text import pipeline_loader, pipeline_lang
 from tools.commons import convert_to_readable_categories
 
+sns.set_theme()
+
 class DataGenerator():
     def __init__(self,
         batch_size = 32,
@@ -100,7 +102,7 @@ class DataGenerator():
             if self.exploration:
                 self.explore()
 
-            self.data["names"] = convert_to_readable_categories(self.data.labels)
+            self.data["names"] = self.convert_to_readable_categories(self.data.labels)
 
     def convert_to_readable_macrocategories(self, serie:pd.Series):
         categories_num = [
@@ -348,7 +350,7 @@ class DataGenerator():
     def explore(self):
         
         data_explore = self.data.copy()
-        data_explore["prdtypename"] = convert_to_readable_categories(data_explore.labels)
+        data_explore["prdtypename"] = self.convert_to_readable_categories(data_explore.labels)
 
         self.analysis_imbalanced(data_explore)
         self.analysis_words(data_explore)
@@ -368,7 +370,7 @@ class DataGenerator():
             print("chi2 : ", chi2, " pvalue : ", pvalue)
 
             sns.heatmap(table_norm)
-            plt.savefig(f"notebooks/images/chi_{column}.png")
+            plt.savefig(f"../notebooks/images/chi_{column}.png")
             plt.clf()
 
         print("analysis imbalanced finished")
@@ -390,7 +392,7 @@ class DataGenerator():
             ylabel='Nombre de titres / langue [-]',
             title='Analyse de la répartition des langues')
 
-        plt.savefig("notebooks/images/lang.png")
+        plt.savefig("../notebooks/images/lang.png")
         plt.clf()
 
         print("analysis language finished")
@@ -408,7 +410,7 @@ class DataGenerator():
             xlabel='Nombre de produits [-]',
             ylabel='Catégories [-]',
             title='Nombre de produits par catégorie (Train)')
-        plt.savefig("notebooks/images/imbalanced.png")
+        plt.savefig("../notebooks/images/imbalanced.png")
         plt.clf()
 
         print("analysis imbalanced finished")
@@ -441,7 +443,7 @@ class DataGenerator():
             ylabel='Total [-]',
             title='Nombre de mots dans `description` (Train)')
 
-        plt.savefig("notebooks/images/words.png")
+        plt.savefig("../notebooks/images/words.png")
         plt.clf()
 
         print("analysis words finished")
