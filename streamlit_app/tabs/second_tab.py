@@ -57,7 +57,8 @@ def run():
 
                     if not url_input:
                         st.warning(f"No image url found for {scrap_response.get('provider')}")
-
+            
+            with C2:                
                 with st.spinner('Classifying, please wait....'):
                     try:
                         if text_input and not url_input:
