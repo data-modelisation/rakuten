@@ -107,11 +107,7 @@ _header: 'Contexte'
 
 Prédire la catégorie d'un produit sur la base de son **titre**, sa **description** et de son **image**
 
-
-
-![bg top:50% height:50%](https://rit.rakuten.com/wp-content/uploads/2022/03/RakutenDataChallenge_RIT_Paris-1024x493.jpg)
-
-
+1 + 1 = 3 ... Un **modèle de texte**, un **modèle d'image** et un **modèle de fusion** 
 
 ___
 
@@ -137,124 +133,30 @@ ___
 _header: 'Exploration des données | Cibles' 
 -->
 
+## Données déséquilibrées
 * 27 catégories labelisées
-* 6 domaines différents trouvés (non labelisés)
-* Cible déséquilibrée
+* 7 domaines différents trouvés (non labelisés)
+* Sur-représentation de la classe `2583`
+* Sous-représentation des classe `60`, `1320` et `2220`
 
+## Challenge probable
 &rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits du même domaine
 
-<style scoped>
-table {
-  font-size: 12px;
-  padding:0px;
-}
-table tr:nth-child(1) td:nth-child(1), 
-table tr:nth-child(1) td:nth-child(2), 
-table tr:nth-child(2) td:nth-child(5), 
-table tr:nth-child(2) td:nth-child(6),
-table tr:nth-child(4) td:nth-child(5), 
-table tr:nth-child(4) td:nth-child(6),
-table tr:nth-child(8) td:nth-child(5), 
-table tr:nth-child(8) td:nth-child(6) 
-{ 
-  background: #B8CEC2;  
-}
-
-table tr:nth-child(2) td:nth-child(1), 
-table tr:nth-child(2) td:nth-child(2),
-table tr:nth-child(3) td:nth-child(1), 
-table tr:nth-child(3) td:nth-child(2),
-table tr:nth-child(4) td:nth-child(1), 
-table tr:nth-child(4) td:nth-child(2), 
-table tr:nth-child(1) td:nth-child(3), 
-table tr:nth-child(1) td:nth-child(4),
-table tr:nth-child(1) td:nth-child(5), 
-table tr:nth-child(1) td:nth-child(6),
-table tr:nth-child(3) td:nth-child(5), 
-table tr:nth-child(3) td:nth-child(6),
-table tr:nth-child(9) td:nth-child(5), 
-table tr:nth-child(9) td:nth-child(6)
-{ 
-  background: #2C4F71;
-  color: white; 
-}
-
-table tr:nth-child(5) td:nth-child(1),
-table tr:nth-child(5) td:nth-child(2),
-table tr:nth-child(6) td:nth-child(1),
-table tr:nth-child(6) td:nth-child(2), 
-table tr:nth-child(7) td:nth-child(1),
-table tr:nth-child(7) td:nth-child(2), 
-table tr:nth-child(8) td:nth-child(1),
-table tr:nth-child(8) td:nth-child(2), 
-table tr:nth-child(9) td:nth-child(1),
-table tr:nth-child(9) td:nth-child(2),
-table tr:nth-child(3) td:nth-child(3),
-table tr:nth-child(3) td:nth-child(4)
-{ 
-  background: #F8E6CE; color: #2C4F71; 
-}
-table tr:nth-child(5)  td:nth-child(3),
-table tr:nth-child(5)  td:nth-child(4),
-table tr:nth-child(6)  td:nth-child(3),
-table tr:nth-child(6)  td:nth-child(4),
-table tr:nth-child(7)  td:nth-child(3),
-table tr:nth-child(7)  td:nth-child(4),
-table tr:nth-child(8)  td:nth-child(3),
-table tr:nth-child(8)  td:nth-child(4),
-table tr:nth-child(5)  td:nth-child(5),
-table tr:nth-child(5)  td:nth-child(6)
-{ 
-  background: #EBC8B4;  color: green;
-}
-
-table tr:nth-child(6) td:nth-child(5),
-table tr:nth-child(6) td:nth-child(6),
-table tr:nth-child(7) td:nth-child(5),
-table tr:nth-child(7) td:nth-child(6),
-table tr:nth-child(9) td:nth-child(3),
-table tr:nth-child(9) td:nth-child(4)
-{ 
-  background:  #D77a61; color: white; 
-}
-
-table tr:nth-child(2) td:nth-child(3),
-table tr:nth-child(2) td:nth-child(4),
-table tr:nth-child(4) td:nth-child(3),
-table tr:nth-child(4) td:nth-child(4)
-{ 
-  background:  #DBD3D8;
-}
-</style>
-
-
-
-
-|Cat. | Code et libellé|Cat.| Code et libellé|Cat.| Code et libellé|
-|---:|------------|----:|------------|-------------------:|------------|
-| ![height:30px](https://www.icone-png.com/png/40/39859.png)   | 10 - Livre d'occasion   | ![height:30px](https://cdn-icons-png.flaticon.com/512/1223/1223280.png) | 1300 - Jouet Tech     |  ![height:30px](https://cdn-icons-png.flaticon.com/512/13/13282.png) | 2280  - Affiche       |
-|  ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)   | 40 - Jeu Console        | ![height:30px ](https://cdn-icons-png.flaticon.com/512/6824/6824500.png)  | 1301 - Chaussette     |  ![height:30px](https://www.icone-png.com/png/40/39859.png) | 2403 - Revue         |
-|   ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)|  50 -  Accessoire Console  |  ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png) | 1302 - Gadget         | ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png) | 2462 - Jeu oldschool |
-| ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)   | 60 - Tech               |  ![height:30px](https://cdn-icons-png.flaticon.com/512/6824/6824500.png)| 1320 - Bébé           |  ![height:30px](https://www.icone-png.com/png/40/39859.png)  | 2522 - Bureautique   |
-|![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)    | 1140 -  Figurine          |   ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png)| 1560 - Salon          |  ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 2582 - Décoration    |
-| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png) |  1160 - Carte colllect.   | ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 1920 - Chambre        | ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png) |  2583 - Aquatique     |
-| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)  |  1180 - Jeu Plateau        | ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png)    | 1940 - Cuisine        |  ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png) | 2585 - Soin et Bricolage |
-| ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)   |  1280 - Déguisement        |   ![height:30px](https://cdn-icons-png.flaticon.com/512/165/165674.png) | 2060 - Chambre enfant | ![height:30px](https://www.icone-png.com/png/40/39859.png)  | 2705 - Livre neuf    |     
-|  ![height:30px](https://cdn-icons-png.flaticon.com/512/138/138409.png)  | 1281 - Boite de jeu       | ![height:30px](https://cdn.pixabay.com/photo/2017/10/24/11/53/tools-2884303_960_720.png)  | 2220 - Animaux        |   ![height:30px](https://cdn-icons-png.flaticon.com/512/25/25428.png)| 2905  - Jeu PC       |   
+![bg right height:90%](./images/categories.svg)
 
 ___
 <!--
 _header: 'Exploration des données / Textes' 
 -->
 
+## Extraction de données quantitives
+* Nombre de mots très variable
+
 ## Langues
 * Détection de la langue
   * 81% français
   * 14% anglais
   * Traduction
-
-## Extraction de données quantitives
-* Nombre de mots très variable
 
 
 ![bg width:50%](../notebooks/images/words.png)
@@ -266,8 +168,15 @@ ___
 <!--
 _header: 'Exploration des données / Images' 
 -->
-![bg width:90%](../notebooks/images/white.png)
-![bg width:90%](../notebooks/images/mask.png)
+
+## Analyse de canaux
+* TODO
+
+## Analayse de la variance
+* Masque de variance très net sur les bordures des images
+* Possibilité de rogner les images de 20% sans perdre trop d'information
+
+![bg right:40% height:90%](./images/channels.svg)
 ___
 <!--
 _header: 'Préparation des données / Textes' 
@@ -325,22 +234,18 @@ _header: 'Les modèles / Deep learning / Fusion '
 -->
 
 ![bg right width:90%](../notebooks/images/fusion_methodology.png)
+![bg right width:90%](../src/models/fusion/fusion_mobilenet_simple_224/model.png)
+
 
 Un schéma simplifié du fonctionnement de concaténation.
 
 * concaténation est faite sur les avant-dernières couches de deux modèles. 
 * les autres couches sont *freezées*. 
 * couches denses completent la fusion pour obtenir une classification sur 27 classes. 
-___
-<!--
-_header: 'Les modèles / Deep learning / Fusion ' 
--->
-![bg width:43%](images/models_dl_text.jpg)
-![bg width:33%](images/models_fusion.jpg)
 
 ___
 <!--
-_header: 'Analyse du meilleur modèle' 
+_header: 'Analyse du meilleur modèle 1/2' 
 -->
 <style scoped>
 section p, li {
@@ -351,14 +256,39 @@ header {
   margin: 0;
 }
 </style>
-![bg right:75% height:76%](images/fusion_crosstab.jpg)
-Pas d'impacte sur les performances réduites du modèle d'image.
-  * Toutes les catégories dépassent le score de 54% et 
-  * Une catégorie sur trois dépasse le score de 90%
+![bg right width:60%](./images/f1score_all.png)
 
-Le modèle concaténé s'aide du modèle d'image pour catégoriser les produits où le modèle de texte sous-performait : 
-  * La catégorie 1080 (Jeu Plateau) gagne 25 points
-  * La catégorie 2705 (Livre neuf) gagne 23 points
+## Analyse des *weigthed f1-scores*
+ 
+  * Toutes les catégories dépassent le score de 55%
+  * Une catégorie sur trois dépasse le score de 90%
+  * Les catégories `10`,  `40` et `2705`  très impactées par la fusion
+  * Au final : *weighted f1-score* 82.2 %
+
+  Le modèle concaténé s'aide du modèle d'image pour catégoriser les produits où le modèle de texte sous-performait : 
+  * La catégorie `10` <span style="font-weight:bold;color:#c7e5d7ff">Livre neuf</span> gagne 15 points
+  * La catégorie `2705` <span style="font-weight:bold;color:#c7e5d7ff">Livre occasion</span> gagne 18 points
+___
+<!--
+_header: 'Analyse du meilleur modèle 2/2' 
+-->
+<style scoped>
+section p, li {
+  font-size: 16px;  
+}
+header {
+  padding-right:2px;
+  margin: 0;
+}
+</style>
+![bg right:60% width:100%](./images/fusion_crosstab.svg)
+
+## Analyse des erreurs > 10%
+* <span style="font-weight:bold;color:#c7e5d7ff">Livres</span> : `10`, `2080`, `2403` et `2280`
+* <span style="font-weight:bold;color:#ffcc5cff">Jouets</span> : `1080`, `1280` et `1281`
+* <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
+
+Nous nous attendions à avoir des erreurs au sein de produits du même domaine
 ___
 
 <!--
@@ -368,7 +298,6 @@ _header: 'Challenges'
 * Disponibilité limité de ressources de calcul de type GPU ou TPU via Google Colab. 
 * Coupures de lien entre Google Drive et Google Colab ont entraîné une grande perte de temps 
 * La création d'un modèle de fusion a été une tâche ardue, principalement pour la gestion des entrées sous forme de générateurs.
-
 
 
 ----
@@ -431,6 +360,7 @@ _header: 'Conclusion'
  
  Merci à tous pour ces 3 mois très intenses et riches ! 
 
+[Lien vers le Streamlit](localhost:8080)
 
 
 ![bg right:60% width:70em](
