@@ -31,7 +31,7 @@ footer {
 /* Sidebar */
 
 section[data-testid="stSidebar"] > div {
-  background-color: #10b8dd;
+  background-color: rgba(191, 0, 0, 0.367);
   padding-top: 2rem;
   padding-left: 1.5rem;
 }

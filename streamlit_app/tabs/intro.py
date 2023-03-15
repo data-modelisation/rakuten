@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-title = "My Awesome DataScientest project."
+title = "Rakuten Classification."
 sidebar_name = "Introduction"
 
 
@@ -18,14 +18,17 @@ def run():
 
     st.markdown(
         """
-        Here is a bootsrap template for your DataScientest project, built with [Streamlit](https://streamlit.io).
+        ## Rakuten
 
-        You can browse streamlit documentation and demos to get some inspiration:
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into streamlit [documentation](https://docs.streamlit.io)
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset] (https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset]
-          (https://github.com/streamlit/demo-uber-nyc-pickups)
+        * Site de e-commerce avec 1.3 milliards d'utilisateurs
+        * Suggestions de recherche et recommandations pour l'utilisateur
+        * Classification des produits nécessaire
+        * Manuellement impossible
+
+        ## Objectifs
+
+        Prédire la catégorie d'un produit sur la base de son **titre**, sa **description** et de son **image**
+
+        1 + 1 = 3 ... Un **modèle de texte**, un **modèle d'image** et un **modèle de fusion** 
         """
     )
