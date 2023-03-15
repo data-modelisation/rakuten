@@ -385,8 +385,11 @@ _header: 'Conclusion'
  
  Merci à tous pour ces 3 mois très intenses et riches ! 
 
-[Lien vers le Streamlit](localhost:8080)
+<br>
+<a style="color: #f44336" href="localhost:8080">Streamlit + FastAPI + Docker = &hearts;</a>
 
+
+<br>
 
 ![bg right:60% width:70em](
 https://global.fr.shopping.rakuten.com/wp-content/uploads/2020/05/rak-monde-bottom-img.png)
