@@ -73,7 +73,7 @@ _footer: ''
 _header: '' 
 -->
 
-![bg left height: 100px](https://img.freepik.com/free-vector/ai-technology-brain-background-vector-digital-transformation-concept_53876-112224.jpg?w=826&t=st=1678478673~exp=1678479273~hmac=30056e96f26cfed14acb6d22fe55d7329c23fe2998a8ee425cc206b63a812474)
+![bg left height: 100px opacity:.80](https://img.freepik.com/free-vector/ai-technology-brain-background-vector-digital-transformation-concept_53876-112224.jpg?w=826&t=st=1678478673~exp=1678479273~hmac=30056e96f26cfed14acb6d22fe55d7329c23fe2998a8ee425cc206b63a812474)
 
 ![top:0px width:600px](https://challengedata.ens.fr/logo/public/RIT_logo_big_YnFAcFo.jpg) 
 
@@ -109,6 +109,7 @@ Prédire la catégorie d'un produit sur la base de son **titre**, sa **descripti
 
 1 + 1 = 3 ... Un **modèle de texte**, un **modèle d'image** et un **modèle de fusion** 
 
+![bg right:40% width:80%](./images/rakuten.svg)
 ___
 
 <!--
@@ -118,31 +119,33 @@ _header: 'Présentation des données'
 
 * **84 916** observations
 * **27** catégories à déterminer 
-* **0** données dupliquées 
+* **0** donnée dupliquée
+<br>
 * **Textes** 
   * Un produit est désigné par : `designation`   et `description` soit un titre et sa description
   * 35% de NaNs pour `description`
+<br>
 * **Images**
   * Une image couleur par produit
   * Peut comporter un support ou une mise en scène
   * Taille `500x500px` en JPG
 
-![bg right:46% height:50% opacity:.7](../notebooks/images/images_category.png)
+![bg right:45% height:60% opacity:.7](./images/dataframe.svg)
 ___
 <!--
 _header: 'Exploration des données | Cibles' 
 -->
 
 ## Données déséquilibrées
-* 27 catégories labelisées
-* 7 domaines différents trouvés (non labelisés)
+* 27 catégories (codes fournis)
+* 7 domaines différents trouvés (non labelisés, non utilisés)
 * Sur-représentation de la classe `2583`
 * Sous-représentation des classe `60`, `1320` et `2220`
 
 ## Challenge probable
 &rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits du même domaine
 
-![bg right height:90%](./images/categories.svg)
+![bg right:40% height:90%](./images/categories.svg)
 
 ___
 <!--
@@ -191,8 +194,8 @@ section p, li {
 
 </style>
 L'exemple de transformations appliquées : 
-* `designation` : Une table très jolie! 
-* `description` : <ul><li>\&#43;Dimensions : 60 x 33 cm</li><ul>
+* colonne `designation` : `Une table très jolie!` 
+* colonne `description` : `<ul><li>\&#43;Dimensions : 60 x 33 cm</li><ul>`
 
 | Étape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
@@ -212,11 +215,12 @@ ___
 _header: 'Préparation des données / Images' 
 -->
 __Générateur d'images__:
-* Streaming per batch : les images sont transmises sous de batchs ce qui évite de traiter l'ensemble des données d'un coup
+* Streaming per *batch* : images transmises forme de *batchs* ce qui évite de traiter l'ensemble des données d'un coup
+* Rognage des images de 20%
 * Redimensionnement en taille `224x224 px`
-* Application de la fonction `preprocess_input` spécifique à chaque modèle 
+* Application de la fonction `preprocess_input` spécifique à chaque modèle de *deep-learning*
 
-![bg right width:80%](../notebooks/images/rescale.png)
+![bg right:45% width:70%](../notebooks/images/rescale.png)
 ___
 <!--
 _header: 'Les modèles / Deep learning / Text ' 
@@ -239,48 +243,33 @@ _header: 'Les modèles / Deep learning / Fusion '
 
 Un schéma simplifié du fonctionnement de concaténation.
 
-* concaténation est faite sur les avant-dernières couches de deux modèles. 
-* les autres couches sont *freezées*. 
-* couches denses completent la fusion pour obtenir une classification sur 27 classes. 
+* La concaténation est faite sur les avant-dernières couches de deux modèles. 
+* Les autres couches des modèles sont *freezées*. 
+* Une couche de *BatchNormalization*
+* Deux couches denses complètent la fusion pour obtenir une classification sur 27 classes. 
 
 ___
 <!--
 _header: 'Analyse du meilleur modèle 1/2' 
 -->
-<style scoped>
-section p, li {
-  font-size: 16px;  
-}
-header {
-  padding-right:2px;
-  margin: 0;
-}
-</style>
-![bg right width:60%](./images/f1score_all.png)
+
+![bg right:30% height:90%](./images/f1score_all.png)
 
 ## Analyse des *weigthed f1-scores*
  
   * Toutes les catégories dépassent le score de 55%
   * Une catégorie sur trois dépasse le score de 90%
-  * Les catégories `10`,  `40` et `2705`  très impactées par la fusion
   * Au final : *weighted f1-score* 82.2 %
 
   Le modèle concaténé s'aide du modèle d'image pour catégoriser les produits où le modèle de texte sous-performait : 
-  * La catégorie `10` <span style="font-weight:bold;color:#c7e5d7ff">Livre neuf</span> gagne 15 points
-  * La catégorie `2705` <span style="font-weight:bold;color:#c7e5d7ff">Livre occasion</span> gagne 18 points
+  * Les catégories `10` et `2705`  sont très impactées par la fusion
+    * La catégorie `10` <span style="font-weight:bold;color:#c7e5d7ff">Livre neuf</span> gagne 15 points
+    * La catégorie `2705` <span style="font-weight:bold;color:#c7e5d7ff">Livre occasion</span> gagne 18 points
 ___
 <!--
 _header: 'Analyse du meilleur modèle 2/2' 
 -->
-<style scoped>
-section p, li {
-  font-size: 16px;  
-}
-header {
-  padding-right:2px;
-  margin: 0;
-}
-</style>
+
 ![bg right:60% width:100%](./images/fusion_crosstab.svg)
 
 ## Analyse des erreurs > 10%
@@ -294,34 +283,18 @@ ___
 <!--
 _header: 'Challenges' 
 -->
-* Le traitement des 84916 images nécessite d'utilisation de générateurs.
-* Disponibilité limité de ressources de calcul de type GPU ou TPU via Google Colab. 
-* Coupures de lien entre Google Drive et Google Colab ont entraîné une grande perte de temps 
-* La création d'un modèle de fusion a été une tâche ardue, principalement pour la gestion des entrées sous forme de générateurs.
+
+## Informations oomplémentaires
+* Pourquoi ces produits et ces catégories à classer en particulier?
+* Comment la classification initiale des targets a-t-elle été faite?
 
 
-----
-<!--
-_header: 'Perspectives' 
--->
-<style scoped>
-section p, li {
-  font-size: 18px;
-  
-}
+## Ressources et techniques
+* Disponibilité limitée de ressources de calcul de type GPU ou TPU via Google Colab. 
+* Pertes d'accès fréquentes entre Google Drive et Google Colab, perte de temps
+* Arrivées tardives des notions de générateurs et de deep-learning dans les modules
 
-</style>
-###### Les modifications globaux : 
-* Uniformisation des données dans le code. Actuellement, des dataframes Pandas, des tableaux Numpy, des générateurs d'images fonctionnent ensemble. Tout pourrait être géré autour d'un seul type de données, comme les tf.data.DataSet.
-
-
-
-###### Le modèle de texte: 
-- une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
- 
- 
-
-![bg right:45% ](
+![bg right:25% ](
 https://static9.depositphotos.com/1101919/1123/i/450/depositphotos_11238831-stock-photo-innovation-idea.jpg)
 
 
@@ -335,6 +308,10 @@ section p, li {
   
 }
 </style>
+
+###### Le modèle de texte: 
+- une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
+
 ###### Le modèle d'image :
 - évolution traitement et preprocessing des images  
   * croping d'image 
@@ -350,7 +327,8 @@ section p, li {
 ###### Fusion 
 - ajout d'autres modèles au modèle de fusion
 - test un autre approche de la fusion :  utiliser un modèle pour identifier un group global et ensuite sous-group precis. Par exemple premiere model prédit un group "Livre" et deuxieme model predit "Nouveau" ou "Ancien".
-![bg right:45% ](
+
+![bg right:30% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
 
 ___
@@ -372,9 +350,55 @@ Nous continuons de croire que le monde numérique a le potentiel d'améliorer la
  
  ***Hiroshi Mikitani** – Fondateur et CEO de Rakuten*
 
+___
+
+![bg](https://fakeimg.pl/800x600/df8080/fff/?text=Annexes)
+
+___
+<!--
+_header: 'Annexe | Choix de la métrique' 
+-->
+
+## Notions
+* Connaissance du métier : une erreur de classification n'est pas fatale
+* Labelisation : comment a-t-elle été effectuée
+* Jeu de données déséquilibré : dû à une survente ou à des difficultés à classer ces produits
+* Forte tendance à l'*overfitting*
 
 
----
+**&rarr;** Choix de la métrique : *f1 weigthed score* pour un bon équilibre entre *accuracy* et *recall*
+
+## Remarques
+
+* Modèle aléatoire : score de 3.7% en moyenne
+* Une métrique personnalisée aurait pu être créée
+
+___
+<!--
+_header: 'Annexe | Callbacks' 
+-->
+
+## Nécessaires au contrôle des modèles lors de l'apprentissage
+* Suivi via *TensorBoard*
+* **EarlyStopping** : met fin à l'apprentissage si val_loss augmente pendant plus de 5 périodes à partir de la 8ème période
+* **ReduceLROnPlateau** : réduit le taux d'apprentissage si val_loss stagne sur un plateau pendant plus de 5 périodes
+
+
+![bg height:80% right:40% ](images/epochs.svg)
+
+___
+<!--
+_header: 'Annexe Exploration des données / Target' 
+-->
+
+## Déséquilibre des targets
+* Non homogéneité de la répartition des classes
+* Environ 7 classes sur-représentées
+* 3 classes sous-représentées
+
+![bg right height:50%](../notebooks/images/imbalanced.png)
+
+___
 <!--
 _header: 'Annexe : Machine Learning  / Text' 
 -->
@@ -400,12 +424,7 @@ _header: 'Annexe : Machine Learning / Image'
 
 ![bg right:39% width:100%](../notebooks/images/SVCHeatmap.png)
 ___
-<!--
-_header: 'Annexe : Les modèles / Deep learning / Text ' 
--->
-![bg width:60%](../notebooks/images/texts/epoch_accuracy.png)
 
-___
 <!--
 _header: 'Annexe : Les modèles / Deep learning / Image ' 
 -->
@@ -417,39 +436,8 @@ _header: 'Annexe : Les modèles / Deep learning / Image '
 
 ![bg right width:100%](../notebooks/images/images/epoch_accuracy_vgg16.png)
 
-___
-<!--
-_header: 'Annexe Exploration des données / Target' 
--->
-
-## Notions
-* cec
-* cze
-
-![bg height:50%](../notebooks/images/imbalanced.png)
-
-___
 
 
-___
-<!--
-_header: 'Annexe | Choix de la métrique' 
--->
 
-## Notions
-* Connaissance du métier : une erreur de classification n'est pas fatale
-* Labelisation : comment a-t-elle été effectuée
-* Jeu de données déséquilibré : dû à une survente ou à des difficultés à classer ces produits
-* Forte tendance à l'*overfitting*
-
-
-**&rarr;** Choix de la métrique : *f1 weigthed score* pour un bon équilibre entre *accuracy* et *recall*
-
-## Remarques
-
-* Modèle aléatoire : score de 3.7% en moyenne
-* Une métrique personnalisée aurait pu être créée
-
-___
 
 
