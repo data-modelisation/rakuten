@@ -293,7 +293,7 @@ ___
 _header: 'Les modèles / Deep learning / Fusion ' 
 -->
 ![bg width:43%](images/models_dl_text.jpg)
-![bg width:33%](images/models_fusion.jpg)
+![bg width:50%](images/models_fusion.jpg)
 
 ___
 <!--
