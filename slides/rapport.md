@@ -41,13 +41,16 @@ section.lead h1, section.lead h2, section.lead h3{
   text-align: left;
 }
 header {
-  background-color: #bf0000;
-  color: #fff;
-  font-size: 1em;
+font-size: 1.2em;
   font-weight: 700;
-  padding: 0.2em 2em 0.2em 2em;
-  opacity:.5;
-  border-radius: 15px;
+  padding: 5px;
+  background: linear-gradient(to right, black 0% 0.8em, #bf0000 0.8em 1.45em, black 1.45em 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+ text-transform: uppercase;
+
 }
 footer {
   font-size: 0.6em;
@@ -406,7 +409,7 @@ ___
 
 ___
 <!--
-_header: 'Annexe | Choix de la métrique' 
+_header: 'Choix de la métrique' 
 -->
 
 ## Notions
@@ -425,7 +428,7 @@ _header: 'Annexe | Choix de la métrique'
 
 ___
 <!--
-_header: 'Annexe | Callbacks' 
+_header: 'Callbacks' 
 -->
 
 ## Nécessaires au contrôle des modèles lors de l'apprentissage
@@ -461,7 +464,7 @@ _header: 'Annexe : Machine Learning  / Text'
 
 ___
 <!--
-_header: 'Annexe : Machine Learning / Image' 
+_header: 'Machine Learning / Image' 
 -->
 # Machine Learning / Image
 | Classifier | Acc. | Precision weighted | Recall weighted | F1 weighted |
@@ -476,7 +479,7 @@ _header: 'Annexe : Machine Learning / Image'
 ___
 
 <!--
-_header: 'Annexe : Les modèles / Deep learning / Image ' 
+_header: 'Les modèles / Deep learning / Image ' 
 -->
  |Model                        |Accuracy                 | Val accuracy    | 
 |-----------------------------|-------------------------|-----------------|
