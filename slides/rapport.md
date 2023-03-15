@@ -171,7 +171,7 @@ _header: 'Exploration des données / Textes'
 -->
 
 ## Nombres de mots
-* Variable (rappel : 35% de `descritpion` ne compte pas de mots)
+* Variable (rappel : 35% de `description` comporte des NaNs)
 * Limite à 500 mots
 
 ## Langues
