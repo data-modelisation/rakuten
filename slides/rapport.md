@@ -12,6 +12,14 @@ paginate: true
 <style>
 @import 'default';
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.container{
+    display: flex;
+}
+.col{
+    flex: 1;
+}
+
 section {
   background-image: none;
   font-family:  'Roboto'; 
@@ -50,7 +58,9 @@ container{
 col{
   flex:1
 }
-
+col2{
+  flex:1
+}
 blockquote {
   max-width: 90%;
   border-top: 0.1em dashed #555;
@@ -64,6 +74,14 @@ blockquote::before {
 blockquote::after {
   content: "";
 }
+
+img[alt~="top-right"] {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width:90%;
+}
+
 </style>    
 <!--
 _class: 
@@ -152,19 +170,22 @@ ___
 _header: 'Exploration des données / Textes' 
 -->
 
-## Extraction de données quantitives
-* Nombre de mots très variable
+## Nombres de mots
+* Variable (rappel : 35% de `descritpion` ne compte pas de mots)
+* Limite à 500 mots
 
 ## Langues
-* Détection de la langue
+* Détection de la langue pour traduction à effectuer
   * 81% français
-  * 14% anglais
-  * Traduction
+  * 14% anglais et autres langues
 
+## Fréquences des mots
+* Grande disparité d'apparition
+* Quelques domaines/catégories apparaissent :
+  * Dimensions (`cm`, `x`, `mm`, `taill`, `lot`)
+  * Autour de la piscine (`eau`, `piscin`)
 
-![bg width:50%](../notebooks/images/words.png)
-
-![bg left:59%](../notebooks/images/common_words.png)
+![bg right:40% ](images/words.svg)
 
 ___
 
@@ -173,7 +194,10 @@ _header: 'Exploration des données / Images'
 -->
 
 ## Analyse de canaux
-* TODO
+* Fortes disparités dans le taux de blanc de images
+  * Catégorie `1301` très étendue
+  * Catégorie `2403`, `1160` et `2462` plus restreintes
+  * Nombreux *outliers* pour `2403` et `1160` 
 
 ## Analayse de la variance
 * Masque de variance très net sur les bordures des images
@@ -225,7 +249,30 @@ ___
 <!--
 _header: 'Les modèles / Deep learning / Text ' 
 -->
-![bg height:80%](images/models_dl_text.jpg)
+
+<div class="container">
+
+<div class="col">
+  <h2>Modèle Texte</h2>
+  <ul>
+    <li> Couche de TextVectorization
+    <li> Embedding
+    <li> Couches denses + Dropout
+  </ul>
+</div>
+
+<div class="col">
+  <h2>Modèle Image</h2>
+    <ul>
+    <li> Couche de TextVectorization
+    <li> Embedding
+    <li> Couches denses + Dropout
+  </ul>
+</div>
+
+</div>
+
+![top-right](images/models.svg)
 
 ___
 <!--
@@ -306,7 +353,7 @@ ___
 _header: 'Challenges' 
 -->
 
-## Informations oomplémentaires
+## Informations complémentaires
 * Pourquoi ces produits et ces catégories à classer en particulier?
 * Comment la classification initiale des targets a-t-elle été faite?
 
@@ -331,24 +378,24 @@ section p, li {
 }
 </style>
 
-###### Le modèle de texte: 
-- une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
+###### Le modèle de textes: 
+- Utiliser des modèles pré-entrainés
+  - Word2Vec
+  - CamemBERT
 
-###### Le modèle d'image :
-- évolution traitement et preprocessing des images  
-  * croping d'image 
-  * augmentation des données via transformation 
-- évolution de modèles testés : 
-    * implimenter _Batch Normalization_,
-    * entraîner des couches de model issue de transfer learning  
-    * configurer differement les hyperparamétres 
-    * entraînement des couches de model issue de transfer learning 
-- analyse de patterns generés par les couches 
-- test autres modèles avec autre taille des images en entrés 
+###### Le modèle d'images :
+- Étapes de pré-processing  
+  * Augmentation des données via transformations
+- Modèles
+    * Implémenter _Batch Normalization_,
+    * Entraîner des couches de modèles issues de transfer learning  
+    * Configurer différemment les hyperparamètres 
+    * Tester les Vision Transformers
+- Analyse de patterns générés par les couches
+- Test autres modèles avec autre taille des images en entrée 
 
 ###### Fusion 
-- ajout d'autres modèles au modèle de fusion
-- test un autre approche de la fusion :  utiliser un modèle pour identifier un group global et ensuite sous-group precis. Par exemple premiere model prédit un group "Livre" et deuxieme model predit "Nouveau" ou "Ancien".
+- Ajouter d'autes modèles, plus performants sur les classes délicates à prédire
 
 ![bg right:30% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
