@@ -152,19 +152,22 @@ ___
 _header: 'Exploration des données / Textes' 
 -->
 
-## Extraction de données quantitives
-* Nombre de mots très variable
+## Nombres de mots
+* Variable (rappel : 35% de `descritpion` ne compte pas de mots)
+* Limite à 500 mots
 
 ## Langues
-* Détection de la langue
+* Détection de la langue pour traduction à effectuer
   * 81% français
-  * 14% anglais
-  * Traduction
+  * 14% anglais et autres langues
 
+## Fréquences des mots
+* Grande disparité d'apparition
+* Quelques domaines/catégories apparaissent :
+  * Dimensions (`cm`, `x`, `mm`, `taill`, `lot`)
+  * Autour de la piscine (`eau`, `piscin`)
 
-![bg width:50%](../notebooks/images/words.png)
-
-![bg left:59%](../notebooks/images/common_words.png)
+![bg right:40% ](images/words.svg)
 
 ___
 
