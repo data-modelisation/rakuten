@@ -18,7 +18,8 @@ def get_data_from_rakuten(soup):
 
     return {
         "text_input" : title ,#+ " " + texts,
-        "url_input" : image_url
+        "url_input" : image_url,
+        "provider" : "Rakuten"
     }
 
 
@@ -36,7 +37,8 @@ def get_data_from_rueducommerce(soup):
 
     return {
         "text_input" : title + " " + legend ,#+ " " + texts,
-        "url_input" : ""
+        "url_input" : "",
+        "provider" : "RueDuCommerce"
     }
 
 def scrap(url):

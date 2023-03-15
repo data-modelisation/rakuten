@@ -55,6 +55,9 @@ def run():
                     text_input = re.sub(r'\W+', ' ', text_input)
                     url_input = scrap_response.get("url_input", "")
 
+                    if not url_input:
+                        st.warning(f"No image url found for {scrap_response.get('provider')}")
+
                 with st.spinner('Classifying, please wait....'):
                     try:
                         if text_input and not url_input:
@@ -70,8 +73,8 @@ def run():
                             response = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/text={text_input}&url={url_input}").json()
 
                     except Exception as exce:
-                        st.warning("The backend doesn't respond ... Please wait or reload it ;)")
-                        st.error(exce)
+                        st.error("The backend doesn't respond ... Please wait or reload it ;)")
+                        #st.error(exce)
 
             if response:
                 if "annotated texts" in response.keys():
