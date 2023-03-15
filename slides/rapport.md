@@ -309,24 +309,24 @@ section p, li {
 }
 </style>
 
-###### Le modèle de texte: 
-- une couche d'embedding pré-entrainée, par exemple celle issue de CamemBERT. 
+###### Le modèle de textes: 
+- Tester un RNN
+- Utiliser des modèles pré-entrainés
+  - Word2Vec
+  - CamemBERT
 
-###### Le modèle d'image :
-- évolution traitement et preprocessing des images  
-  * croping d'image 
-  * augmentation des données via transformation 
-- évolution de modèles testés : 
-    * implimenter _Batch Normalization_,
-    * entraîner des couches de model issue de transfer learning  
-    * configurer differement les hyperparamétres 
-    * entraînement des couches de model issue de transfer learning 
-- analyse de patterns generés par les couches 
-- test autres modèles avec autre taille des images en entrés 
+###### Le modèle d'images :
+- Étapes de pré-processing  
+  * Augmentation des données via transformations
+- Modèles
+    * Implémenter _Batch Normalization_,
+    * Entraîner des couches de modèles issues de transfer learning  
+    * Configurer différemment les hyperparamètres 
+- Analyse de patterns générés par les couches
+- Test autres modèles avec autre taille des images en entrée 
 
 ###### Fusion 
-- ajout d'autres modèles au modèle de fusion
-- test un autre approche de la fusion :  utiliser un modèle pour identifier un group global et ensuite sous-group precis. Par exemple premiere model prédit un group "Livre" et deuxieme model predit "Nouveau" ou "Ancien".
+- Ajouter d'autes modèles, plus performants sur les classes délicates à prédire
 
 ![bg right:30% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
