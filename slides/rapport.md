@@ -173,7 +173,10 @@ _header: 'Exploration des données / Images'
 -->
 
 ## Analyse de canaux
-* TODO
+* Fortes disparités dans le taux de blanc de images
+  * Catégorie `1301` très étendue
+  * Catégorie `2403`, `1160` et `2462` plus restreintes
+  * Nombreux *outliers* pour `2403` et `1160` 
 
 ## Analayse de la variance
 * Masque de variance très net sur les bordures des images
@@ -284,7 +287,7 @@ ___
 _header: 'Challenges' 
 -->
 
-## Informations oomplémentaires
+## Informations complémentaires
 * Pourquoi ces produits et ces catégories à classer en particulier?
 * Comment la classification initiale des targets a-t-elle été faite?
 
