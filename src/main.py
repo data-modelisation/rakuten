@@ -60,7 +60,7 @@ if __name__ == "__main__":
         translate=True,
         stem=True,
         exploration=False,
-        crop=False,
+        crop=True,
         vocab_size=VOCAB_SIZE,
         sequence_length=SEQUENCE_LENGTH,
         embedding_dim=EMBEDDING_DIM
@@ -76,12 +76,12 @@ if __name__ == "__main__":
 
     #Objet Model Text
     model_text_obj = ModelText_Neural_Simple(
-        suffix=f"",
+        suffix=f"_re",
         epochs=EPOCHS_TEXT,
         vocab_size=VOCAB_SIZE,
         sequence_length=SEQUENCE_LENGTH,
         embedding_dim=EMBEDDING_DIM,
-        load=True,
+        load=False,
     )
 
     #Entrainement Text
@@ -109,10 +109,10 @@ if __name__ == "__main__":
 
     #Objet Model Image
     model_image_obj = ModelImage_MobileNet(
-        suffix=f"_224",
+        suffix=f"_224_crop",
         epochs=EPOCHS_IMAGE,
         target_shape=TARGET_SHAPE,
-        load=True,
+        load=False,
     )
 
     #Entrainement Model Image
@@ -129,18 +129,18 @@ if __name__ == "__main__":
         generator=data_generator,
         for_api=False)
     
-    #Prediction Image pour API
-    response = model_image_obj.predict(
-        ["uploaded_image.jpg",],
-        #enc_trues = test.targets.values,
-        generator=data_generator,
-        is_="image",
-        for_api=True)
-    print(response)
+    # #Prediction Image pour API
+    # response = model_image_obj.predict(
+    #     ["uploaded_image.jpg",],
+    #     #enc_trues = test.targets.values,
+    #     generator=data_generator,
+    #     is_="image",
+    #     for_api=True)
+    # print(response)
 
     #Objet Model Fusion
     model_fusion_obj = ModelFusion(
-        suffix=f"_mobilenet_simple_224",
+        suffix=f"_mobilenet_224_crop_re",
         epochs=EPOCHS_FUSION,
         models=[model_image, model_text],
         models_concat_layer_num=[-2, -2],

@@ -24,7 +24,7 @@ model_text = ModelText_Neural_Simple(
     )
 
 model_image = ModelImage_MobileNet(
-        suffix="_224",
+        suffix="_224_crop",
         load=True,
     )
     
@@ -36,7 +36,8 @@ model_fusion = ModelFusion(
 #DataGenrator
 data_generator = DataGenerator(
     from_api=True,
-    target_shape=(224,224,3)
+    target_shape=(224,224,3),
+    crop=True
 )
 
 def save_image(url):

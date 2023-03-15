@@ -180,7 +180,7 @@ class ModelImage_MobileNet(ModelImage):
 
         super().__init__(*args, **kwargs)
 
-    def init_model(self,):
+    def init_model(self,_):
         
         model = Sequential()
         base_model = MobileNetV2(

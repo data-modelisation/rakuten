@@ -258,7 +258,7 @@ def clean_text(text):
     text = unidecode(text)
 
     #Suppression es mot à 1 caracteres
-    text = re.sub(r'\b\w{1,1}\b', '', text)    
+    text = re.sub(r'\b\w{1,1}\b', ' ', text)    
     
     #Suppression des espaces multiples
     text = re.sub(' +', ' ', text)

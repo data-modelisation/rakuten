@@ -12,6 +12,7 @@ from tabs import intro, second_tab, third_tab
 from annotated_text import annotated_text
 import re
 import scrapper
+import flag
 
 st.set_page_config(
     page_title=config.TITLE,
@@ -68,7 +69,7 @@ def run():
                 text_input = re.sub(r'\W+', ' ', text_input)
                 url_input = scrap_response.get("url_input", "")
 
-
+                
                 print(text_input)
                 print(url_input)
 
@@ -105,7 +106,8 @@ def run():
                         with st.expander("Détails du texte"):
                             
                             st.caption("Langue détectée")
-                            st.text(response.get("lang texts")[0])
+                            lang = response.get("lang texts")[0].upper()
+                            st.text(f"{lang}  {flag.flag(lang)}")
 
                             st.caption("Présence du texte dans la couche de vectorisation")
                             
