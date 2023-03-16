@@ -20,6 +20,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import TextVectorization
 from tools.text import pipeline_loader, pipeline_lang
 from tools.commons import convert_to_readable_categories
+from tools.image import  get_white_ratio, get_channel_ratio
 
 sns.set_theme()
 
@@ -99,10 +100,12 @@ class DataGenerator():
 
             print(f"{len(self.data)} observations and their targets loaded")
 
-            if self.exploration:
-                self.explore()
+
 
             self.data["names"] = self.convert_to_readable_categories(self.data.labels)
+
+            if self.exploration:
+                self.explore()
 
     def convert_to_readable_macrocategories(self, serie:pd.Series):
         categories_num = [
@@ -356,6 +359,23 @@ class DataGenerator():
         self.analysis_words(data_explore)
         self.analysis_translation(data_explore)
         self.analysis_correlations(data_explore)
+        self.analysis_channel(data_explore)
+
+    def analysis_channel(self, df):
+        
+        sns.set(rc={'figure.figsize': (5, 5)})
+
+        df_im = df.sample(frac=.5)
+        
+        for name, fct in zip(("white", "channel", get_white_ratio, get_channel_ratio)):
+            df_im[name] = df_im.links.apply(lambda link : fct(self.load_image(link).numpy()))
+            sns.boxplot(data=df_im, y="names", x="name")
+            plt.xlabel("Taux [-]")
+            plt.ylabel("Catégorie [-]")
+            plt.savefig(f"../notebooks/images/{name}.svg")
+            plt.clf()
+
+        print("analysis white ratio finished")
 
     def analysis_correlations(self, df):
 
