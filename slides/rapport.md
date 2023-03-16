@@ -252,16 +252,15 @@ ___
 _header: 'Deep learning / Image ' 
 -->
 ###  Le modèle texte  *Neural_Embedder*
-* la vectorisation gère 50 000 mots et seuls les 500 plus fréquents sont conservés. 
+* la vectorisation gère 50 000 mots et seuls les 500 plus fréquents sont conservés 
 * une couche d'embedding 
 
-
-### Le modèle image CNN
-
+### Le modèle image *CNN*
 * apprentissage par transfert avec le modèle *MobileNetV2* 
+* il est chargé avec des poids pré-entraînés sur *ImageNet* 
+* les couches de base modèle sont congélées
 
-![bg right:65% width:900px](diagram/image_schema_MobileNetv2.drawio.png)
-
+![bg right:65% width:850px](diagram/image_schema_MobileNetv2.drawio.png)
 ___
 <!--
 _header: 'Deep learning / Fusion ' 
