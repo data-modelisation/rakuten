@@ -246,40 +246,22 @@ __Générateur d'images__:
 * Application de la fonction `preprocess_input` spécifique à chaque modèle de *deep-learning*
 
 ![bg right:50% width:80%](../notebooks/images/rescale.png)
-___
-<!--
-_header: 'Deep learning / Text ' 
--->
-
-<div class="container">
-
-<div class="col">
-  <h2>Modèle Texte</h2>
-  <ul>
-    <li> Couche de TextVectorization
-    <li> Embedding
-    <li> Couches denses + Dropout
-  </ul>
-</div>
-
-<div class="col">
-  <h2>Modèle Image</h2>
-    <ul>
-    <li> Couche de TextVectorization
-    <li> Embedding
-    <li> Couches denses + Dropout
-  </ul>
-</div>
-
-</div>
-
-![top-right](images/models.svg)
 
 ___
 <!--
 _header: 'Deep learning / Image ' 
 -->
-![bg width:90%](diagram/image_schema_MobileNetv2.drawio.png)
+###  Le modèle texte  *Neural_Embedder*
+* la vectorisation gère 50 000 mots et seuls les 500 plus fréquents sont conservés. 
+* une couche d'embedding 
+
+
+### Le modèle image CNN
+
+* apprentissage par transfert avec le modèle *MobileNetV2* 
+
+![bg right:65% width:900px](diagram/image_schema_MobileNetv2.drawio.png)
+
 ___
 <!--
 _header: 'Deep learning / Fusion ' 
