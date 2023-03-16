@@ -24,7 +24,7 @@ section {
   background-image: none;
   font-family:  'Roboto'; 
   font-weight: normal; 
-  font-size: 1.4em;
+  font-size: 1.3em;
   padding-top: 90px;
   padding-left: 40px;
   padding-right: 40px;
@@ -136,7 +136,7 @@ ___
 _header: 'Présentation des données' 
 -->
 
-
+### En chiffres
 * **84 916** observations
 * **27** catégories à déterminer 
 * **0** donnée dupliquée
@@ -162,7 +162,7 @@ _header: 'Exploration des données / Cibles'
 * Sur-représentation de la classe `2583`
 * Sous-représentation des classes `60`, `1320` et `2220`
 
-## Challenge probable
+### Challenge probable
 &rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits appartenant même domaine
 
 ![bg right:40% height:90%](./images/categories.svg)
@@ -172,7 +172,7 @@ ___
 _header: 'Exploration des données / Textes' 
 -->
 
-## Nombres de mots
+### Nombres de mots
 * Variable (rappel : 35% de `description` comporte des NaNs)
 * Limite à 500 mots
 
@@ -195,13 +195,13 @@ ___
 _header: 'Exploration des données / Images' 
 -->
 
-## Analyse de canaux
+### Analyse de canaux
 * Fortes disparités dans le taux de blanc de images
   * Catégorie `1301` très étendue
   * Catégorie `2403`, `1160` et `2462` plus restreintes
   * Nombreux *outliers* pour `2403` et `1160` 
 
-## Analayse de la variance
+### Analayse de la variance
 * Masque de variance très net sur les bordures des images
 * Possibilité de rogner les images de 20% sans trop de perte de données
 
@@ -320,7 +320,7 @@ _header: 'Analyse du meilleur modèle 2/2'
 
 ![bg right:60% width:100%](./images/fusion_crosstab.svg)
 
-## Analyse des erreurs > 10%
+### Analyse des erreurs > 10%
 * <span style="font-weight:bold;color:#c7e5d7ff">Livres</span> : `10`, `2080`, `2403` et `2280`
 * <span style="font-weight:bold;color:#ffcc5cff">Jouets</span> : `1080`, `1280` et `1281`
 * <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
@@ -367,25 +367,12 @@ section h6 {
 - Étapes de pré-processing  
   * Augmentation des données via transformations
 - Modèles
-    * Implémenter _Batch Normalization_,
-    * Entraîner des couches de modèles issues de *transfer-learning * 
+    * Implémenter *Batch Normalization*,
+    * Entraîner des couches de modèles issues de *transfer-learning* 
     * Configurer différemment les hyperparamètres 
-<<<<<<< HEAD
     * Tester les *Vision Transformers*
-<<<<<<< HEAD
-=======
->>>>>>> e02a1ad (Reajuste des elements de la presentation)
-- Analyse de patterns générés par les couches
-- Test autres modèles avec autre taille des images en entrée 
-  - InceptionResNetV2
-  - Vision Transformers
-###### Fusion 
-||||||| b3d1a3b
-- Analyse de patterns générés par les couches
-- Test autres modèles avec autre taille des images en entrée 
 
-###### Fusion 
-=======
+
 
 ###### Globalement 
 >>>>>>> dev_batchnorm
@@ -422,7 +409,7 @@ ___
 _header: 'Choix de la métrique' 
 -->
 
-## Notions
+### Notions
 * Connaissance du métier : une erreur de classification n'est pas fatale
 * Labelisation : comment a-t-elle été effectuée
 * Jeu de données déséquilibré : dû à une survente ou à des difficultés à classer ces produits
@@ -431,7 +418,7 @@ _header: 'Choix de la métrique'
 
 **&rarr;** Choix de la métrique : *f1 weigthed score* pour un bon équilibre entre *accuracy* et *recall*
 
-## Remarques
+### Remarques
 
 * Modèle aléatoire : score de 3.7% en moyenne
 * Une métrique personnalisée aurait pu être créée
@@ -441,7 +428,7 @@ ___
 _header: 'Callbacks' 
 -->
 
-## Nécessaires au contrôle des modèles lors de l'apprentissage
+### Nécessaires au contrôle des modèles lors de l'apprentissage
 * Suivi via *TensorBoard*
 * **EarlyStopping** : met fin à l'apprentissage si val_loss augmente pendant plus de 5 périodes à partir de la 8ème période
 * **ReduceLROnPlateau** : réduit le taux d'apprentissage si val_loss stagne sur un plateau pendant plus de 5 périodes
@@ -454,7 +441,7 @@ ___
 _header: 'Annexe Exploration des données / Target' 
 -->
 
-## Déséquilibre des targets
+### Déséquilibre des targets
 * Non homogéneité de la répartition des classes
 * Environ 7 classes sur-représentées
 * 3 classes sous-représentées
