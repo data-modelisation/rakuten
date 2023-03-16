@@ -22,16 +22,19 @@ model_text = ModelText_Neural_Simple(
         suffix="",
         load=True,
     )
+model_text.start()
 
 model_image = ModelImage_MobileNet(
         suffix="_224_crop",
         load=True,
     )
-    
+model_image.start()
+
 model_fusion = ModelFusion(
         suffix="_mobilenet_simple_224",
         load=True,
     )
+model_fusion.start()
 
 #DataGenrator
 data_generator = DataGenerator(
@@ -64,7 +67,7 @@ def pred_image(image_input: str):
     response = model_image.predict(
         [UPLOADED_PATH,], 
         generator=data_generator,
-        #model=model_image.model,
+        model=model_image.model,
         for_api=True,
         is_="image"
     )
@@ -77,6 +80,7 @@ def text_prediction(text_input):
         [text_input.split(";")[0],], 
         generator=data_generator,
         for_api=True,
+        model=model_text.model,
         is_="text"
         )
     return response
@@ -90,6 +94,7 @@ def fusion_prediction(text_input, image_input):
         [text_input.split(";")[0],UPLOADED_PATH], 
         generator=data_generator,
         for_api=True,
+        model=model_fusion.model,
         is_="fusion"
         )
     return response
