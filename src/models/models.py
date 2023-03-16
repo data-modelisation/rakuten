@@ -6,7 +6,8 @@ import gc
 import os
 import tensorflow as tf
 import keras
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.metrics import balanced_accuracy_score, recall_score,classification_report
 
@@ -42,6 +43,7 @@ class MyDataSetModel():
         self.batch_size=batch_size
         self.epochs=epochs
 
+ 
     @property
     def model_name(self,):
         """Extract the model name from it class name"""
@@ -108,20 +110,20 @@ class MyDataSetModel():
         is_fon =  isinstance(model, keras.engine.functional.Functional)
         self.is_neural = is_seq or is_fon
 
-    def load_model(self, path, dataset):
+    def load_model(self, path, ):
 
         try:
             return tf.keras.models.load_model(path)
         except Exception as exce:
             print(f"unable to find a model in the fodler {path}")
-            return self.init_model(dataset)
+            return self.init_model()
 
     def get_model(self, path, train_dataset):
 
         if self.load:
-            return self.load_model(path, train_dataset)
+            return self.load_model(path)
         else:
-            return self.init_model(train_dataset)
+            return self.init_model()
 
     def save_model_graph(self, model, path):
         from keras.utils import plot_model
@@ -154,6 +156,28 @@ class MyDataSetModel():
 
         return model
     
+    def graph_predictions_good_vs_bad(self, df_cross, path):
+        values = df_cross.values
+        mask_TP = np.eye(values.shape[0],dtype=bool)
+        mask_OV = ~np.eye(values.shape[0],dtype=bool) 
+
+
+        for name, color, mask in zip(("tp", "ov"), ("g", "r"), (mask_TP, mask_OV)):
+            values_sns = values[mask]
+           
+            fig = sns.displot(x=values_sns,  kind="kde", color=color, fill=True, clip=(0,1))
+            fig.set(xlim=(0, 1))
+            plt.xlabel("Probabilités [-]")
+            plt.ylabel("Densité [-]")
+            plt.savefig(Path(path, f"density_{name}.svg"), format="svg")
+
+    def start(self, ):
+        path = self.generate_path()
+        model = self.load_model(path)  
+
+        self.model = model
+  
+
     def predict(self, features, model=None, is_=None,for_api=False, enc_trues=None, generator=None):
         
 
@@ -213,9 +237,9 @@ class MyDataSetModel():
                         output_types = ({"te_input":tf.float32, "im_input":tf.float32})
                         ).batch(1)
 
-        #if model is None:
-        path = self.generate_path()
-        model = self.load_model(path, features)
+        if model is None:
+            path = self.generate_path()
+            model = self.load_model(path)
         #model.compile(**self.compilation_kwargs)
 
         probas = model.predict(features)
@@ -239,7 +263,8 @@ class MyDataSetModel():
             dec_trues = generator.decode(enc_trues)
             nam_trues = generator.convert_to_readable_categories(pd.Series(dec_trues)).values
 
-            self.save_crosstab(dec_trues, dec_preds, path)
+            df_cross = self.save_crosstab(dec_trues, dec_preds, path)
+            self.graph_predictions_good_vs_bad(df_cross, path)
             report = self.save_classification_report(dec_trues, dec_preds, path)
             self.push_classification_to_summary(report)
         else:
@@ -294,6 +319,8 @@ class MyDataSetModel():
         )
         #Save it in a csv file
         crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
+
+        return crosstab
 
     def save_classification_report(self, y_true, y_pred, path):
         """Create and save a classification report"""
