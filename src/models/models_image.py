@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
+from tensorflow.keras.layers import BatchNormalization, Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Dropout, Flatten, Dense, Cropping2D
 
 from keras.applications.vgg16 import VGG16 
 from keras.applications.vgg16 import preprocess_input as preprocess_input_vgg16
@@ -66,7 +66,7 @@ class ModelImage_CNN_Simple(ModelImage):
 
         super().__init__(*args, **kwargs)
 
-    def init_model(self,_):
+    def init_model(self,):
 
         model = Sequential()
         model.add(Input(shape = self.target_shape, name="im_input"))
@@ -83,7 +83,7 @@ class ModelImage_CNN_Lenet(ModelImage):
         
         super().__init__(*args, **kwargs)
 
-    def init_model(self,_):
+    def init_model(self,):
 
         model = Sequential()
         model.add(Input(shape = self.target_shape, name="im_input"))
@@ -180,7 +180,7 @@ class ModelImage_MobileNet(ModelImage):
 
         super().__init__(*args, **kwargs)
 
-    def init_model(self,_):
+    def init_model(self,):
         
         model = Sequential()
         base_model = MobileNetV2(
@@ -198,9 +198,9 @@ class ModelImage_MobileNet(ModelImage):
         model.add(Dense(units=1024, activation='relu', name="im_dense_1"))   
         model.add(Dropout(rate=0.2, name="im_drop_1"))
         model.add(Dense(units=512, activation='relu', name="im_dense_2"))   
+        model.add(BatchNormalization(name="im_batch"))
         model.add(Dropout(rate=0.2, name="im_drop_2"))  
         model.add(Dense(units=27, activation="softmax", name="im_output"))
-
 
         return model
     

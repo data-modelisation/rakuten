@@ -178,7 +178,7 @@ class ModelText_Neural_Simple(ModelText):
 
         super().__init__(*args, **kwargs)
 
-    def init_model(self, train_dataset):
+    def init_model(self, ):
 
         # VectorizationLayer = TextVectorization(
         #     max_tokens=self.vocab_size,
@@ -215,7 +215,7 @@ class ModelText_Neural_Embedding(ModelText):
         super().__init__(*args, **kwargs)
 
 
-    def init_model(self, train_dataset):
+    def init_model(self, ):
         
         model = Sequential()
         model.add(Input(shape=(1,), dtype=tf.string, name = "te_input"))
@@ -236,7 +236,7 @@ class ModelText_Neural_RNN(ModelText):
 
         super().__init__(*args, **kwargs)
 
-    def init_model(self, train_dataset):
+    def init_model(self, ):
 
         VectorizationLayer = TextVectorization(
             max_tokens=self.vocab_size,
