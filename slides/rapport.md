@@ -150,7 +150,7 @@ _header: 'Présentation des données'
   * Peut comporter un support ou une mise en scène
   * Taille `500x500px` en JPG
 
-![bg right:45% height:60% opacity:.7](./images/dataframe.svg)
+![bg right:50% height:60% opacity:.7](./images/dataframe.svg)
 ___
 <!--
 _header: 'Exploration des données / Cibles' 
@@ -301,7 +301,7 @@ ___
 _header: 'Analyse du meilleur modèle 1/2' 
 -->
 
-![bg right:30% height:90%](./images/f1score_all.png)
+![bg right:45% height:90%](./images/f1score_all.png)
 
 ### Analyse des *weigthed f1-scores*
  
@@ -352,7 +352,7 @@ _header: 'Perspectives'
 -->
 <style scoped>
 section li {
-  font-size: 18px;
+  font-size: 0.9em;
 }
 section h6 {
   margin-top:0;
@@ -380,7 +380,7 @@ section h6 {
 - Analyse de patterns générés par les couches CNN
 - Travailler sur l'interprétabilité des résultats
 
-![bg right:40% ](
+![bg right:30% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
 
 ___
@@ -394,7 +394,7 @@ Merci à tous pour ces 3 mois très intenses et riches !
 ![bg right:60% width:70em](
 https://global.fr.shopping.rakuten.com/wp-content/uploads/2020/05/rak-monde-bottom-img.png)
 
-![width:80px](https://oxygentogo.com/wp-content/uploads/2017/05/blockquote-300x198.png)
+![width:60px](https://oxygentogo.com/wp-content/uploads/2017/05/blockquote-300x198.png)
 
 Nous continuons de croire que le monde numérique a le potentiel d'améliorer la vie de chacun d'entre nous. Oubliez la peur. Adoptez l'optimisme.
  
