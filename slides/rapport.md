@@ -100,7 +100,6 @@ _header: ''
 
 ![height:60px right](https://i0.wp.com/datascientest.com/wp-content/uploads/2022/03/logo-2021.png?w=429&ssl=1)
 
-
 __Participants :__
 Olga TOLSTOLUTSKA
 Mohamed BACHKAT
@@ -163,13 +162,8 @@ _header: 'Exploration des données / Cibles'
 * Sur-représentation de la classe `2583`
 * Sous-représentation des classes `60`, `1320` et `2220`
 
-<<<<<<< HEAD
 ## Challenge probable
 &rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits appartenant même domaine
-=======
-### Challenge probable
-&rarr; Les modèles auront probablement (comme nous) du mal à distinguer les catégories de produits du même domaine
->>>>>>> e02a1ad (Reajuste des elements de la presentation)
 
 ![bg right:40% height:90%](./images/categories.svg)
 
@@ -178,13 +172,8 @@ ___
 _header: 'Exploration des données / Textes' 
 -->
 
-<<<<<<< HEAD
 ## Nombres de mots
 * Variable (rappel : 35% de `description` comporte des NaNs)
-=======
-### Nombres de mots
-* Variable (rappel : 35% de `descritpion` ne compte pas de mots)
->>>>>>> e02a1ad (Reajuste des elements de la presentation)
 * Limite à 500 mots
 
 ### Langues
@@ -216,7 +205,7 @@ _header: 'Exploration des données / Images'
 * Masque de variance très net sur les bordures des images
 * Possibilité de rogner les images de 20% sans trop de perte de données
 
-![bg right:50% height:90%](./images/channels.svg)
+![bg right:48% height:95%](images/whites.svg)
 ___
 <!--
 _header: 'Préparation des données / Textes' 
@@ -235,28 +224,23 @@ L'exemple de transformations appliquées :
 
 | Étape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
-| Fusion de `description` et `designation` | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
-| Détection de la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
-| Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
-| Suppression des caractères non alpha-numériques          | Une table très jolie Dimensions x cm           |
-| Passage en minuscules                                  | une table très jolie dimensions x cm           |
-| Suppression des accents                                              | une table tres jolie dimensions x cm           |
-| Suppression des mots d'un caractère                               | une table tres jolie dimensions cm             |
-| Suppression des *stopwords*                           | table tres jolie dimensions cm                 | 
-| Extraction de la racine des mots                      | tabl tres jol dimens cm                        | 
-| Vectorisation TF-IDF du texte via un `Tokenizer`             | [6, 1, 2, 4, 5 ]                               | 
+| Fusion de `description` et `designation` | `Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul>` | 
+| Détection de la langue  et traduction en français        | `Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul>` | 
+| Suppression les balises html                          | `Une table très jolie! Dimensions : 60 x 33 cm`  | 
+| Suppression des caractères numériques          | `Une table très jolie Dimensions x cm`           |
+| Passage en minuscules                                  | `une table très jolie dimensions x cm`           |
+| Suppression des accents                                              | `une table tres jolie dimensions x cm`           |
+| Suppression des mots d'un caractère                               | `une table tres jolie dimensions cm`             |
+| Suppression des *stopwords*                           | `table tres jolie dimensions cm`                 | 
+| Extraction de la racine des mots                      | `tabl tres jol dimens cm`                        | 
+| Vectorisation TF-IDF du texte via un `Tokenizer`             | [.0.06, 0.001, 0, 0.4, 0.555, ... ]                               | 
 ___
 
 <!--
 _header: 'Préparation des données / Images' 
 -->
-<<<<<<< HEAD
 __Générateur d'images__:
 * Streaming per *batch* : images transmises forme de *batchs* ce qui évite de traiter l'ensemble des données (limite RAM + CPU)
-=======
-### Générateur d'images
-* Streaming per *batch* : images transmises forme de *batchs* ce qui évite de traiter l'ensemble des données d'un coup
->>>>>>> e02a1ad (Reajuste des elements de la presentation)
 * Rognage des images de 20%
 * Redimensionnement en taille `224x224 px`
 * Application de la fonction `preprocess_input` spécifique à chaque modèle de *deep-learning*
@@ -340,13 +324,8 @@ _header: 'Analyse du meilleur modèle 2/2'
 * <span style="font-weight:bold;color:#c7e5d7ff">Livres</span> : `10`, `2080`, `2403` et `2280`
 * <span style="font-weight:bold;color:#ffcc5cff">Jouets</span> : `1080`, `1280` et `1281`
 * <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
-<<<<<<< HEAD
 
 Nous nous attendions à avoir des erreurs au sein de produits du même domaine.
-=======
-Nous nous attendions à avoir des erreurs au sein de produits du même domaine
-
->>>>>>> e02a1ad (Reajuste des elements de la presentation)
 ___
 
 <!--
@@ -393,6 +372,7 @@ section h6 {
     * Configurer différemment les hyperparamètres 
 <<<<<<< HEAD
     * Tester les *Vision Transformers*
+<<<<<<< HEAD
 =======
 >>>>>>> e02a1ad (Reajuste des elements de la presentation)
 - Analyse de patterns générés par les couches
@@ -400,7 +380,18 @@ section h6 {
   - InceptionResNetV2
   - Vision Transformers
 ###### Fusion 
+||||||| b3d1a3b
+- Analyse de patterns générés par les couches
+- Test autres modèles avec autre taille des images en entrée 
+
+###### Fusion 
+=======
+
+###### Globalement 
+>>>>>>> dev_batchnorm
 - Ajouter d'autes modèles, plus performants sur les classes délicates à prédire
+- Analyse de patterns générés par les couches CNN
+- Travailler sur l'interprétabilité des résultats
 
 ![bg right:40% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)

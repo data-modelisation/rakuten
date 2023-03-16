@@ -148,6 +148,11 @@ def get_channel_means(im:np.array):
     return im.mean(axis=1)
 
 # Ratio de blanc dans l'image
+def get_channel_ratio(im:np.array):
+    return im.mean()
+
+# Ratio de blanc dans l'image
 def get_white_ratio(im:np.array):
-    mask_white = im[:,:,:] == [1, 1, 1]
-    return mask_white.sum(axis=(1,2)) / (im.shape[1] * im.shape[2])
+    mask_white = im[:,:,:] > [250, 250, 250]
+
+    return mask_white.mean()
