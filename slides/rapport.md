@@ -320,7 +320,7 @@ _header: 'Analyse du meilleur modèle 2/2'
 
 ![bg right:60% width:100%](./images/fusion_crosstab.svg)
 
-### Analyse des erreurs > 10%
+### Analyse des erreurs de classification supérieures à 10%
 * <span style="font-weight:bold;color:#c7e5d7ff">Livres</span> : `10`, `2080`, `2403` et `2280`
 * <span style="font-weight:bold;color:#ffcc5cff">Jouets</span> : `1080`, `1280` et `1281`
 * <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
