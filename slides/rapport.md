@@ -363,11 +363,12 @@ section h6 {
 - Utiliser des modèles pré-entrainés
   - Word2Vec
   - CamemBERT
+
 ###### Le modèle d'images :
 - Étapes de pré-processing  
   * Augmentation des données via transformations
 - Modèles
-    * Implémenter *Batch Normalization*,
+    * Implémenter *Batch Normalization*
     * Entraîner des couches de modèles issues de *transfer-learning* 
     * Configurer différemment les hyperparamètres 
     * Tester les *Vision Transformers*
@@ -375,7 +376,6 @@ section h6 {
 
 
 ###### Globalement 
->>>>>>> dev_batchnorm
 - Ajouter d'autes modèles, plus performants sur les classes délicates à prédire
 - Analyse de patterns générés par les couches CNN
 - Travailler sur l'interprétabilité des résultats
