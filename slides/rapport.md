@@ -97,7 +97,6 @@ _header: ''
 
 ![height:60px right](https://i0.wp.com/datascientest.com/wp-content/uploads/2022/03/logo-2021.png?w=429&ssl=1)
 
-
 __Participants :__
 Olga TOLSTOLUTSKA
 Mohamed BACHKAT
@@ -203,7 +202,7 @@ _header: 'Exploration des données / Images'
 * Masque de variance très net sur les bordures des images
 * Possibilité de rogner les images de 20% sans trop de perte de données
 
-![bg right:40% height:90%](./images/channels.svg)
+![bg right:48% height:95%](images/whites.svg)
 ___
 <!--
 _header: 'Préparation des données / Textes' 
@@ -223,16 +222,16 @@ L'exemple de transformations appliquées :
 
 | Étape                                                 |     Résultat                                   | 
 | :----- | :----------------------------------------------- | 
-| Fusion de `description` et `designation` | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
-| Détection de la langue  et traduction en français        | Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul> | 
-| Suppression les balises html                          | Une table très jolie! Dimensions : 60 x 33 cm  | 
-| Suppression des caractères non alpha-numériques          | Une table très jolie Dimensions x cm           |
-| Passage en minuscules                                  | une table très jolie dimensions x cm           |
-| Suppression des accents                                              | une table tres jolie dimensions x cm           |
-| Suppression des mots d'un caractère                               | une table tres jolie dimensions cm             |
-| Suppression des *stopwords*                           | table tres jolie dimensions cm                 | 
-| Extraction de la racine des mots                      | tabl tres jol dimens cm                        | 
-| Vectorisation TF-IDF du texte via un `Tokenizer`             | [6, 1, 2, 4, 5 ]                               | 
+| Fusion de `description` et `designation` | `Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul>` | 
+| Détection de la langue  et traduction en français        | `Une table très jolie! <ul><li>\&#43;Dimensions : 60 x 33 cm</li></ul>` | 
+| Suppression les balises html                          | `Une table très jolie! Dimensions : 60 x 33 cm`  | 
+| Suppression des caractères numériques          | `Une table très jolie Dimensions x cm`           |
+| Passage en minuscules                                  | `une table très jolie dimensions x cm`           |
+| Suppression des accents                                              | `une table tres jolie dimensions x cm`           |
+| Suppression des mots d'un caractère                               | `une table tres jolie dimensions cm`             |
+| Suppression des *stopwords*                           | `table tres jolie dimensions cm`                 | 
+| Extraction de la racine des mots                      | `tabl tres jol dimens cm`                        | 
+| Vectorisation TF-IDF du texte via un `Tokenizer`             | [.0.06, 0.001, 0, 0.4, 0.555, ... ]                               | 
 ___
 
 <!--
@@ -369,11 +368,11 @@ section p, li {
     * Entraîner des couches de modèles issues de *transfer-learning * 
     * Configurer différemment les hyperparamètres 
     * Tester les *Vision Transformers*
-- Analyse de patterns générés par les couches
-- Test autres modèles avec autre taille des images en entrée 
 
-###### Fusion 
+###### Globalement 
 - Ajouter d'autes modèles, plus performants sur les classes délicates à prédire
+- Analyse de patterns générés par les couches CNN
+- Travailler sur l'interprétabilité des résultats
 
 ![bg right:30% ](
 https://media.istockphoto.com/id/863607936/fr/photo/pour-faire-la-liste-sur-bloc-note-avec-stylo-sur-le-bureau-et-le-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=tkrDkcqQTHXCihN7VZghK9baToxSGtV1rjSgeHxdbNg=)
