@@ -4,8 +4,6 @@ services:
 
   tensorboard:
     container_name: ds_tensorboard
-    #image: tensorflow/tensorflow:latest
-    #command: tensorboard --logdir /app/models --host 127.0.0.1 --port 6009
     build:
       context: 'src/models'
       dockerfile: "./Dockerfile"
@@ -20,8 +18,6 @@ services:
     network_mode: host
     ports:
       - "8008:8008"
-    # volumes:
-    # - shared_volume:/app/models
 
   streamlit:
     container_name: ds_streamlit
@@ -32,11 +28,6 @@ services:
     network_mode: host
     depends_on : 
     - fastapi
-    # volumes:
-    # - shared_volume:/app/models
-
-# volumes:
-#   shared_volume:
 
 networks:
   host:
