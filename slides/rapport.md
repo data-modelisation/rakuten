@@ -326,6 +326,10 @@ _header: 'Analyse du meilleur modèle 2/2'
 * <span style="font-weight:bold;color:#ff6f69ff">Mobilier</span>: `2582` et `1560`
 
 Nous nous attendions à avoir des erreurs au sein de produits du même domaine.
+
+### Analyse des densités
+
+![height:50%](./images/all_tp_flat.svg)
 ___
 
 <!--
