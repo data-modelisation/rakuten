@@ -260,7 +260,7 @@ _header: 'Deep learning / Image '
 * il est chargé avec des poids pré-entraînés sur *ImageNet* 
 * les couches de base modèle sont congélées
 
-![bg right:65% width:850px](diagram/image_schema_MobileNetv2.drawio.png)
+![bg right:66% width:800px](diagram/image_schema_MobileNetv2.drawio.png)
 ___
 <!--
 _header: 'Deep learning / Fusion ' 
