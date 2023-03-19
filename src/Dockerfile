@@ -9,8 +9,11 @@ RUN apt-get update &&\
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-COPY . .
-
 EXPOSE 8008
+COPY . .
+# COPY models/checkpoint models/
+# COPY models/embedding.ckpt-1.data-00000-of-00001 models/
+# COPY models/embedding.ckpt-1.index models/
+# COPY models/metadata.tsv models/
 
 CMD uvicorn fast:app --host 127.0.0.1 --port 8008 --reload

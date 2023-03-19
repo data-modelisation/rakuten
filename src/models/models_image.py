@@ -195,10 +195,10 @@ class ModelImage_MobileNet(ModelImage):
         model.add(Input(shape = self.target_shape, name="im_input"))
         model.add(base_model) # Ajout du modèle VGG16  
         model.add(GlobalAveragePooling2D(name="im_avg"))   
-        model.add(Dense(units=1024, activation='relu', name="im_dense_1"))   
+        model.add(Dense(units=128, activation='relu', name="im_dense_1"))   
         model.add(Dropout(rate=0.2, name="im_drop_1"))
-        model.add(Dense(units=512, activation='relu', name="im_dense_2"))   
-        model.add(BatchNormalization(name="im_batch"))
+        model.add(Dense(units=64, activation='relu', name="im_dense_2"))   
+        #model.add(BatchNormalization(name="im_batch"))
         model.add(Dropout(rate=0.2, name="im_drop_2"))  
         model.add(Dense(units=27, activation="softmax", name="im_output"))
 

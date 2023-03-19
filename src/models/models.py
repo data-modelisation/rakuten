@@ -4,9 +4,11 @@ import numpy as np
 import pandas as pd
 import gc
 import os
+import glob
 import tensorflow as tf
 import keras
 import seaborn as sns
+import pickle
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.metrics import balanced_accuracy_score, recall_score,classification_report
@@ -35,14 +37,18 @@ class MyDataSetModel():
         load=False,
         batch_size=30,
         epochs=50,
+        load_embedding=False,
         
     ):
+        self.load_embedding=load_embedding
         self.models_folder=models_folder
         self.suffix=suffix
         self.load=load
         self.batch_size=batch_size
         self.epochs=epochs
 
+        print(f"model {type(self).__name__} init")
+        return self
  
     @property
     def model_name(self,):
@@ -81,6 +87,7 @@ class MyDataSetModel():
             } if self.is_neural else {}
 
     def set_callbacks(self, path):
+        """Set the callbacks for the model"""
         self.callbacks = [
                 call_memory(),
                 call_tqdm(),
@@ -91,6 +98,7 @@ class MyDataSetModel():
             ] if self.is_neural else []
 
     def save_model(self, model, path):
+        """Save the model"""
         if self.is_neural:
             model.save(path)
         else:
@@ -99,64 +107,73 @@ class MyDataSetModel():
 
 
     def generate_path(self,):
-
+        """Set the path"""
         path = Path(self.models_folder, self.model_type, self.model_name)
         path.mkdir(exist_ok=True, parents=True)
         
         return path
 
     def set_neural(self, model):
+        """Check if the model is neural or not"""
         is_seq =  isinstance(model, keras.engine.sequential.Sequential)
         is_fon =  isinstance(model, keras.engine.functional.Functional)
         self.is_neural = is_seq or is_fon
 
     def load_model(self, path, ):
-
+        """Load the model from path"""
+        print(f"trying to load the model from {path}")
         try:
-            return tf.keras.models.load_model(path)
+            model = tf.keras.models.load_model(path)
+            print("model loaded")
+            return model
         except Exception as exce:
-            print(f"unable to find a model in the fodler {path}")
+            print(f"unable to find a model in the fodler {path}. Initialisation")
             return self.init_model()
 
     def get_model(self, path, train_dataset):
-
+        """Load or initialize the model"""
         if self.load:
             return self.load_model(path)
         else:
             return self.init_model()
 
     def save_model_graph(self, model, path):
+        """Save the model summary as a graph"""
         from keras.utils import plot_model
         
         plot_model(model, to_file=Path(path, 'model.png'))
 
 
     def fit(self, train_dataset, class_weight={}, validation=None):
-        
-        path = self.generate_path()
-        model = self.get_model(path, train_dataset)
-        self.set_neural(model)
+        """Fit the model to the dataset"""
+
+        self.set_neural(self.model)
         self.set_fit_kwargs(class_weight=class_weight, validation_data=validation)
-        self.set_callbacks(path)
+        self.set_callbacks(self.path)
 
-        model.compile(**self.compilation_kwargs)
+        self.model.compile(**self.compilation_kwargs)
 
-        self.save_model_summary(model, path)
-        self.save_model_graph(model, path)
+        self.save_model_summary(self.model, self.path)
+        self.save_model_graph(self.model, self.path)
 
         if not self.load:
-            print(f"fitting the model {path}")
-            history_model = model.fit(
+            print(f"fitting the model {self.path}")
+            history_model = self.model.fit(
                 train_dataset, 
                 callbacks=self.callbacks,
                 **self.fit_kwargs
                 )
-            self.save_model(model, path)
-            
+            self.save_model(self.model, self.path)
 
-        return model
+            if self.model_type=="text":
+                weights = tf.Variable(self.model.layers[0].get_weights()[0][1:])
+                checkpoint = tf.train.Checkpoint(embedding=weights)
+                checkpoint.save(self.embedding_layer_path)
+                
+        return self.model
     
     def graph_predictions_good_vs_bad(self, df_cross, path):
+        """Graph with the good and the bad predictions as density"""
         values = df_cross.values
         mask_TP = np.eye(values.shape[0],dtype=bool)
         mask_OV = ~np.eye(values.shape[0],dtype=bool) 
@@ -172,14 +189,38 @@ class MyDataSetModel():
             plt.savefig(Path(path, f"density_{name}.svg"), format="svg")
 
     def start(self, ):
-        path = self.generate_path()
-        model = self.load_model(path)  
+        """Load the model and get freeze the saved layers"""
+        self.path = self.generate_path()
+        
+        self.model = self.load_model(self.path) if self.load else self.init_model()
 
-        self.model = model
+        self.layers_folder_path = Path(self.path, "layers")
+        self.layers_folder_path.mkdir(exist_ok=True, parents=True)
+        self.embedding_layer_path = Path(self.layers_folder_path, "embedding.ckpt")
+        
+        if self.load_embedding:
+            try:
+                filename = glob.glob(str(self.layers_folder_path)+"/embedding*.index")[-1]
+                self.embedding_layer_path = Path(self.layers_folder_path, Path(filename).stem)
+
+                
+
+                checkpoint = tf.train.Checkpoint(self.model)
+                checkpoint.restore(self.embedding_layer_path)
+
+                emb_layer = self.model.get_layer("te_emb")
+                emb_layer.trainable = False
+                print("embedding layer form disk, set as untrainable")
+            except Exception as exce:
+                print(f"unable to load the embedding layer : {exce}")
+        else:
+            print("embedding layer not initiazed, as asked")
+        return self
+        
   
 
     def predict(self, features, model=None, is_=None,for_api=False, enc_trues=None, generator=None):
-        
+        """Make a prediction on the features"""
 
         if (for_api is True) and (is_ == "text"):
 
@@ -237,12 +278,12 @@ class MyDataSetModel():
                         output_types = ({"te_input":tf.float32, "im_input":tf.float32})
                         ).batch(1)
 
-        if model is None:
-            path = self.generate_path()
-            model = self.load_model(path)
-        #model.compile(**self.compilation_kwargs)
+        # if model is None:
+        #     path = self.generate_path()
+        #     self.model = self.load_model(path)
+        # #model.compile(**self.compilation_kwargs)
 
-        probas = model.predict(features)
+        probas = self.model.predict(features)
 
         enc_preds = np.argmax(probas, axis=1)
         rates = np.array([probas[idx, target] for idx, target in enumerate(enc_preds)])
@@ -263,9 +304,9 @@ class MyDataSetModel():
             dec_trues = generator.decode(enc_trues)
             nam_trues = generator.convert_to_readable_categories(pd.Series(dec_trues)).values
 
-            df_cross = self.save_crosstab(dec_trues, dec_preds, path)
-            self.graph_predictions_good_vs_bad(df_cross, path)
-            report = self.save_classification_report(dec_trues, dec_preds, path)
+            df_cross = self.save_crosstab(dec_trues, dec_preds, self.path)
+            self.graph_predictions_good_vs_bad(df_cross, self.path)
+            report = self.save_classification_report(dec_trues, dec_preds, self.path)
             self.push_classification_to_summary(report)
         else:
             enc_trues = np.array([-1 for _ in enc_preds])
@@ -309,7 +350,7 @@ class MyDataSetModel():
                 model.summary(print_fn=lambda x: f.write(x + '\n'))
                 
     def save_crosstab(self, y_true, y_pred, path):
-        """"Calculate the crosstab between targets and predictions"""
+        """Calculate the crosstab between targets and predictions"""
 
         #Calculate the crosstab, normalisé selon les colonnes
         crosstab = pd.crosstab(
@@ -317,6 +358,12 @@ class MyDataSetModel():
             rownames=['Realité'], colnames=['Prédiction'],
             normalize="index"
         )
+
+        #Add columns if missing (because unpredicted)
+        mask_missing_columns = set(COLUMNS) - set(crosstab.columns)
+        for miss_column in mask_missing_columns:
+            crosstab.loc[:,miss_column] = np.zeros(len(COLUMNS))
+
         #Save it in a csv file
         crosstab.to_csv(Path(path, f'crosstab_report.csv'), index= True)
 

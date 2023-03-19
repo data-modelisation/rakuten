@@ -179,5 +179,5 @@ cython_debug/
 #.idea/     
 
 #Exceptions
-!src/labelencoder.joblib
+!src/generators/labelencoder.joblib
 !src/textvectorization_layer.pkl

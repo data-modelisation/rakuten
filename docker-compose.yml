@@ -2,6 +2,15 @@ version: "3"
 
 services:
 
+  tensorboard:
+    container_name: ds_tensorboard
+    build:
+      context: 'src/models'
+      dockerfile: "./Dockerfile"
+    network_mode: host
+    ports:
+    - "6009:6009"
+
   fastapi:
     container_name: ds_fastapi
     build: src/.
@@ -9,7 +18,7 @@ services:
     network_mode: host
     ports:
       - "8008:8008"
-    
+
   streamlit:
     container_name: ds_streamlit
     build: streamlit_app/.
@@ -19,7 +28,7 @@ services:
     network_mode: host
     depends_on : 
     - fastapi
-      
+
 networks:
   host:
     name: host

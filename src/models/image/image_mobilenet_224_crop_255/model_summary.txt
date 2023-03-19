@@ -1,0 +1,25 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ mobilenetv2_1.00_224 (Funct  (None, 7, 7, 1280)       2257984   
+ ional)                                                          
+                                                                 
+ im_avg (GlobalAveragePoolin  (None, 1280)             0         
+ g2D)                                                            
+                                                                 
+ im_dense_1 (Dense)          (None, 128)               163968    
+                                                                 
+ im_drop_1 (Dropout)         (None, 128)               0         
+                                                                 
+ im_dense_2 (Dense)          (None, 64)                8256      
+                                                                 
+ im_drop_2 (Dropout)         (None, 64)                0         
+                                                                 
+ im_output (Dense)           (None, 27)                1755      
+                                                                 
+=================================================================
+Total params: 2,431,963
+Trainable params: 173,979
+Non-trainable params: 2,257,984
+_________________________________________________________________
