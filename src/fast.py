@@ -48,19 +48,27 @@ model_image_obj = ModelImage_MobileNet(
         suffix=f"_224_crop_255",
         epochs=EPOCHS_IMAGE,
         target_shape=TARGET_SHAPE,
-        load=True,
+        load=False,
     ).start()
 
 #DataGenrator
 data_generator = DataGenerator(
-    from_api=True,
-    target_shape=(224,224,3),
-    crop=True,
-    vocab_size=VOCAB_SIZE,
-    sequence_length=SEQUENCE_LENGTH,
-    embedding_dim=EMBEDDING_DIM,
-    layers_folder_path = model_text_obj.layers_folder_path
-)
+        from_api = True,
+        samplings=NUM_TARGETS,
+        test_size=TEST_SPLIT,
+        valid_size=VALID_SPLIT,
+        target_shape=TARGET_SHAPE,
+        random_state=RANDOM_STATE,
+        clean=True,
+        translate=True,
+        stem=True,
+        exploration=False,
+        crop=True,
+        vocab_size=VOCAB_SIZE,
+        sequence_length=SEQUENCE_LENGTH,
+        embedding_dim=EMBEDDING_DIM,
+        layers_folder_path = model_text_obj.layers_folder_path
+    )
 
 
 model_fusion = ModelFusion(

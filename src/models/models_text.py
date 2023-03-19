@@ -30,7 +30,7 @@ class ModelText(MyDataSetModel):
         name=None,
         **kwargs):
 
-        super(ModelText).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.vocab_size = vocab_size
         self.sequence_length = sequence_length
@@ -176,7 +176,7 @@ class ModelText_Neural_Simple(ModelText):
         *args,
         **kwargs):
 
-        super(ModelText_Neural_Simple).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def init_model(self, ):
        
