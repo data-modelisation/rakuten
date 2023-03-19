@@ -1,8 +1,8 @@
 import streamlit as st
-
+import streamlit.components.v1 as components
 
 title = "Rakuten Classification."
-sidebar_name = "Introduction"
+sidebar_name = "Rapport"
 
 
 def run():
@@ -15,20 +15,5 @@ def run():
     st.title(title)
 
     st.markdown("---")
-
-    st.markdown(
-        """
-        ## Rakuten
-
-        * Site de e-commerce avec 1.3 milliards d'utilisateurs
-        * Suggestions de recherche et recommandations pour l'utilisateur
-        * Classification des produits nécessaire
-        * Manuellement impossible
-
-        ## Objectifs
-
-        Prédire la catégorie d'un produit sur la base de son **titre**, sa **description** et de son **image**
-
-        1 + 1 = 3 ... Un **modèle de texte**, un **modèle d'image** et un **modèle de fusion** 
-        """
-    )
+    html_file = open("assets/rapport.html", "r")
+    components.html(html_file.read(), width=1000, height=564)
