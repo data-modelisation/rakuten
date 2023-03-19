@@ -1,20 +1,15 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import streamlit.components.v1 as components
 
-
-title = "Third tab"
-sidebar_name = "Third Tab"
+title = "Tensorboard"
+sidebar_name = "Tensorboard"
 
 
 def run():
 
     st.title(title)
 
-    st.markdown(
-        """
-        This is the third sample tab.
-        """
-    )
-
-    st.write(pd.DataFrame(np.random.randn(100, 4), columns=list("ABCD")))
+    
+    components.iframe("http://127.0.0.1:6009/#projector", height=1200)
