@@ -45,12 +45,11 @@ class ModelFusion(MyDataSetModel):
             for layer in model.layers:
                 layer._name = f'{layer.name}_{idx}'
 
-                if "text_vectorization" in layer.name:
-                    import pickle
-                    from_disk = pickle.load(open("tv_layer.pkl", "rb"))
-                    layer = TextVectorization.from_config(from_disk['config'])
-                    layer.set_weights(from_disk['weights'])
-                    layer.get_vocabulary(from_disk['vocabulary'])
+                # if "text_vectorization" in layer.name:
+                #     from_disk = pickle.load(open("tv_layer.pkl", "rb"))
+                #     layer = TextVectorization.from_config(from_disk['config'])
+                #     layer.set_weights(from_disk['weights'])
+                #     layer.get_vocabulary(from_disk['vocabulary'])
                 
                 print(layer.name)
         for idx, model in enumerate(self.models):
@@ -88,7 +87,7 @@ class ModelFusion(MyDataSetModel):
         print("layers merged")
         return concat_layers  
     
-    def init_model(self, _):
+    def init_model(self, ):
 
         self.rename_layers()
         self.freeze_models()

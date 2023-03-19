@@ -12,7 +12,7 @@ import joblib
 import keras
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input, Dropout, Flatten
+from tensorflow.keras.layers import BatchNormalization, Dense, Input, Dropout, Flatten
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, RNN, GRUCell
 from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Rescaling, TextVectorization
 
@@ -24,13 +24,13 @@ from models.models import MyDataSetModel
 class ModelText(MyDataSetModel):
     def __init__(self, 
         *args,
-        vocab_size=-404,
-        sequence_length=50000,
-        embedding_dim=200,
+        vocab_size=None,
+        sequence_length=None,
+        embedding_dim=None,
         name=None,
         **kwargs):
 
-        super().__init__(*args, **kwargs)
+        super(ModelText).__init__(*args, **kwargs)
 
         self.vocab_size = vocab_size
         self.sequence_length = sequence_length
@@ -176,33 +176,36 @@ class ModelText_Neural_Simple(ModelText):
         *args,
         **kwargs):
 
-        super().__init__(*args, **kwargs)
+        super(ModelText_Neural_Simple).__init__(*args, **kwargs)
 
     def init_model(self, ):
-
-        # VectorizationLayer = TextVectorization(
-        #     max_tokens=self.vocab_size,
-        #     output_mode='tf-idf',
-        #     split="whitespace",
-        #     ngrams=(1,),
-        # )
-        
-        # VectorizationLayer.adapt(
-        #     train_dataset.map(lambda text, label: text))
-        
-        # import pickle
-        # pickle.dump({
-        #     'config': VectorizationLayer.get_config(),
-        #     'weights': VectorizationLayer.get_weights(),
-        #     'vocabulary': VectorizationLayer.get_vocabulary(),
-        #     }
-        #     , open("tv_layer.pkl", "wb"))
-
+       
         model = Sequential()
         model.add(Input(shape=(self.sequence_length,), name = "te_input"))
         model.add(Embedding(self.vocab_size + 1, self.embedding_dim, name="te_emb"))
         model.add(Dropout(0.2, name="te_drop"))
         model.add(GlobalAveragePooling1D(name="te_global"))
+        model.add(Dense(27, activation="softmax", name="te_output"))
+        return model
+
+class ModelText_Neural_Batch(ModelText):
+    def __init__(self, 
+        *args,
+        **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+    def init_model(self, ):
+
+
+        model = Sequential()
+        model.add(Input(shape=(self.sequence_length,), name = "te_input"))
+        model.add(Embedding(self.vocab_size + 1, self.embedding_dim, name="te_emb"))
+        model.add(GlobalAveragePooling1D(name="te_global"))
+        model.add(Dropout(0.2, name="te_drop_1"))
+        model.add(BatchNormalization(name="te_batch"))
+        model.add(Dense(128, activation="relu", name="te_dense"))
+
         model.add(Dense(27, activation="softmax", name="te_output"))
 
         return model

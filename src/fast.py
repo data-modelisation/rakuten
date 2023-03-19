@@ -9,6 +9,21 @@ from models.models_image import *
 from models.models_fusion import *
 
 UPLOADED_PATH = 'uploaded_image.jpg'
+BATCH_SIZE_IMAGE = 32
+BATCH_SIZE_TEXT = 64
+BATCH_SIZE_FUSION = 128
+EPOCHS_TEXT = 50
+EPOCHS_IMAGE = 50
+EPOCHS_FUSION = 50
+NUM_FOLDS = 3
+NUM_TARGETS = 84916
+TARGET_SHAPE = [224, 224, 3]
+TEST_SPLIT = .16
+VALID_SPLIT = .16
+RANDOM_STATE = 123
+VOCAB_SIZE = 50000
+SEQUENCE_LENGTH = 500
+EMBEDDING_DIM = 200
 
 #Instance
 app = FastAPI()
@@ -18,56 +33,56 @@ origins = ["https://localhost:8000",]
 
 
 #Modeles 
-model_text = ModelText_Neural_Simple(
-        suffix="",
+model_text_obj = ModelText_Neural_Simple(
+        suffix=f"",
+        epochs=EPOCHS_TEXT,
+        vocab_size=VOCAB_SIZE,
+        sequence_length=SEQUENCE_LENGTH,
+        embedding_dim=EMBEDDING_DIM,
         load=True,
-    )
-model_text.start()
+        load_embedding=True
+    ).start()
 
-model_image = ModelImage_MobileNet(
-        suffix="_224_crop",
+#Objet Model Image
+model_image_obj = ModelImage_MobileNet(
+        suffix=f"_224_crop_255",
+        epochs=EPOCHS_IMAGE,
+        target_shape=TARGET_SHAPE,
         load=True,
-    )
-model_image.start()
-
-model_fusion = ModelFusion(
-        suffix="_mobilenet_simple_224",
-        load=True,
-    )
-model_fusion.start()
+    ).start()
 
 #DataGenrator
 data_generator = DataGenerator(
     from_api=True,
     target_shape=(224,224,3),
-    crop=True
+    crop=True,
+    vocab_size=VOCAB_SIZE,
+    sequence_length=SEQUENCE_LENGTH,
+    embedding_dim=EMBEDDING_DIM,
+    layers_folder_path = model_text_obj.layers_folder_path
 )
+
+
+model_fusion = ModelFusion(
+        suffix="_mobilenet_224_crop",
+        load=True,
+).start()
+
+
 
 def save_image(url):
     img_data = requests.get(str(url)).content
     with open(UPLOADED_PATH, 'wb') as handler:
         handler.write(img_data)
 
-@app.get("/api/image/layer/{idx_layer}")
-def get_layer(idx_layer):
-    model_text = ModelText_Neural_Simple(
-        suffix="_translated",
-        load=True,
-    )
-    layers = model_text.model.layers
-
-    return StreamingResponse(image.read(), media_type="image/jpeg")
-
-
 @app.get("/api/image/predict/url={image_input:path}")
 def pred_image(image_input: str):
     
     save_image(image_input)
 
-    response = model_image.predict(
+    response = model_image_obj.predict(
         [UPLOADED_PATH,], 
         generator=data_generator,
-        model=model_image.model,
         for_api=True,
         is_="image"
     )
@@ -76,11 +91,10 @@ def pred_image(image_input: str):
 @app.get("/api/text/predict/text={text_input}")
 def text_prediction(text_input):
     
-    response = model_text.predict(
+    response = model_text_obj.predict(
         [text_input.split(";")[0],], 
         generator=data_generator,
         for_api=True,
-        model=model_text.model,
         is_="text"
         )
     return response

@@ -44,6 +44,25 @@ EMBEDDING_DIM = 200
 
 if __name__ == "__main__":
 
+    #Objet Model Text
+    model_text_obj = ModelText_Neural_Simple(
+        suffix=f"",
+        epochs=EPOCHS_TEXT,
+        vocab_size=VOCAB_SIZE,
+        sequence_length=SEQUENCE_LENGTH,
+        embedding_dim=EMBEDDING_DIM,
+        load=True,
+        load_embedding=True
+    ).start()
+
+    #Objet Model Image
+    model_image_obj = ModelImage_MobileNet(
+        suffix=f"_224_crop_255",
+        epochs=EPOCHS_IMAGE,
+        target_shape=TARGET_SHAPE,
+        load=False,
+    ).start()
+
     #Creation du générateur principal
     data_generator = DataGenerator(
         from_data="csv",
@@ -63,7 +82,8 @@ if __name__ == "__main__":
         crop=True,
         vocab_size=VOCAB_SIZE,
         sequence_length=SEQUENCE_LENGTH,
-        embedding_dim=EMBEDDING_DIM
+        embedding_dim=EMBEDDING_DIM,
+        layers_folder_path = model_text_obj.layers_folder_path
     )
 
     #Split des générateurs
@@ -74,46 +94,30 @@ if __name__ == "__main__":
         dfs={"train": train, "test": test, "valid": valid},
         bss={"text": BATCH_SIZE_TEXT, "image": BATCH_SIZE_IMAGE, "fusion": BATCH_SIZE_FUSION})
 
-    #Objet Model Text
-    model_text_obj = ModelText_Neural_Simple(
-        suffix=f"_re",
-        epochs=EPOCHS_TEXT,
-        vocab_size=VOCAB_SIZE,
-        sequence_length=SEQUENCE_LENGTH,
-        embedding_dim=EMBEDDING_DIM,
-        load=False,
-    )
-
     #Entrainement Text
-    model_text = model_text_obj.fit(
-        datasets["train"]["text"],
-        validation=datasets["valid"]["text"],
-        class_weight=data_generator.class_weight
-    )
+    # model_text = model_text_obj.fit(
+    #     datasets["train"]["text"],
+    #     validation=datasets["valid"]["text"],
+    #     class_weight=data_generator.class_weight
+    # )
 
-    #Prediction Text
-    model_text_obj.predict(
-        datasets["test"]["text"],
-        enc_trues = test.targets.values,
-        generator=data_generator,
-        for_api=False)
+    # #Prediction Text
+    # model_text_obj.predict(
+    #     datasets["test"]["text"],
+    #     enc_trues = test.targets.values,
+    #     generator=data_generator,
+    #     for_api=False)
 
-    #Prediction Text pour API
-    response = model_text_obj.predict(
-        ["jouet bois enfant traduction",],
-        #enc_trues = test.targets.values,
-        generator=data_generator,
-        is_="text",
-        for_api=True)
-    print(response)
+    # #Prediction Text pour API
+    # response = model_text_obj.predict(
+    #     ["jouet bois enfant traduction",],
+    #     #enc_trues = test.targets.values,
+    #     generator=data_generator,
+    #     is_="text",
+    #     for_api=True)
+    # print(response)
 
-    #Objet Model Image
-    model_image_obj = ModelImage_MobileNet(
-        suffix=f"_224_crop",
-        epochs=EPOCHS_IMAGE,
-        target_shape=TARGET_SHAPE,
-        load=False,
-    )
+
 
     #Entrainement Model Image
     model_image = model_image_obj.fit(
@@ -129,23 +133,24 @@ if __name__ == "__main__":
         generator=data_generator,
         for_api=False)
     
-    # #Prediction Image pour API
-    # response = model_image_obj.predict(
-    #     ["uploaded_image.jpg",],
-    #     #enc_trues = test.targets.values,
-    #     generator=data_generator,
-    #     is_="image",
-    #     for_api=True)
-    # print(response)
+    # # #Prediction Image pour API
+    # # response = model_image_obj.predict(
+    # #     ["uploaded_image.jpg",],
+    # #     #enc_trues = test.targets.values,
+    # #     generator=data_generator,
+    # #     is_="image",
+    # #     for_api=True)
+    # # print(response)
+
 
     #Objet Model Fusion
     model_fusion_obj = ModelFusion(
-        suffix=f"_mobilenet_224_crop_re",
+        suffix=f"_mobilenet_224_crop",
         epochs=EPOCHS_FUSION,
-        models=[model_image, model_text],
+        models=[model_image_obj.model, model_text_obj.model],
         models_concat_layer_num=[-2, -2],
         load=False,
-    )
+    ).start()
 
     #Entrainement model fusion
     model_fusion = model_fusion_obj.load_models().fit(
