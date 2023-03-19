@@ -258,7 +258,7 @@ _header: 'Deep learning / Image '
 ### Le modèle image *CNN*
 * apprentissage par transfert avec le modèle *MobileNetV2* 
 * il est chargé avec des poids pré-entraînés sur *ImageNet* 
-* les couches de base modèle sont congélées
+* les couches de base modèle sont gélées
 
 ![bg right:66% width:800px](diagram/image_schema_MobileNetv2.drawio.png)
 ___
