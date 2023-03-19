@@ -46,6 +46,7 @@ class DataGenerator():
         embedding_dim=None,
         sequence_length=None,
         vocab_size=None,
+        layers_folder_path=None
         ):
         
         #Attributs
@@ -70,22 +71,16 @@ class DataGenerator():
         self.random_state = random_state
         self.preprocessed = False
         self.encoder = None
-        self.encoder_path = Path("./labelencoder.joblib")
-        
+        self.encoder_path = Path("./generators/labelencoder.joblib")
+        self.layers_folder_path = layers_folder_path
 
-        if Path("textvectorization_layer.pkl").exists():
-            from_disk = pickle.load(open("textvectorization_layer.pkl", "rb"))
-            self.vectorize_layer = TextVectorization.from_config(from_disk['config'])
-            self.vectorize_layer.set_weights(from_disk['weights'])
-            self.vectorize_layer.set_vocabulary(from_disk['vocabulary'])
-            print("vectorization layer form disk")
-        else:
-            self.vectorize_layer = TextVectorization(
-                max_tokens=self.vocab_size,
-                output_mode='int',
-                output_sequence_length=self.sequence_length)
-            print("new vectorization layer")
+        self.vectorize_layer_path = Path(self.layers_folder_path, "textvectorization_layer.pkl")
+        self.vectorize_metadata_path = Path(self.layers_folder_path, "textvectorization_metadata.tsv")
 
+        #Get the vectorization layer
+        self.vectorize_layer = self.get_vectorization_layer()
+            
+        #If the API is used, the data is not loaded
         if from_api:
             self.set_encoder()
         else:
@@ -107,6 +102,44 @@ class DataGenerator():
             if self.exploration:
                 self.explore()
 
+
+    def get_vectorization_layer(self):
+        # Load the vecotrization layer or initialize it
+        
+        vocab_size_disk = None
+        self.vectorize_layer_loaded = False
+        try:
+            #If a layer exists
+            if self.vectorize_layer_path.exists():
+                from_disk = pickle.load(open(self.vectorize_layer_path, "rb"))
+                vocab_size_disk = len(from_disk['vocabulary'])
+                print(f"vectorization found on disk with size of {vocab_size_disk}")
+            else:
+                raise Exception(f"not vectorization layer found ")
+            #If this layer vocab if correct, the weights are setted
+            if vocab_size_disk and vocab_size_disk == self.vocab_size:
+                vectorize_layer = TextVectorization.from_config(from_disk['config'])
+                vectorize_layer.set_weights(from_disk['weights'])
+                vectorize_layer.set_vocabulary(from_disk['vocabulary'])
+                print("vectorization loaded from disk")
+                self.vectorize_layer_loaded = True
+                return vectorize_layer
+            else:
+                raise Exception(f"layer found with vocab size of {vocab_size_disk}, but actual size is {self.vocab_size}")
+
+        except Exception as exce:
+            print(f"unable to load the vectorization layer : {exce}")
+        
+        #Otherwise, the layer is initialized (and not loaded)
+        return TextVectorization(
+                max_tokens=self.vocab_size,
+                output_mode='int',
+                output_sequence_length=self.sequence_length)
+
+
+        
+
+
     def convert_to_readable_macrocategories(self, serie:pd.Series):
         categories_num = [
             10, 40, 50, 60, 1140, 1160, 1180,
@@ -122,8 +155,6 @@ class DataGenerator():
             "Gaming", "Livres", "Mobilier", "Equipement", "Equipement", "Livres", "Gaming"
             ]
 
-        #categories_des_num = [f"{category_des}_{category_num}" for category_des, category_num in zip(categories_des, categories_num)]
-        
         return serie.replace(
             to_replace = categories_num ,
             value = categories_des
@@ -165,7 +196,7 @@ class DataGenerator():
         weights = compute_class_weight('balanced', classes=classes, y=values)
         self.class_weight = {k: v for k, v in zip(classes, weights)}
 
-        print(self.class_weight)
+        print("weights calculated")
 
     def read_image_from_url(self, url):
         image_reader = tf.image.decode_jpeg(
@@ -180,6 +211,7 @@ class DataGenerator():
         if self.crop:
             im = im[50:450,50:450,:]
         im = tf.image.resize(im, size=self.target_shape[:2])
+        im /= 255.0
         return im
 
     def vectorize_text(self,text, expand=False):
@@ -191,12 +223,11 @@ class DataGenerator():
 
         splits = ["train", "test", "valid"]
         types = ["text", "image", "fusion"]
-        subdatasets = dict.fromkeys(types, None)
-        datasets = dict.fromkeys(splits, subdatasets)
-        datasets = {}
-               
 
+        datasets = {} #dict.from_keys not working -_-
+               
         for split in splits:
+
             datasets[split] = {}
             
             for type_ in types:
@@ -209,7 +240,6 @@ class DataGenerator():
                 links = df.links.astype(np.str)
                 targets = df.targets.values.astype(np.int32)
 
-
                 def fusion_generator(texts, links, targets, expand=False):
                     for text, link, target in zip(texts, links, targets):
                         yield {"te_input": self.vectorize_text(text, expand=expand), "im_input": self.load_image(link)}, target
@@ -219,14 +249,31 @@ class DataGenerator():
                     dataset = tf.data.Dataset.from_tensor_slices((texts, targets))
                     
                     if split == "train":
-                        train_text_vectorizer = dataset.map(lambda x, y: x)
-                        self.vectorize_layer.adapt(train_text_vectorizer.batch(64))
+
+                        #Train / Adapt the vectorization layer if not loaded
+                        if not self.vectorize_layer_loaded:
+                            print("vectorize_layer adaptation")
+                            train_text_vectorizer = dataset.map(lambda x, y: x)
+                            self.vectorize_layer.adapt(train_text_vectorizer.batch(bss.get(type_)))
+                        else:
+                            print("vectorize_layer already adapted")
+                        #Save the layer
                         pickle.dump({'config': self.vectorize_layer.get_config(),
                             'weights': self.vectorize_layer.get_weights(),
                             'vocabulary': self.vectorize_layer.get_vocabulary(),
                             }
-                            , open("textvectorization_layer.pkl", "wb"))
+                            , open(self.vectorize_layer_path, "wb"))
                         
+                        #Set the metadata for projector
+                        with open(self.vectorize_metadata_path, 'w') as metadata_file:
+                            vocab = self.vectorize_layer.get_vocabulary()
+                            # Fill rows with the label  .
+                            for subwords in vocab:
+                                metadata_file.write("{}\n".format(subwords))
+                            # Fill in the rest of the labels with "unknown".
+                            for idx in range(0, self.vocab_size - len(vocab)+1):
+                                metadata_file.write("unknown #{}\n".format(idx))
+
                     dataset = dataset.map(lambda x,y : (self.vectorize_text(x), y))
                 
                 elif type_ == "image":
@@ -245,6 +292,7 @@ class DataGenerator():
         return datasets
 
     def split(self,):
+        """Split the dataset in train, test and valid"""
 
         train, test = train_test_split(
             self.data,
@@ -267,6 +315,7 @@ class DataGenerator():
             return datasets
 
     def read_csv(self):
+        """Read a csv file and delete Unnamed rows"""
         #Read the file
         dataset = pd.read_csv(self.csv_data, index_col="Unnamed: 0")
         
