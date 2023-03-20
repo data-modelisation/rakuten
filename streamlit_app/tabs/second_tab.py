@@ -35,7 +35,8 @@ def run():
                 key="text_input", 
                 height=120,
                 placeholder="Après dix-sept ans d'absence, Joe revient à Bush Falls, le patelin de son enfance. Couronné par le succès d'un livre qui ridiculisait ses voisins, il se heurte à l'hostilité d'une ville entière, bien décidée à lui faire payer ses écarts autobiographiques. Entre souvenirs et fantômes du passé, Joe va devoir affronter ses propres contradictions et peut-être enfin trouver sa place.'Mélanger ainsi humour et nostalgie est une prouesse rare, un vrai délice ! 'Charlotte Roux, Page des Libraires")
-            
+            text_input = re.sub('[^A-Za-z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02af\u1d00-\u1d25\u1d62-\u1d65\u1d6b-\u1d77\u1d79-\u1d9a\u1e00-\u1eff\u2090-\u2094\u2184-\u2184\u2488-\u2490\u271d-\u271d\u2c60-\u2c7c\u2c7e-\u2c7f\ua722-\ua76f\ua771-\ua787\ua78b-\ua78c\ua7fb-\ua7ff\ufb00-\ufb06]', ' ', text_input)
+
             url_input = st.text_input("Image URL", key="url_input")
 
             scrap_input = st.text_input("Scrap URL", key="scrap_input", placeholder="Rueducommerce?")
@@ -99,8 +100,8 @@ def run():
                         st.text_area("Texte traduit", response.get("translated texts")[0])
                         st.text_area("Texte nettoyé", response.get("cleaned texts")[0])
 
-                    with st.expander("Détails JSON"):
-                        st.write(response)
+                with st.expander("Détails JSON"):
+                    st.write(response)
 
 
     with C2:                
