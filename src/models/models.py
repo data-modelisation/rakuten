@@ -12,7 +12,7 @@ import pickle
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.metrics import balanced_accuracy_score, recall_score,classification_report
-
+from keras.applications.mobilenet_v2 import MobileNetV2
 from imblearn.metrics import classification_report_imbalanced
 
 from models.models_utils import call_memory, call_tqdm, call_dashboard, call_checkpoint, call_earlystopping, call_reducelr
@@ -242,9 +242,6 @@ class MyDataSetModel():
                     annotated.append(word+" ")
             
             
-
-            
-
         elif (for_api is True) and (is_ == "image"):
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.load_image(x)).batch(1)
@@ -285,6 +282,21 @@ class MyDataSetModel():
 
         probas = self.model.predict(features)
 
+        if (for_api is True) and (is_ == "image"):
+            base_model = MobileNetV2(
+                weights='imagenet', 
+                include_top=False,
+                input_shape = self.target_shape
+            )
+            print(base_model.summary())
+            layers = [layer.output for layer in base_model.layers[:5]]
+            
+            activation_model = Model(
+                inputs=base_model.input,
+                outputs=base_model.get_layer("expanded_conv_project").output)
+            activations = activation_model.predict(features)
+            activation_layer = activations[0]
+            
         enc_preds = np.argmax(probas, axis=1)
         rates = np.array([probas[idx, target] for idx, target in enumerate(enc_preds)])
 
@@ -335,7 +347,10 @@ class MyDataSetModel():
                 response["cleaned texts"] = cleaned_texts.tolist()
                 response["encoded texts"] = encoded_texts.tolist()
                 response["annotated texts"] = annotated
-            
+            if is_ in ["image"]:
+
+                random_layer = np.random.randint(low=0, high=activation_layer.shape[2])
+                response["activation_0"] = activation_layer[:,:,random_layer].tolist()
             return response
 
     def save_model_summary(self, model, path):
