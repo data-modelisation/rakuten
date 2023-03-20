@@ -33,7 +33,7 @@ def run():
             
             text_input = st.text_area("Text", 
                 key="text_input", 
-                height=180,
+                height=120,
                 placeholder="Après dix-sept ans d'absence, Joe revient à Bush Falls, le patelin de son enfance. Couronné par le succès d'un livre qui ridiculisait ses voisins, il se heurte à l'hostilité d'une ville entière, bien décidée à lui faire payer ses écarts autobiographiques. Entre souvenirs et fantômes du passé, Joe va devoir affronter ses propres contradictions et peut-être enfin trouver sa place.'Mélanger ainsi humour et nostalgie est une prouesse rare, un vrai délice ! 'Charlotte Roux, Page des Libraires")
             
             url_input = st.text_input("Image URL", key="url_input")
@@ -78,6 +78,14 @@ def run():
                         #st.error(exce)
 
             if response:
+                if "activation_0" in response.keys():
+                    with st.expander("Détails des images"):
+                        image = np.array(response.get("activation_0"))
+                        image = np.expand_dims(image, axis=2)
+                        image = (image - image.min()) / (image.max() - image.min())
+                        st.image(image, clamp=True)
+                        
+
                 if "annotated texts" in response.keys():
                     with st.expander("Détails du texte"):
                                 
