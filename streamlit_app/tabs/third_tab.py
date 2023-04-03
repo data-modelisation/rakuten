@@ -12,4 +12,4 @@ def run():
     st.title(title)
 
     
-    components.iframe("http://127.0.0.1:6009/#projector", height=1200)
+    components.iframe("http://localhost:6109/#projector", height=1200)

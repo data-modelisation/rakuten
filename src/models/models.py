@@ -12,14 +12,14 @@ import pickle
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.metrics import balanced_accuracy_score, recall_score,classification_report
-
+from keras.applications.mobilenet_v2 import MobileNetV2
 from imblearn.metrics import classification_report_imbalanced
 
-from models.models_utils import call_memory, call_tqdm, call_dashboard, call_checkpoint, call_earlystopping, call_reducelr
+from src.models.models_utils import call_memory, call_tqdm, call_dashboard, call_checkpoint, call_earlystopping, call_reducelr
 #from src.generators.generator_fusion import FusionGenerator
 #from src.generators.generator_image import ImageGenerator
-from models.models_utils import METRICS
-from tools.text import get_lang, translate_text, stemmatize_text, clean_text
+from src.models.models_utils import METRICS
+from src.tools.text import get_lang, translate_text, stemmatize_text, clean_text
 
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
@@ -232,7 +232,7 @@ class MyDataSetModel():
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(encoded_texts).astype(str), ))
             features = dataset.map(lambda x: generator.vectorize_text(x)).batch(1)
         
-            
+           
             vocab = generator.vectorize_layer.get_vocabulary()
             annotated = []
             for word in encoded_texts[0].split():
@@ -242,18 +242,15 @@ class MyDataSetModel():
                     annotated.append(word+" ")
             
             
-
-            
-
         elif (for_api is True) and (is_ == "image"):
             dataset = tf.data.Dataset.from_tensor_slices((np.asarray(features).astype(str), ))
             features = dataset.map(lambda x: generator.load_image(x)).batch(1)
+            #here 
                 
         elif (for_api is True) and (is_ == "fusion"):
             def fusion_generator(texts, links, expand=False):
                     for text, link in zip(texts, links):
                         yield {"te_input": generator.vectorize_text(text, expand=expand), "im_input": generator.load_image(link)}
-            
             
             texts = np.asarray([features[0],]).astype(np.str)
             links = np.asarray([features[1],]).astype(np.str)
@@ -285,18 +282,36 @@ class MyDataSetModel():
 
         probas = self.model.predict(features)
 
+        if (for_api is True) and (is_ == "image"):
+            base_model = MobileNetV2(
+                weights='imagenet', 
+                include_top=False,
+                input_shape = self.target_shape
+            )
+            print(base_model.summary())
+            layers = [layer.output for layer in base_model.layers[:5]]
+            
+            activation_model = Model(
+                inputs=base_model.input,
+                outputs=base_model.get_layer("expanded_conv_project").output)
+            activations = activation_model.predict(features)
+            activation_layer = activations[0]
+            
         enc_preds = np.argmax(probas, axis=1)
         rates = np.array([probas[idx, target] for idx, target in enumerate(enc_preds)])
 
         if generator is not None:
-            dec_preds = generator.decode(enc_preds)
+       
+            dec_preds = generator.decode(enc_preds) 
+
             nam_preds = generator.convert_to_readable_categories(pd.Series(dec_preds)).values
-            
+
             enc_probas = np.arange(27)
             dec_probas = generator.decode(enc_probas)
             nam_probas = generator.convert_to_readable_categories(pd.Series(dec_probas)).values
             name_macro_probas = generator.convert_to_readable_macrocategories(pd.Series(dec_probas)).values
         else:
+
             dec_preds = [-1 for _ in enc_preds]
             nam_preds = ["na" for _ in enc_preds]
 
@@ -315,6 +330,7 @@ class MyDataSetModel():
 
             
         if for_api:
+
             response =  {       
                     "encoded predictions": enc_preds.tolist(),
                     "encoded trues" : enc_trues.tolist(),
@@ -335,7 +351,14 @@ class MyDataSetModel():
                 response["cleaned texts"] = cleaned_texts.tolist()
                 response["encoded texts"] = encoded_texts.tolist()
                 response["annotated texts"] = annotated
-            
+<<<<<<< HEAD
+            if is_ in ["image"]:
+
+                random_layer = np.random.randint(low=0, high=activation_layer.shape[2])
+                response["activation_0"] = activation_layer[:,:,random_layer].tolist()
+=======
+
+>>>>>>> 23d451d (Ajout generateur et model dans le dossier FastAPI_backend et corrige le docker composer pour que tensorboar fonctionne)
             return response
 
     def save_model_summary(self, model, path):

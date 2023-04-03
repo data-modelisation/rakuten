@@ -1,35 +1,45 @@
-version: "3"
-
-services:
-
-  tensorboard:
-    container_name: ds_tensorboard
-    build:
-      context: 'src/models'
-      dockerfile: "./Dockerfile"
-    network_mode: host
-    ports:
-    - "6009:6009"
-
-  fastapi:
-    container_name: ds_fastapi
-    build: src/.
-    command: "uvicorn fast:app --host 127.0.0.1 --port 8008 --reload"
-    network_mode: host
-    ports:
-      - "8008:8008"
-
-  streamlit:
-    container_name: ds_streamlit
-    build: streamlit_app/.
-    command: "streamlit run --server.port 8080 --server.enableCORS false app.py"
-    ports:
-      - "8080:8080"
-    network_mode: host
-    depends_on : 
-    - fastapi
+version: "3.7"
 
 networks:
-  host:
-    name: host
-    external: true
+    AIservice:
+        external: true
+
+
+services:
+  backend:
+    build: FastAPI_backend
+    ports:
+      - 8111:8000
+    networks:       
+      AIservice: 
+        aliases: 
+          - backend.docker
+    volumes:
+      - ./FastAPI_backend:/app
+      - ./src:/src
+  frontend:
+    build: streamlit_app
+    ports:
+      - 8501:8080
+    networks: 
+      AIservice:
+        aliases: 
+          - frontend.docker
+    depends_on:
+      - backend
+    volumes:
+       - ./streamlit_app:/app
+       - ./src:/src
+
+  tensorboard:
+    build:
+      context: 'tensorboard_backend'
+      dockerfile: "./Dockerfile"
+    networks:       
+      AIservice: 
+        aliases: 
+          - tensorboard.docker
+    volumes:
+      - ./src/models/text/text_neural_simple/layers:/app/text/text_neural_simple/layers
+    ports:
+    - 6109:6009
