@@ -183,3 +183,7 @@ cython_debug/
 #Exceptions
 !src/generators/labelencoder.joblib
 !src/textvectorization_layer.pkl
+
+# VSCode
+.vscode
+.lh
