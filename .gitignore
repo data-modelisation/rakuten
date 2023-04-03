@@ -93,7 +93,9 @@ src/**/variables*
 src/**/*.jpg
 src/models/**/events.*
 src/models/**/clf_report*
-
+FastAPI_backend/models/**/*.ckpt*
+FastAPI_backend/models/**/events.*
+FastAPI_backend/models/**/variables*
 # Corpora
 tokenizers/
 corpora/
