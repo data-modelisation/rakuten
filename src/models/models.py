@@ -351,14 +351,9 @@ class MyDataSetModel():
                 response["cleaned texts"] = cleaned_texts.tolist()
                 response["encoded texts"] = encoded_texts.tolist()
                 response["annotated texts"] = annotated
-<<<<<<< HEAD
             if is_ in ["image"]:
-
                 random_layer = np.random.randint(low=0, high=activation_layer.shape[2])
                 response["activation_0"] = activation_layer[:,:,random_layer].tolist()
-=======
-
->>>>>>> 23d451d (Ajout generateur et model dans le dossier FastAPI_backend et corrige le docker composer pour que tensorboar fonctionne)
             return response
 
     def save_model_summary(self, model, path):
