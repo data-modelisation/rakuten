@@ -6,11 +6,9 @@
 ![Transfer Learning](https://placehold.co/100x20?text=Transfer+Learning)
 ![Docker](https://placehold.co/100x20?text=Docker) 
 # DS - Bootcamp - DEC22 - Rakuten Challenge
+![cover](./slides/images/readme_cover.jpg) 
 ## Presentation
-This repository contains the code for project **Rakuten** based on data of [Rakuten Challenge](https://challengedata.ens.fr/participants/challenges/35/) issued 
-
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw79ki-IykjLBi_fjucsBdqgsM3CiEWQg0mxkCGJJU_ja5wbuXXzGiSVhP6LGqjRprBQk&usqp=CAU" width="300" />
-
+This repository contains the code for project **Rakuten** based on data issued of [Rakuten Challenge](https://challengedata.ens.fr/participants/challenges/35/) 
 and developed during [Data Scientist training](https://datascientest.com/en/data-scientist-course) at [DataScientest](https://datascientest.com/).  
   
 
