@@ -22,7 +22,7 @@ The goal of this project is to **predict product’s type code  through descript
 This project was developed by the following *team* :
 - Charly LAGRESLE ([GitHub](https://github.com/karolus-git/) / [LinkedIn](https://www.linkedin.com/in/charly-lagresle/))
 - Olga ([GitHub](https://github.com/data-modelisation/) / [LinkedIn](https://www.linkedin.com/in/tolstolutska/))
-- Mohamed BACHKAT  ([GitHub](https://github.com/mbachkat/) / [LinkedIn](http://linkedin.com/))
+- Mohamed BACHKAT  ([GitHub](https://github.com/mbachkat/) / [LinkedIn](https://fr.linkedin.com/in/mo-bachkat-7389451a3/))
 
 You can browse and run the [notebooks](./notebooks). You will need to install the dependencies (in a dedicated environment) :
 
