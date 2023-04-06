@@ -87,5 +87,6 @@ The fusion model has the following architecture :
 
 The fusion model uses the image model to categorize products where the text model underperformed. The global **weighted-F1 score is 82.2%** and **all categories exceed the 55% score**. 
 
-Model density analysis : 
+Model density analysis :   
+
 ![image](./slides/images/all_tp_flat.svg)
