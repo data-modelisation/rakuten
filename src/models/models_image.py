@@ -15,8 +15,8 @@ from tensorflow.keras.applications.resnet import preprocess_input as resnet_prep
 
 from sklearn.svm import SVC
 
-from models.models_utils import METRICS
-from models.models import MyDataSetModel
+from src.models.models_utils import METRICS
+from src.models.models import MyDataSetModel
 
 class ModelImage(MyDataSetModel):
     def __init__(self, 
@@ -177,11 +177,10 @@ class ModelImage_MobileNet(ModelImage):
         *args,
         **kwargs):
         
-
         super().__init__(*args, **kwargs)
 
     def init_model(self,):
-        
+     
         model = Sequential()
         base_model = MobileNetV2(
             weights='imagenet', 

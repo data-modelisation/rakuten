@@ -62,22 +62,25 @@ def run():
             with C2:                
                 with st.spinner('Classifying, please wait....'):
                     try:
+                        #response = requests.get(f"http://rakuten-backend-1:8000/api/text/predict/text=piscine").json()
+
                         if text_input and not url_input:
                             print(f"asking FastAPI to predict this Text : {text_input}")
-                            response = requests.get(f"http://127.0.0.1:8008/api/text/predict/text={text_input}").json()
+                            response = requests.get(f"http://rakuten-backend-1:8000/api/text/predict/text={text_input}").json()
 
                         elif not text_input and url_input:
                             print(f"asking FastAPI to predict this URL : {url_input}")
-                            response = requests.get(f"http://127.0.0.1:8008/api/image/predict/url={url_input}").json()
+                            response = requests.get(f"http://rakuten-backend-1:8000/api/image/predict/url={url_input}").json()
 
                         elif text_input and url_input :
                             print(f"asking FastAPI to predict this Text {text_input} and this URL {url_input}")
-                            response = requests.get(f"http://127.0.0.1:8008/api/fusion/predict/text={text_input}&url={url_input}").json()
+                            response = requests.get(f"http://rakuten-backend-1:8000/api/fusion/predict/text={text_input}&url={url_input}").json()
 
                     except Exception as exce:
-                        st.error("The backend doesn't respond ... Please wait or reload it ;)")
-                        #st.error(exce)
+                        st.error(exce)
 
+                        st.error("The backend doesn't respond ... Please wait or reload it ffff ;)")
+                   
             if response:
                 if "activation_0" in response.keys():
                     with st.expander("Détails des images"):

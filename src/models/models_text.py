@@ -16,8 +16,17 @@ from tensorflow.keras.layers import BatchNormalization, Dense, Input, Dropout, F
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, RNN, GRUCell
 from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Rescaling, TextVectorization
 
-from models.models_utils import METRICS
-from models.models import MyDataSetModel
+import os
+import sys  
+
+
+
+# sys.path.insert(0, '..') #Pour inclure le dossier parent à report
+# from src.models.models import MyDataSetModel
+
+
+from src.models.models import MyDataSetModel
+
 #from tools.text import pipeline_preprocess
 
 

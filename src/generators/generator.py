@@ -18,9 +18,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import TextVectorization
-from tools.text import pipeline_loader, pipeline_lang
-from tools.commons import convert_to_readable_categories
-from tools.image import  get_white_ratio, get_channel_ratio
+from src.tools.text import pipeline_loader, pipeline_lang
+from src.tools.commons import convert_to_readable_categories
+from src.tools.image import  get_white_ratio, get_channel_ratio
 
 sns.set_theme()
 

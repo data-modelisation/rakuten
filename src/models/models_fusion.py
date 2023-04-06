@@ -6,7 +6,8 @@ import tensorflow as tf
 import numpy as np
 import joblib
 import math
-from models.models import MyDataSetModel
+
+from src.models.models import MyDataSetModel
 
 class ModelFusion(MyDataSetModel):
     def __init__(self, 
