@@ -46,7 +46,7 @@ docker-compose up --build
 The app should then be available at [localhost:8501](http://localhost:8501) and API documentation should be available at [localhost:8008/docs](http://localhost:8008/docs).
 
 
-## Description
+## Overview
 Rakuten Challenge contains : 
 
 * `84 916` observations
@@ -86,3 +86,6 @@ The fusion model has the following architecture :
 <img src="./notebooks/images/fusion_methodology.png" width="300" />
 
 The fusion model uses the image model to categorize products where the text model underperformed. The global **weighted-F1 score is 82.2%** and **all categories exceed the 55% score**. 
+
+Model density analysis : 
+![image](./slides/images/all_tp_flat.svg)
