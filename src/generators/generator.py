@@ -267,12 +267,12 @@ class DataGenerator():
                         #Set the metadata for projector
                         with open(self.vectorize_metadata_path, 'w') as metadata_file:
                             vocab = self.vectorize_layer.get_vocabulary()
-                            # Fill rows with the label  .
-                            for subwords in vocab:
+                            # Fill in the rest of the labels with "unknown".  
+                            nb_unknow_labels = self.vocab_size - len(vocab)+1
+                            unknow_labels = ["unknown #{}".format(i) for i in range(0, nb_unknow_labels) ] 
+                            # Write labels to metadata file 
+                            for subwords in vocab + unknow_labels:
                                 metadata_file.write("{}\n".format(subwords))
-                            # Fill in the rest of the labels with "unknown".
-                            for idx in range(0, self.vocab_size - len(vocab)+1):
-                                metadata_file.write("unknown #{}\n".format(idx))
 
                     dataset = dataset.map(lambda x,y : (self.vectorize_text(x), y))
                 
