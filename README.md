@@ -1,60 +1,92 @@
-# Insérer le nom du projet
 
-
-## Explications et Instructions
-
-Ce repository contient les fichiers nécessaires à l'initialisation d'un projet fil-rouge dans le cadre de votre formation [DataScientest](https://datascientest.com/).
-
-Il contient principalement le présent fichier README.md et un template d'application [Streamlit](https://streamlit.io/).
-
-**README**
-
-Le fichier README.md est un élément central de tout repository git. Il permet de présenter votre projet, ses objectifs, ainsi que d'expliquer comment installer et lancer le projet, ou même y contribuer.
-
-Vous devrez donc modifier différentes sections du présent README.md, afin d'y inclure les informations nécessaires.
-
-- Complétez **en anglais** les sections (`## Presentation` et `## Installation` `## Streamlit App`) en suivant les instructions présentes dans ces sections.
-- Supprimer la présente section (`## Explications et Instructions`)
-
-**Application Streamlit**
-
-Un template d'application [Streamlit](https://streamlit.io/) est disponible dans le dossier [`streamlit_app`](streamlit_app). Vous pouvez partir de ce template pour mettre en avant votre projet.
-
+![Text](https://placehold.co/100x20?text=Text) 
+![Image](https://placehold.co/100x20?text=Image) 
+![Tensorflow](https://placehold.co/100x20?text=Tensorflow)
+![Deep Learning](https://placehold.co/100x20?text=Deep+Learning)
+![Transfer Learning](https://placehold.co/100x20?text=Transfer+Learning)
+![Docker](https://placehold.co/100x20?text=Docker) 
+# DS - Bootcamp - DEC22 - Rakuten Challenge
+![cover](./slides/images/readme_cover.jpg) 
 ## Presentation
+This repository contains the code for project **Rakuten** based on data issued by [Rakuten Challenge](https://challengedata.ens.fr/participants/challenges/35/) 
+and developed during [Data Scientist training](https://datascientest.com/en/data-scientist-course) at [DataScientest](https://datascientest.com/).  
+  
+The cataloging of product listings through title and image categorization is a fundamental problem for any e-commerce marketplace. The traditional way of categorizing is to do it manually. However, this takes up a lot of employees’ time and can be expensive.
 
-Complétez cette section **en anglais** avec une brève description de votre projet, le contexte (en incluant un lien vers le parcours DataScientest), et les objectifs.
+The goal of this project is to **predict a product’s type code  through its description and image for the e-commerce platform Rakuten.** 
 
-Vous pouvez également ajouter une brève présentation des membres de l'équipe avec des liens vers vos réseaux respectifs (GitHub et/ou LinkedIn par exemple).
-
-**Exemple :**
-
-This repository contains the code for our project **PROJECT_NAME**, developed during our [Data Scientist training](https://datascientest.com/en/data-scientist-course) at [DataScientest](https://datascientest.com/).
-
-The goal of this project is to **...**
-
-This project was developed by the following team :
-
-- John Doe ([GitHub](https://github.com/) / [LinkedIn](http://linkedin.com/))
-- Martin Dupont ([GitHub](https://github.com/) / [LinkedIn](http://linkedin.com/))
+This project was developed by the following *team* :
+- Charly LAGRESLE ([GitHub](https://github.com/karolus-git/) / [LinkedIn](https://www.linkedin.com/in/charly-lagresle/))
+- Olga ([GitHub](https://github.com/data-modelisation/) / [LinkedIn](https://www.linkedin.com/in/tolstolutska/))
+- Mohamed BACHKAT  ([GitHub](https://github.com/mbachkat/) / [LinkedIn](https://fr.linkedin.com/in/mo-bachkat-7389451a3/))
 
 You can browse and run the [notebooks](./notebooks). You will need to install the dependencies (in a dedicated environment) :
 
 ```
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
-## Streamlit App
+You can also see a summary presentation of the project in the formats pdf 
+[presentation.pdf](./slides/rapport.pdf) and pptx [presentation.pptx](./slides/rapport.pptx). 
 
-**Add explanations on how to use the app.**
 
-To run the app :
+## Application
 
-```shell
-cd streamlit_app
-conda create --name my-awesome-streamlit python=3.9
-conda activate my-awesome-streamlit
-pip install -r requirements.txt
-streamlit run app.py
+The application has the following elements :
+* *Frontend* that contains the web interface created with  application Streamlit  
+* *Backend* that contains the API created with FastAPI   
+* *Monitoring* that contains the application Tensorboard  
+
+The application should be run within a Docker container [Streamlit + FastAPI + Docker = &hearts;].  
+To run the Docker containers use the following command:
+
+```sh
+docker-compose up --build 
 ```
+The app should then be available at [localhost:8501](http://localhost:8501) and API documentation should be available at [localhost:8008/docs](http://localhost:8008/docs).
 
-The app should then be available at [localhost:8501](http://localhost:8501).
+
+## Overview
+Rakuten Challenge contains : 
+
+* `84 916` observations
+* `27` categories to be determined 
+* `0` duplicate data
+* One color image per product
+* Image size is `500x500px` in JPG format 
+
+The sample of the data:   
+
+<img src="./slides/images/dataframe.svg" width="500" />
+
+The challenge presents several *interesting research aspects* due to :
+- the intrinsic noisy nature of the product labels and images 
+- the typical unbalanced data distribution
+- the large size of the data 
+- the description of the product in different languages 
+
+We use a supervised approach for the one-label classification problem with an imbalanced distribution of labels. Therefore, the metric used in this challenge to rank the model's performance is the weighted-F1 score.
+
+The development of the best model contains the following steps : 
+
+1. Creation Text Classifier 
+1. Creation Image Classifier 
+1. Fusion Text Classifier and Image Classifier  
+
+Text Classifier : 
+* Contains text prepprocessing and text vectorization using Natural Language Processing (NLP).   
+* Based on the *Neural_Embedder* text model. 
+
+Image Classifier : 
+* Bases on the *CNN* image model
+* Use transfer learning with the *MobileNetV2* model loaded with pre-trained weights on *ImageNet*. 
+
+The fusion model has the following architecture :  
+
+<img src="./notebooks/images/fusion_methodology.png" width="300" />
+
+The fusion model uses the image model to categorize products where the text model underperformed. The global **weighted-F1 score is 82.2%** and **all categories exceed the 55% score**. 
+
+Model density analysis :   
+
+![image](./slides/images/all_tp_flat.svg)
