@@ -43,7 +43,7 @@ To run the Docker containers use the following command:
 ```sh
 docker-compose up --build 
 ```
-The app should then be available at [localhost:8501](http://localhost:8501) and API documentation should be available at [localhost:8008/docs](http://localhost:8008/docs).
+The app should then be available at [localhost:8501](http://localhost:8501) and API documentation should be available at [localhost:8111/docs](http://localhost:8111/docs).
 
 
 ## Overview
