@@ -16,7 +16,7 @@ RUN apt-get update && \
    
 # copy the dependences file to the working directory and install dependencies
 COPY requirements.txt .
-RUN pip3 wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r app/requirements.txt
+RUN pip3 wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
 
 # final stage
@@ -31,6 +31,9 @@ RUN pip install --no-cache /wheels/*
 
 #copy the content of the local directory 
 COPY . /app
+
+RUN addgroup --system api && adduser --system --group api
+USER api
 
 EXPOSE 8000
 # command to run on container start 
